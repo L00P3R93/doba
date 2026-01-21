@@ -16,9 +16,10 @@ endpoints:
       subgroupDescription: ''
       title: 'Display a listing of the resource.'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      X-API-KEY: '{YOUR_API_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -31,15 +32,18 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"error":"Unauthorized"}'
+        status: 200
+        content: '{"data":[{"id":1,"name":"Sntaks Admin","email":"sntaksolutionsltd@gmail.com","phone":"0727796831","created_at":"2026-01-21 12:43:36","updated_at":"2026-01-21 12:43:36"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - X-API-KEY
+      - x7nliXGkYwkxWk3ojyQzQQ3pM0IE0CUD
     controller: null
     method: null
     route: null
@@ -56,9 +60,10 @@ endpoints:
       subgroupDescription: ''
       title: 'Store a newly created resource in storage.'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      X-API-KEY: '{YOUR_API_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -118,7 +123,10 @@ endpoints:
     fileParameters: []
     responses: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - X-API-KEY
+      - x7nliXGkYwkxWk3ojyQzQQ3pM0IE0CUD
     controller: null
     method: null
     route: null
@@ -135,9 +143,10 @@ endpoints:
       subgroupDescription: ''
       title: 'Display the specified resource.'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      X-API-KEY: '{YOUR_API_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -146,14 +155,14 @@ endpoints:
         name: id
         description: 'The ID of the customer.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -162,15 +171,18 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"error":"Unauthorized"}'
+        status: 200
+        content: '{"data":{"id":1,"name":"Sntaks Admin","email":"sntaksolutionsltd@gmail.com","phone":"0727796831","created_at":"2026-01-21 12:43:36","updated_at":"2026-01-21 12:43:36"}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
           access-control-allow-origin: '*'
         description: null
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - X-API-KEY
+      - x7nliXGkYwkxWk3ojyQzQQ3pM0IE0CUD
     controller: null
     method: null
     route: null
@@ -188,9 +200,10 @@ endpoints:
       subgroupDescription: ''
       title: 'Update the specified resource in storage.'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      X-API-KEY: '{YOUR_API_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -199,14 +212,14 @@ endpoints:
         name: id
         description: 'The ID of the customer.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -214,7 +227,10 @@ endpoints:
     fileParameters: []
     responses: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - X-API-KEY
+      - x7nliXGkYwkxWk3ojyQzQQ3pM0IE0CUD
     controller: null
     method: null
     route: null
@@ -231,9 +247,10 @@ endpoints:
       subgroupDescription: ''
       title: 'Remove the specified resource from storage.'
       description: ''
-      authenticated: false
+      authenticated: true
       deprecated: false
     headers:
+      X-API-KEY: '{YOUR_API_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -242,14 +259,14 @@ endpoints:
         name: id
         description: 'The ID of the customer.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -257,7 +274,10 @@ endpoints:
     fileParameters: []
     responses: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - X-API-KEY
+      - x7nliXGkYwkxWk3ojyQzQQ3pM0IE0CUD
     controller: null
     method: null
     route: null

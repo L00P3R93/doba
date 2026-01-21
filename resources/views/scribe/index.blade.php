@@ -23,6 +23,8 @@
         /* starts out as display none and is replaced with js later  */
                     body .content .bash-example code { display: none; }
                     body .content .javascript-example code { display: none; }
+                    body .content .php-example code { display: none; }
+                    body .content .python-example code { display: none; }
             </style>
 
     <script>
@@ -36,7 +38,7 @@
 
 </head>
 
-<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;]">
+<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
 
 <a href="#" id="nav-button">
     <span>
@@ -49,6 +51,8 @@
             <div class="lang-selector">
                                             <button type="button" class="lang-button" data-language-name="bash">bash</button>
                                             <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                            <button type="button" class="lang-button" data-language-name="php">php</button>
+                                            <button type="button" class="lang-button" data-language-name="python">python</button>
                     </div>
     
     <div class="search">
@@ -114,7 +118,9 @@
 You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).&lt;/aside&gt;</code></pre>
 
         <h1 id="authenticating-requests">Authenticating requests</h1>
-<p>This API is not authenticated.</p>
+<p>To authenticate requests, include a <strong><code>X-API-KEY</code></strong> header with the value <strong><code>"{YOUR_API_KEY}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>Token is required in the X-API-KEY header.</p>
 
         <h1 id="endpoints">Endpoints</h1>
 
@@ -123,6 +129,7 @@ You can switch the language used with the tabs at the top right (or from the nav
                                 <h2 id="endpoints-GETapi-customers">Display a listing of the resource.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -134,6 +141,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "http://doba.test/api/customers" \
+    --header "X-API-KEY: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -144,6 +152,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 );
 
 const headers = {
+    "X-API-KEY": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -153,11 +162,43 @@ fetch(url, {
     headers,
 }).then(response =&gt; response.json());</code></pre></div>
 
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://doba.test/api/customers';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'X-API-KEY' =&gt; '{YOUR_API_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://doba.test/api/customers'
+headers = {
+  'X-API-KEY': '{YOUR_API_KEY}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
 </span>
 
 <span id="example-responses-GETapi-customers">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -169,7 +210,16 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;error&quot;: &quot;Unauthorized&quot;
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;Sntaks Admin&quot;,
+            &quot;email&quot;: &quot;sntaksolutionsltd@gmail.com&quot;,
+            &quot;phone&quot;: &quot;0727796831&quot;,
+            &quot;created_at&quot;: &quot;2026-01-21 12:43:36&quot;,
+            &quot;updated_at&quot;: &quot;2026-01-21 12:43:36&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -190,7 +240,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-customers" data-method="GET"
       data-path="api/customers"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -221,6 +271,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>X-API-KEY</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="X-API-KEY" class="auth-value"               data-endpoint="GETapi-customers"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -249,6 +311,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="endpoints-POSTapi-customers">Store a newly created resource in storage.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -260,6 +323,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://doba.test/api/customers" \
+    --header "X-API-KEY: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -277,6 +341,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 );
 
 const headers = {
+    "X-API-KEY": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -293,6 +358,50 @@ fetch(url, {
     headers,
     body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://doba.test/api/customers';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'X-API-KEY' =&gt; '{YOUR_API_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'b',
+            'email' =&gt; 'zbailey@example.net',
+            'phone' =&gt; 'i',
+            'password' =&gt; '0pBNvYgxwmi/#iw/kX',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://doba.test/api/customers'
+payload = {
+    "name": "b",
+    "email": "zbailey@example.net",
+    "phone": "i",
+    "password": "0pBNvYgxwmi\/#iw\/kX"
+}
+headers = {
+  'X-API-KEY': '{YOUR_API_KEY}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
 
 </span>
 
@@ -315,7 +424,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-customers" data-method="POST"
       data-path="api/customers"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -345,6 +454,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/customers</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>X-API-KEY</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="X-API-KEY" class="auth-value"               data-endpoint="POSTapi-customers"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -423,6 +544,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="endpoints-GETapi-customers--id-">Display the specified resource.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -433,17 +555,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://doba.test/api/customers/architecto" \
+    --get "http://doba.test/api/customers/1" \
+    --header "X-API-KEY: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/architecto"
+    "http://doba.test/api/customers/1"
 );
 
 const headers = {
+    "X-API-KEY": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -453,11 +577,43 @@ fetch(url, {
     headers,
 }).then(response =&gt; response.json());</code></pre></div>
 
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://doba.test/api/customers/1';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'X-API-KEY' =&gt; '{YOUR_API_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://doba.test/api/customers/1'
+headers = {
+  'X-API-KEY': '{YOUR_API_KEY}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
 </span>
 
 <span id="example-responses-GETapi-customers--id-">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -469,7 +625,14 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;error&quot;: &quot;Unauthorized&quot;
+    &quot;data&quot;: {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;Sntaks Admin&quot;,
+        &quot;email&quot;: &quot;sntaksolutionsltd@gmail.com&quot;,
+        &quot;phone&quot;: &quot;0727796831&quot;,
+        &quot;created_at&quot;: &quot;2026-01-21 12:43:36&quot;,
+        &quot;updated_at&quot;: &quot;2026-01-21 12:43:36&quot;
+    }
 }</code>
  </pre>
     </span>
@@ -490,7 +653,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-customers--id-" data-method="GET"
       data-path="api/customers/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -521,6 +684,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>X-API-KEY</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="X-API-KEY" class="auth-value"               data-endpoint="GETapi-customers--id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -547,21 +722,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-customers--id-"
-               value="architecto"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-customers--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>architecto</code></p>
+<p>The ID of the customer. Example: <code>1</code></p>
             </div>
                     </form>
 
                     <h2 id="endpoints-PUTapi-customers--id-">Update the specified resource in storage.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -572,17 +748,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://doba.test/api/customers/architecto" \
+    "http://doba.test/api/customers/1" \
+    --header "X-API-KEY: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/architecto"
+    "http://doba.test/api/customers/1"
 );
 
 const headers = {
+    "X-API-KEY": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -591,6 +769,38 @@ fetch(url, {
     method: "PUT",
     headers,
 }).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://doba.test/api/customers/1';
+$response = $client-&gt;put(
+    $url,
+    [
+        'headers' =&gt; [
+            'X-API-KEY' =&gt; '{YOUR_API_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://doba.test/api/customers/1'
+headers = {
+  'X-API-KEY': '{YOUR_API_KEY}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('PUT', url, headers=headers)
+response.json()</code></pre></div>
 
 </span>
 
@@ -613,7 +823,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-PUTapi-customers--id-" data-method="PUT"
       data-path="api/customers/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -648,6 +858,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>X-API-KEY</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="X-API-KEY" class="auth-value"               data-endpoint="PUTapi-customers--id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -674,21 +896,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-customers--id-"
-               value="architecto"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-customers--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>architecto</code></p>
+<p>The ID of the customer. Example: <code>1</code></p>
             </div>
                     </form>
 
                     <h2 id="endpoints-DELETEapi-customers--id-">Remove the specified resource from storage.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 
@@ -699,17 +922,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://doba.test/api/customers/architecto" \
+    "http://doba.test/api/customers/1" \
+    --header "X-API-KEY: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/architecto"
+    "http://doba.test/api/customers/1"
 );
 
 const headers = {
+    "X-API-KEY": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -718,6 +943,38 @@ fetch(url, {
     method: "DELETE",
     headers,
 }).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://doba.test/api/customers/1';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'X-API-KEY' =&gt; '{YOUR_API_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://doba.test/api/customers/1'
+headers = {
+  'X-API-KEY': '{YOUR_API_KEY}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('DELETE', url, headers=headers)
+response.json()</code></pre></div>
 
 </span>
 
@@ -740,7 +997,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-DELETEapi-customers--id-" data-method="DELETE"
       data-path="api/customers/{id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -771,6 +1028,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>X-API-KEY</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="X-API-KEY" class="auth-value"               data-endpoint="DELETEapi-customers--id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -797,15 +1066,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-customers--id-"
-               value="architecto"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-customers--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>architecto</code></p>
+<p>The ID of the customer. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -817,6 +1086,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <div class="lang-selector">
                                                         <button type="button" class="lang-button" data-language-name="bash">bash</button>
                                                         <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                                        <button type="button" class="lang-button" data-language-name="php">php</button>
+                                                        <button type="button" class="lang-button" data-language-name="python">python</button>
                             </div>
             </div>
 </div>
