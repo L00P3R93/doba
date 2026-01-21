@@ -433,14 +433,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://doba.test/api/customers/16" \
+    --get "http://doba.test/api/customers/architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/16"
+    "http://doba.test/api/customers/architecto"
 );
 
 const headers = {
@@ -457,7 +457,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-customers--id-">
             <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -469,7 +469,7 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Server Error&quot;
+    &quot;error&quot;: &quot;Unauthorized&quot;
 }</code>
  </pre>
     </span>
@@ -547,15 +547,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="GETapi-customers--id-"
-               value="16"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="GETapi-customers--id-"
+               value="architecto"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>16</code></p>
+<p>The ID of the customer. Example: <code>architecto</code></p>
             </div>
                     </form>
 
@@ -572,14 +572,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://doba.test/api/customers/16" \
+    "http://doba.test/api/customers/architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/16"
+    "http://doba.test/api/customers/architecto"
 );
 
 const headers = {
@@ -674,15 +674,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="PUTapi-customers--id-"
-               value="16"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="PUTapi-customers--id-"
+               value="architecto"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>16</code></p>
+<p>The ID of the customer. Example: <code>architecto</code></p>
             </div>
                     </form>
 
@@ -699,14 +699,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://doba.test/api/customers/16" \
+    "http://doba.test/api/customers/architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://doba.test/api/customers/16"
+    "http://doba.test/api/customers/architecto"
 );
 
 const headers = {
@@ -797,15 +797,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+<small>string</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="id"                data-endpoint="DELETEapi-customers--id-"
-               value="16"
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="DELETEapi-customers--id-"
+               value="architecto"
                data-component="url">
     <br>
-<p>The ID of the customer. Example: <code>16</code></p>
+<p>The ID of the customer. Example: <code>architecto</code></p>
             </div>
                     </form>
 
