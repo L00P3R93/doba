@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    abort(404, 'Not Found');
+});
+
+/*Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
@@ -11,3 +15,4 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 require __DIR__.'/settings.php';
+*/
