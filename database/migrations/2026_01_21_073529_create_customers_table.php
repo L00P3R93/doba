@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('password');
+            $table->string('role')->default('listener'); // listener, artist
+            $table->timestamp('offline_expiry')->nullable(); // From rewarded ad unlocks (e.g. 3h → 3 months)
             $table->timestamps();
             $table->softDeletes();
         });

@@ -6,26 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
-use App\Models\Customer;
 use App\Services\CustomerService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-    protected $customerService;
+    protected CustomerService $customerService;
 
     public function __construct(CustomerService $customerService)
     {
         $this->customerService = $customerService;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $customers = $this->customerService->getAllCustomers();
+
         return CustomerResource::collection($customers);
     }
 
@@ -36,6 +35,7 @@ class CustomerController extends Controller
     {
         try {
             $customer = $this->customerService->createCustomer($request->validated());
+
             return response()->json([
                 'message' => 'Customer created successfully',
                 'data' => new CustomerResource($customer),
@@ -60,6 +60,7 @@ class CustomerController extends Controller
                     'message' => 'Customer not found',
                 ], 404);
             }
+
             return response()->json([
                 'data' => new CustomerResource($customer),
             ]);
@@ -78,6 +79,7 @@ class CustomerController extends Controller
         try {
             $customer = $this->customerService->getCustomerById($id);
             $updatedCustomer = $this->customerService->updateCustomer($customer, $request->validated());
+
             return response()->json([
                 'message' => 'Customer updated successfully',
                 'data' => new CustomerResource($updatedCustomer),
@@ -98,6 +100,7 @@ class CustomerController extends Controller
         try {
             $customer = $this->customerService->getCustomerById($id);
             $this->customerService->deleteCustomer($customer);
+
             return response()->json([
                 'message' => 'Customer deleted successfully',
             ], 204);

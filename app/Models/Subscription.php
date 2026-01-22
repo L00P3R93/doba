@@ -6,30 +6,22 @@ use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends Model
+class Subscription extends Model
 {
-    /** @use HasFactory<\Database\Factories\CustomerFactory> */
+    /** @use HasFactory<\Database\Factories\SubscriptionFactory> */
     use Auditable, HasFactory, SoftDeletes;
 
-    protected $table = 'customers';
-
-    protected $hidden = [
-        'password',
-    ];
+    protected $table = 'subscriptions';
 
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
+            'period' => 'string',
+            'downloads_limit' => 'integer',
+            'price' => 'decimal:2',
         ];
-    }
-
-    public function profile(): HasOne
-    {
-        return $this->hasOne(Profile::class);
     }
 
     public function customerSubscriptions(): HasMany
