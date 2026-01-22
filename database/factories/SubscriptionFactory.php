@@ -17,7 +17,11 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'period' => fake()->randomElement(['week', 'month', '3months', '6months', 'year']),
+            'price' => fake()->randomFloat(2, 4.99, 99.99),
+            'downloads_limit' => fake()->numberBetween(10, 1000),
+            'created_at' => fake()->dateTimeBetween('-6 months', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-6 months', 'now'),
         ];
     }
 }

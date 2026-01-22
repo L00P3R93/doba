@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
+use App\Models\Subscription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,17 @@ class CustomerSubscriptionFactory extends Factory
      */
     public function definition(): array
     {
+        $customer = Customer::query()->inRandomOrder()->first();
+        $subscription = Subscription::query()->inRandomOrder()->first();
         return [
-            //
+            'customer_id' => $customer->id,
+            'subscription_id' => $subscription->id,
+            'start_date' => fake()->dateTimeBetween('-1 month', 'now'),
+            'end_date' => fake()->dateTimeBetween('now', '+1 year'),
+            'status' => fake()->randomElement(['active', 'expired', 'cancelled']),
+            'downloads_used' => fake()->numberBetween(0, 100),
+            'created_at' => fake()->dateTimeBetween('-6 months', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-6 months', 'now'),
         ];
     }
 }
