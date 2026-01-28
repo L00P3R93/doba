@@ -36,4 +36,9 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerSubscription::class);
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
