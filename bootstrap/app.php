@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'decrypt-identifier' => \App\Http\Middleware\DecryptIdentifier::class,
+            'decrypt.identifier' => \App\Http\Middleware\DecryptIdentifier::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

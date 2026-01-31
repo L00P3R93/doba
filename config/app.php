@@ -125,4 +125,6 @@ return [
 
     'x-api-key' => env('X_API_KEY'),
 
+    'cors_allowed_origins' => env('CORS_ALLOWED_ORIGINS', ''),
+
 ];

@@ -16,6 +16,11 @@ class CheckApiKey
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Allow CORS preflight requests to pass without API key
+        if ($request->isMethod('OPTIONS')) {
+            return $next($request);
+        }
+
         $apiKey = $request->header('X-API-KEY');
 
         if (! $apiKey || ! ApiKey::query()->where('key', $apiKey)->where('is_active', true)->exists()) {
