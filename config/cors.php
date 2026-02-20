@@ -31,10 +31,11 @@ return [
 
     'allowed_origins' => [
         // These will be merged with environment-specific origins below
+        '*',
     ],
 
     'allowed_origins_patterns' => [
-        'https://*.kadikings.co.ke',
+        // Allow all origins
     ],
 
     'allowed_headers' => [

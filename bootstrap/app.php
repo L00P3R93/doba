@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'decrypt.identifier' => \App\Http\Middleware\DecryptIdentifier::class,
+            'redirect.authenticated' => \App\Http\Middleware\RedirectAuthenticatedUsers::class,
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

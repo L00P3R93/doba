@@ -29,6 +29,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        $this->configureAuthentication();
     }
 
     /**
@@ -52,6 +53,25 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::registerView(fn () => view('pages::auth.register'));
         Fortify::resetPasswordView(fn () => view('pages::auth.reset-password'));
         Fortify::requestPasswordResetLinkView(fn () => view('pages::auth.forgot-password'));
+    }
+
+    /**
+     * Configure authentication redirection.
+     */
+    private function configureAuthentication(): void
+    {
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = \App\Models\User::query()->where('email', $request->email)->first();
+
+            if ($user && \Hash::check($request->password, $user->password)) {
+                // Check if user has appropriate role for panel access
+                if ($user->hasRole('Admin') || $user->hasRole('Artist')) {
+                    return $user;
+                }
+            }
+
+            return null;
+        });
     }
 
     /**

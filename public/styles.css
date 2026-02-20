@@ -1,0 +1,150 @@
+body {
+    background: radial-gradient(circle at top, #0f2a3a, #06161f);
+    color: #ffffff;
+    min-height: 100vh;
+    padding-top: 72px; /* space for fixed navbar */
+}
+
+.awesome-list {
+    max-width: 720px;
+    list-style: none;
+    padding: 0;
+    color: #cfe1ee;
+    font-size: 0.95rem;
+}
+
+.awesome-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+
+    padding: 14px 16px;
+    border-radius: 10px;
+}
+
+.awesome-list i {
+    color: #f5c542;
+    font-size: 1.1rem;
+    margin-top: 3px;
+}
+
+/* NAVBAR */
+.navbar {
+    background: rgba(6, 22, 31, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #0f2d3f;
+}
+
+.navbar-brand span {
+    color: #f5c542;
+}
+
+.nav-link {
+    color: #cfe1ee !important;
+    font-size: 0.9rem;
+}
+
+.nav-link:hover {
+    color: #f5c542 !important;
+}
+
+/* INTRO */
+.hero {
+    padding: 90px 20px 60px;
+    text-align: center;
+}
+
+.hero h1 span {
+    color: #f5c542;
+}
+
+.hero p {
+    max-width: 620px;
+    margin: 15px auto 0;
+    color: #9fb6c5;
+}
+
+/* PRICING CARDS */
+.pricing-card {
+    background: linear-gradient(180deg, #0f2d3f, #091c28);
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-6px);
+}
+
+.plan-title {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #9fb6c5;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+.currency {
+    font-size: 1.1rem;
+    vertical-align: top;
+}
+
+.billing {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #6f8797;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+    color: #cfe1ee;
+    font-size: 0.9rem;
+    min-height: 95px;
+}
+
+.features li {
+    margin-bottom: 8px;
+    padding-left: 18px;
+    position: relative;
+}
+
+.features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #f5c542;
+}
+
+.btn-gold {
+    background: #f5c542;
+    color: #000;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 12px 0;
+    border: none;
+}
+
+.btn-gold:hover {
+    background: #e0b437;
+    color: #000;
+}
+
+footer {
+    text-align: center;
+    padding: 30px 0;
+    color: #6f8797;
+    font-size: 0.85rem;
+}

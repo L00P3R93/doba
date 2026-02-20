@@ -1,67 +1,52 @@
 <x-layouts::auth>
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+    <div class="main-wrapper">
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <!-- LEFT BRAND SECTION -->
+        <div class="left-side">
+            <h1>DobaPlay</h1>
+            <p>Turn your music into income. Build your name. Own your future.</p>
 
-        <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
-            @csrf
-            <!-- Name -->
-            <flux:input
-                name="name"
-                :label="__('Name')"
-                :value="old('name')"
-                type="text"
-                required
-                autofocus
-                autocomplete="name"
-                :placeholder="__('Full name')"
-            />
+            <div class="feature"><i class="fa-solid fa-chart-line"></i> Earn from every stream</div>
+            <div class="feature"><i class="fa-solid fa-calendar-check"></i> Promote events & shows</div>
+            <div class="feature"><i class="fa-solid fa-headphones"></i> Sell beats as a producer</div>
+        </div>
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="__('Email address')"
-                :value="old('email')"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="email@example.com"
-            />
+        <!-- RIGHT LOGIN -->
+        <div class="right-side">
+            <div class="login-box">
+                <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
 
-            <!-- Password -->
-            <flux:input
-                name="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Password')"
-                viewable
-            />
+                <!-- Session Status -->
+                <x-auth-session-status class="text-center" :status="session('status')" />
 
-            <!-- Confirm Password -->
-            <flux:input
-                name="password_confirmation"
-                :label="__('Confirm password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Confirm password')"
-                viewable
-            />
+                <form method="POST" action="{{ route('register.store') }}" class="mt-4">
+                    @csrf
 
-            <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
-                    {{ __('Create account') }}
-                </flux:button>
+                    <div class="mb-4">
+                        <!-- Name -->
+                        <input type="text" class="form-control" name="name" placeholder="{{ __('Full name') }}" value="{{ old('name') }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="{{ __('Email Address') }}"  value="{{ old('email') }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                    </div>
+
+                    <button type="submit" class="btn-gold">Create Account</button>
+
+                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+                        <span>{{ __('Already have an account?') }}</span>
+                        <flux:link :href="route('login')" wire:navigate>{{ __('Sign in') }}</flux:link>
+                    </div>
+                </form>
             </div>
-        </form>
-
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>
