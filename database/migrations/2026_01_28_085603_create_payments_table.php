@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Customer::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Subscription::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('transaction_id')->unique()->index();
             $table->string('type')->nullable();

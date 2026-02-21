@@ -18,19 +18,9 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
-        $customer = Customer::query()
-            ->whereHas('customerSubscriptions')
-            ->with('customerSubscriptions')
-            ->inRandomOrder()->first();
-        $subscription = $customer?->customerSubscriptions?->random();
-
         return [
-            'customer_id' => $customer?->id,
-            'subscription_id' => $subscription?->subscription_id,
             'transaction_id' => (string) Str::uuid(),
-            'type' => 'subscription',
             'transaction_time' => $this->faker->dateTimeBetween('-60 days', '-2 days'),
-            'amount' => $this->faker->randomFloat(2, 100, 5000),
             'short_code' => Str::random(6),
             'bill_ref_no' => Str::random(10),
             'msisdn' => $this->faker->phoneNumber,

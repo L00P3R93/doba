@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\CustomerSubscription;
 use App\Models\Subscription;
 
 class SubscriptionSeeder extends BaseSeeder
@@ -24,6 +23,7 @@ class SubscriptionSeeder extends BaseSeeder
             ];
             $data = $subscriptionsData[$index];
             $index++;
+
             return Subscription::factory()->create([
                 'name' => $data['name'],
                 'type' => $data['type'],
@@ -34,11 +34,5 @@ class SubscriptionSeeder extends BaseSeeder
         });
 
         $this->command->info("Created {$subscriptions->count()} subscriptions");
-
-        $this->command->info('Seeding customer subscriptions');
-        $customerSubscriptions = $this->withProgressBar($subscriptions->count(), function () {
-            return CustomerSubscription::factory()->create();
-        });
-        $this->command->info("Created {$customerSubscriptions->count()} customer subscriptions");
     }
 }

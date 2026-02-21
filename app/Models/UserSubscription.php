@@ -8,19 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Payment extends Model
+class UserSubscription extends Model
 {
-    /** @use HasFactory<\Database\Factories\PaymentFactory> */
+    /** @use HasFactory<\Database\Factories\UserSubscriptionFactory> */
     use Auditable, HasFactory, SoftDeletes;
 
-    protected $table = 'payments';
-
-    protected function casts(): array
-    {
-        return [
-            'amount' => 'decimal:2',
-        ];
-    }
+    protected $table = 'user_subscriptions';
 
     public function user(): BelongsTo
     {

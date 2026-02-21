@@ -19,13 +19,13 @@ class Subscription extends Model
     {
         return [
             'price' => 'decimal:2',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ];
     }
 
-    public function customerSubscriptions(): HasMany
+    public function userSubscriptions(): HasMany
     {
-        return $this->hasMany(CustomerSubscription::class);
+        return $this->hasMany(UserSubscription::class);
     }
 
     public function payments(): HasMany

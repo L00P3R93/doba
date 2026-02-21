@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\CustomerSubscription;
 use App\Models\User;
+use App\Models\UserSubscription;
 use Illuminate\Auth\Access\Response;
 
-class CustomerSubscriptionPolicy
+class UserSubscriptionPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('view_user_subscriptions');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, CustomerSubscription $customerSubscription): bool
+    public function view(User $user, UserSubscription $userSubscription): bool
     {
-        return false;
+        return $user->hasPermissionTo('view_user_subscription');
     }
 
     /**
@@ -29,29 +29,29 @@ class CustomerSubscriptionPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('create_user_subscription');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, CustomerSubscription $customerSubscription): bool
+    public function update(User $user, UserSubscription $userSubscription): bool
     {
-        return false;
+        return $user->hasPermissionTo('update_user_subscription');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, CustomerSubscription $customerSubscription): bool
+    public function delete(User $user, UserSubscription $userSubscription): bool
     {
-        return false;
+        return $user->hasPermissionTo('delete_user_subscription');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, CustomerSubscription $customerSubscription): bool
+    public function restore(User $user, UserSubscription $userSubscription): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class CustomerSubscriptionPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, CustomerSubscription $customerSubscription): bool
+    public function forceDelete(User $user, UserSubscription $userSubscription): bool
     {
         return false;
     }

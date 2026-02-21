@@ -27,6 +27,9 @@ class RoleSeeder extends Seeder
             'view_charts', 'view_chart', 'create_chart', 'update_chart', 'delete_charts',
             'view_playlists', 'view_playlist', 'create_playlist', 'update_playlist', 'delete_playlist',
 
+            'view_subscriptions', 'view_subscription', 'create_subscription', 'update_subscription', 'delete_subscription',
+            'view_user_subscriptions', 'view_user_subscription', 'create_user_subscription', 'update_user_subscription', 'delete_user_subscription',
+
             'view_users', 'view_user', 'create_user', 'update_user', 'delete_user',
             'view_roles', 'view_role', 'create_role', 'update_role', 'delete_role',
             'view_permissions', 'view_permission', 'create_permission', 'update_permission', 'delete_permission',

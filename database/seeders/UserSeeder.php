@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Payment;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -42,7 +44,20 @@ class UserSeeder extends BaseSeeder
             Profile::factory()->create([
                 'user_id' => $user->id,
             ]);
+
+            // Create user subscription for each user
+            $subscription = UserSubscription::factory()->create([
+                'user_id' => $user->id,
+            ]);
+
+            // Create payment for each user subscription
+            Payment::factory()->create([
+                'user_id' => $user->id,
+                'subscription_id' => $subscription->subscription_id,
+                'amount' => $subscription->subscription->price,
+                'type' => $subscription->subscription->type,
+            ]);
         });
-        $this->command->info('✓ Other users '.$users->count().' created with profiles and assigned roles.');
+        $this->command->info('✓ Other users '.$users->count().' created with profiles, subscriptions and assigned roles.');
     }
 }
