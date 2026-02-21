@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('period'); // week, month, 3months, 6months, year
+            $table->string('name'); // week, month, 3months, 6months, year
+            $table->string('type');
             $table->decimal('price', 10, 2);
-            $table->integer('downloads_limit')->default(0);
+            $table->integer('duration_days')->default(365);
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

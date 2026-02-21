@@ -22,7 +22,7 @@ class StoreProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id|unique:profiles,customer_id',
+            'user_id' => 'required|exists:customers,id|unique:profiles,customer_id',
             'bio' => 'nullable|string|max:1000',
             'mpesa_phone' => 'nullable|string|regex:/^\+?[0-9]{10,15}$/|unique:profiles,mpesa_phone',
             'tier' => 'required|string',

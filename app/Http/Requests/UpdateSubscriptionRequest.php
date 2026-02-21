@@ -22,16 +22,17 @@ class UpdateSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'period' => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255',
+            'type' => 'sometimes|string|max:255',
             'price' => 'sometimes|numeric',
-            'downloads_limit' => 'sometimes|integer',
+            'duration_days' => 'sometimes|integer',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'period.max' => 'The period may not be greater than 255 characters.',
+            'name.max' => 'The period may not be greater than 255 characters.',
         ];
     }
 }

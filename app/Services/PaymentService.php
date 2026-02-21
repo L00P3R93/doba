@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Payment;
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -21,11 +23,7 @@ class PaymentService
         try {
             $payment = Payment::query()->create($data);
             if ($payment) {
-                $billRefNo = $payment->bill_ref_no;
-                // TODO: Extract Customer & Subscritption Info from bill_ref_no
-                // TODO: Get Customer & Subscription Info
-                // TODO: Update Customer & Subscription
-                // TODO: Update Customer Subscription Status
+                $this->processPayment($payment);
             }
 
             return $payment;
@@ -33,6 +31,64 @@ class PaymentService
             Log::error('Error creating payment: '.$e->getMessage());
             throw $e;
         }
+    }
+
+    private function processPayment(Payment $payment): void
+    {
+        $billRefNo = $payment->bill_ref_no;
+
+        // Expected Format: DP-ACCCOUNTNO-SUBSCRIPTIONID (e.g. DP-1234-456)
+        $parts = explode('-', $billRefNo);
+
+        if (count($parts) !== 3) {
+            Log::error("Invalid bill_ref_no format: {$billRefNo}");
+
+            return;
+        }
+
+        $accountNo = $parts[1];
+        $subscriptionId = $parts[2];
+
+        $user = User::query()->where('account_no', $accountNo);
+        $subscription = Subscription::find($subscriptionId);
+
+        if (! $user || ! $subscription) {
+            Log::error("User or Subscription not found for payment: {$payment->id}");
+
+            return;
+        }
+
+        // Map subscription type to role
+        $roleMapping = [
+            'artist' => 'Artist',
+            'event' => 'Event',
+            'studio' => 'Studio',
+            'record' => 'Record',
+        ];
+
+        $targetRole = $roleMapping[$subscription->type] ?? null;
+
+        if (! $targetRole) {
+            Log::error("Invalid subscription type: {$subscription->type}");
+
+            return;
+        }
+
+        // Remove Guest role and assign new role
+        $user->removeRole('Guest');
+        $user->assignRole($targetRole);
+
+        // Create customer subscription record
+        \App\Models\CustomerSubscription::create([
+            'user_id' => $user->id,
+            'subscription_id' => $subscription->id,
+            'payment_id' => $payment->id,
+            'status' => 'active',
+            'start_date' => now(),
+            'end_date' => now()->addDays($subscription->duration_days),
+        ]);
+
+        Log::info("User {$user->id} upgraded from Guest to {$targetRole}");
     }
 
     /**

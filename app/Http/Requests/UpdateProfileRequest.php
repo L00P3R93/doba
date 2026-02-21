@@ -25,7 +25,7 @@ class UpdateProfileRequest extends FormRequest
         $profile = $this->route('profile');
 
         return [
-            'customer_id' => ['sometimes', 'integer', 'exists:customers,id', Rule::unique('profiles', 'customer_id')->ignore($profile->id)],
+            'user_id' => ['sometimes', 'integer', 'exists:customers,id', Rule::unique('profiles', 'customer_id')->ignore($profile->id)],
             'bio' => ['nullable', 'string', 'max:1000'],
             'mpesa_phone' => ['nullable', 'string', 'regex:/^[0-9]{9,15}$/', Rule::unique('profiles', 'mpesa_phone')->ignore($profile->id)],
             'tier' => 'sometimes|string',

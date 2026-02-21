@@ -18,9 +18,8 @@ class Subscription extends Model
     protected function casts(): array
     {
         return [
-            'period' => 'string',
-            'downloads_limit' => 'integer',
             'price' => 'decimal:2',
+            'is_active' => 'boolean'
         ];
     }
 

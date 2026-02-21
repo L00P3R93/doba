@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Customer::class)->constrained()->cascadeOnDelete(); // 1:1 with customers
+            $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->cascadeOnDelete(); // 1:1 with users
             $table->text('bio')->nullable();
             $table->string('mpesa_phone')->nullable(); // For artist B2C payouts
             $table->string('tier')->default('standard'); // standard, high_performance, premium

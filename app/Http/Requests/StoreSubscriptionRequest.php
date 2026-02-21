@@ -22,19 +22,20 @@ class StoreSubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'period' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'downloads_limit' => 'required|integer',
+            'duration_days' => 'required|integer',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'period.required' => 'The period field is required.',
-            'period.max' => 'The period may not be greater than 255 characters.',
+            'name.required' => 'The period field is required.',
+            'name.max' => 'The period may not be greater than 255 characters.',
             'price.required' => 'The price field is required.',
-            'downloads_limit.required' => 'The downloads limit field is required.',
+            'duration_days.required' => 'The downloads limit field is required.',
         ];
     }
 }

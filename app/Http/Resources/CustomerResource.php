@@ -19,14 +19,6 @@ class CustomerResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'profile' => $this->profile ? [
-                'id' => $this->profile->id,
-                'bio' => $this->profile->bio,
-                'mpesa_phone' => $this->profile->mpesa_phone,
-                'tier' => $this->profile->tier,
-                'created_at' => $this->profile->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $this->profile->updated_at->format('Y-m-d H:i:s'),
-            ] : null,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

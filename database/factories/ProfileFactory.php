@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +18,7 @@ class ProfileFactory extends Factory
      */
     public function definition(): array
     {
-        $customer = Customer::query()->inRandomOrder()->first();
         return [
-            'customer_id' => $customer->id,
             'bio' => fake()->text(100),
             'mpesa_phone' => fake()->phoneNumber(),
             'tier' => fake()->randomElement(['free', 'basic', 'premium']),

@@ -14,8 +14,19 @@ class RoleSeeder extends Seeder
 
         // Define Permissions
         $permissions = [
-            'access-admin-panel', 'access-artist-panel',
-            'view_customers', 'view_customer', 'create_customer', 'update_customer', 'delete_customer',
+            'payment_gateway',
+            'admin_panel', 'artist_panel', 'event_panel', 'studio_panel', 'record_panel',
+
+            'view_tickets', 'view_ticket', 'create_ticket', 'update_ticket', 'delete_ticket',
+            'view_events', 'view_event', 'create_event', 'update_event', 'delete_event',
+
+            'view_albums', 'view_album', 'create_album', 'update_album', 'delete_album',
+            'view_songs', 'view_song', 'create_song', 'update_song', 'delete_song',
+            'view_eps', 'view_ep', 'create_ep', 'update_ep', 'delete_ep',
+            'view_podcasts', 'view_podcast', 'create_podcast', 'update_podcast', 'delete_podcast',
+            'view_charts', 'view_chart', 'create_chart', 'update_chart', 'delete_charts',
+            'view_playlists', 'view_playlist', 'create_playlist', 'update_playlist', 'delete_playlist',
+
             'view_users', 'view_user', 'create_user', 'update_user', 'delete_user',
             'view_roles', 'view_role', 'create_role', 'update_role', 'delete_role',
             'view_permissions', 'view_permission', 'create_permission', 'update_permission', 'delete_permission',
@@ -30,9 +41,44 @@ class RoleSeeder extends Seeder
         $roles = [
             'Admin' => $permissions,
             'Artist' => [
-                'access-artist-panel',
+                'artist_panel',
+                'view_albums', 'view_album', 'create_album', 'update_album', 'delete_album',
+                'view_songs', 'view_song', 'create_song', 'update_song', 'delete_song',
+                'view_eps', 'view_ep', 'create_ep', 'update_ep', 'delete_ep',
+                'view_podcasts', 'view_podcast', 'create_podcast', 'update_podcast', 'delete_podcast',
             ],
-            'Member' => [],
+            'Event' => [
+                'event_panel',
+                'view_tickets', 'view_ticket', 'create_ticket', 'update_ticket', 'delete_ticket',
+                'view_events', 'view_event', 'create_event', 'update_event', 'delete_event',
+            ],
+            'Studio' => [
+                'studio_panel',
+                'view_tickets', 'view_ticket', 'create_ticket', 'update_ticket', 'delete_ticket',
+                'view_events', 'view_event', 'create_event', 'update_event', 'delete_event',
+
+                'view_albums', 'view_album', 'create_album', 'update_album', 'delete_album',
+                'view_songs', 'view_song', 'create_song', 'update_song', 'delete_song',
+                'view_eps', 'view_ep', 'create_ep', 'update_ep', 'delete_ep',
+                'view_podcasts', 'view_podcast', 'create_podcast', 'update_podcast', 'delete_podcast',
+
+                'view_users', 'view_user', 'create_user', 'update_user', 'delete_user',
+            ],
+            'Record' => [
+                'record_panel',
+                'view_tickets', 'view_ticket', 'create_ticket', 'update_ticket', 'delete_ticket',
+                'view_events', 'view_event', 'create_event', 'update_event', 'delete_event',
+
+                'view_albums', 'view_album', 'create_album', 'update_album', 'delete_album',
+                'view_songs', 'view_song', 'create_song', 'update_song', 'delete_song',
+                'view_eps', 'view_ep', 'create_ep', 'update_ep', 'delete_ep',
+                'view_podcasts', 'view_podcast', 'create_podcast', 'update_podcast', 'delete_podcast',
+
+                'view_users', 'view_user', 'create_user', 'update_user', 'delete_user',
+            ],
+            'Guest' => [
+                'payment_gateway',
+            ],
         ];
 
         foreach ($roles as $roleName => $perms) {

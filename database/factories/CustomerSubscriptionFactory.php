@@ -23,8 +23,8 @@ class CustomerSubscriptionFactory extends Factory
         return [
             'customer_id' => $customer->id,
             'subscription_id' => $subscription->id,
-            'start_date' => fake()->dateTimeBetween('-1 month', 'now'),
-            'end_date' => fake()->dateTimeBetween('now', '+1 year'),
+            'start_date' => $startDate = fake()->dateTimeBetween('-1 month', 'now'),
+            'end_date' => fake()->dateTimeBetween($startDate, '+1 year'),
             'status' => fake()->randomElement(['active', 'expired', 'cancelled']),
             'downloads_used' => fake()->numberBetween(0, 100),
             'created_at' => fake()->dateTimeBetween('-6 months', 'now'),

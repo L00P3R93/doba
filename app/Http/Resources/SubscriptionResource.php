@@ -16,9 +16,12 @@ class SubscriptionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'period' => $this->period,
+            'name' => $this->name,
+            'type' => $this->type,
             'price' => $this->price,
-            'downloads_limit' => $this->downloads_limit,
+            'duration_days' => $this->duration_days,
+            'is_active' => (bool) $this->is_active,
+            'description' => $this->description,
             'customers_count' => $this->customerSubscriptions?->count() ?? 0,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),

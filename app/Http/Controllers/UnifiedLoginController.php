@@ -30,25 +30,16 @@ class UnifiedLoginController extends Controller
 
         $user = Auth::user();
 
-        // Check if user has appropriate role for panel access
-        if (! $user->hasRole('Admin') && ! $user->hasRole('Artist')) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => 'Members cannot access admin panels.',
-            ]);
-        }
-
         // Redirect based on user role
-        if ($user->hasRole('Admin')) {
-            return redirect()->intended('/admin');
-        } elseif ($user->hasRole('Artist')) {
-            return redirect()->intended('/artist');
-        }
-
-        return redirect('/');
+        return match (true) {
+            $user->hasRole('Guest') => redirect()->intended('/guest'),
+            $user->hasRole('Admin') => redirect()->intended('/admin'),
+            $user->hasRole('Artist') => redirect()->intended('/artist'),
+            $user->hasRole('Event') => redirect()->intended('/event'),
+            $user->hasRole('Studio') => redirect()->intended('/studio'),
+            $user->hasRole('Record') => redirect()->intended('/record'),
+            default => redirect('/'),
+        };
     }
 
     public function destroy(Request $request)

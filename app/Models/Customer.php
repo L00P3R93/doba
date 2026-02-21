@@ -27,11 +27,6 @@ class Customer extends Model
         ];
     }
 
-    public function profile(): HasOne
-    {
-        return $this->hasOne(Profile::class);
-    }
-
     public function customerSubscriptions(): HasMany
     {
         return $this->hasMany(CustomerSubscription::class);

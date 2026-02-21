@@ -19,11 +19,5 @@ class CustomerSeeder extends BaseSeeder
         });
 
         $this->command->info("Created {$customers->count()} customers");
-
-        $this->command->info('Seeding profiles');
-        $profiles = $this->withProgressBar($customers->count(), function () {
-            return Profile::factory()->create();
-        });
-        $this->command->info("Created {$profiles->count()} profiles");
     }
 }
