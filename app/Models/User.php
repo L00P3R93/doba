@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatus;
 use App\Traits\Auditable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -29,6 +30,8 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'account_no',
+        'phone',
     ];
 
     /**
@@ -51,6 +54,7 @@ class User extends Authenticatable implements FilamentUser
     protected function casts(): array
     {
         return [
+            'status' => UserStatus::class,
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
@@ -76,10 +80,6 @@ class User extends Authenticatable implements FilamentUser
 
         if ($panel->getId() === 'artist') {
             return $this->hasRole('Artist');
-        }
-
-        if ($panel->getId() === 'guest') {
-            return $this->hasRole('Guest');
         }
 
         if ($panel->getId() === 'studio') {

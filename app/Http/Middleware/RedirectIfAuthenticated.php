@@ -23,7 +23,7 @@ class RedirectIfAuthenticated
                 } elseif ($user->hasRole('Artist')) {
                     return redirect('/artist');
                 } elseif ($user->hasRole('Guest')) {
-                    return redirect('/guest');
+                    return redirect('/subscribe');
                 } elseif ($user->hasRole('Studio')) {
                     return redirect('/studio');
                 } elseif ($user->hasRole('Record')) {

@@ -107,91 +107,75 @@
         <section class="pb-5">
             <div class="container">
                 <div class="row g-4 align-items-stretch justify-content-center">
+                    @php
+                        $plans = [
+                            [
+                                'title' => 'EVENTS',
+                                'price' => '499',
+                                'features' => [
+                                    'Sell tickets',
+                                    'Promote Events',
+                                    'Reach the right audience',
+                                    'Merchandise store integration',
+                                ],
+                            ],
+                            [
+                                'title' => 'ARTIST + VIDEOS',
+                                'price' => '1,499',
+                                'features' => [
+                                    'Music & video uploads',
+                                    'Streaming earnings',
+                                    'Video monetization',
+                                    'Artist analytics',
+                                    'Promote Events',
+                                    'Merchandise store integration',
+                                ],
+                            ],
+                            [
+                                'title' => 'STUDIO',
+                                'price' => '14,999',
+                                'features' => [
+                                    '10 artist accounts',
+                                    'Music & video uploads',
+                                    'Studio dashboard',
+                                    'Promote Events',
+                                    'Merchandise store integration',
+                                    'Sell beats & get producing gigs',
+                                ],
+                            ],
+                            [
+                                'title' => 'RECORD LABEL',
+                                'price' => '49,999',
+                                'features' => [
+                                    'Unlimited artists',
+                                    'Promote Events',
+                                    'All studio features',
+                                    'Label payouts & analytics',
+                                    'Merchandise store integration',
+                                    'Sell beats & get producing gigs',
+                                ],
+                            ],
+                        ];
+                    @endphp
 
-                    <!-- ARTIST -->
-                    <div class="col-md-3">
-                        <div class="pricing-card d-flex flex-column">
-                            <div>
-                                <div class="plan-title">EVENTS</div>
-                                <div class="price"><span class="currency">KES</span> 499</div>
-                                <div class="billing">BILLED YEARLY</div>
+                    @foreach($plans as $plan)
+                        <div class="col-md-3">
+                            <div class="pricing-card d-flex flex-column">
+                                <div>
+                                    <div class="plan-title">{{ $plan['title'] }}</div>
+                                    <div class="price"><span class="currency">KES</span> {{ $plan['price'] }}</div>
+                                    <div class="billing">BILLED YEARLY</div>
 
-                                <ul class="features">
-                                    <li>Sell tickets</li>
-                                    <li>Promote Events</li>
-                                    <li>Reach the right audience</li>
-                                    <li>Merchandise store integration</li>
-                                </ul>
+                                    <ul class="features">
+                                        @foreach($plan['features'] as $feature)
+                                            <li>{{ $feature }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <a href="{{ route('register') }}" class="btn btn-gold w-100 mt-auto">CREATE ACCOUNT</a>
                             </div>
-                            <a href="{{ route('register') }}" class="btn btn-gold w-100 mt-auto">CREATE ACCOUNT</a>
                         </div>
-                    </div>
-
-                    <!-- ARTIST + VIDEO -->
-                    <div class="col-md-3">
-                        <div class="pricing-card d-flex flex-column">
-                            <div>
-                                <div class="plan-title">ARTIST + VIDEOS</div>
-                                <div class="price"><span class="currency">KES</span> 1,499</div>
-                                <div class="billing">BILLED YEARLY</div>
-
-                                <ul class="features">
-                                    <li>Music & video uploads</li>
-                                    <li>Streaming earnings</li>
-                                    <li>Video monetization</li>
-                                    <li>Artist analytics</li>
-                                    <li>Promote Events</li>
-                                    <li>Merchandise store integration</li>
-
-
-                                </ul>
-                            </div>
-                            <a href="{{ route('register') }}" class="btn btn-gold w-100 mt-auto">CREATE ACCOUNT</a>
-                        </div>
-                    </div>
-
-                    <!-- STUDIO -->
-                    <div class="col-md-3">
-                        <div class="pricing-card d-flex flex-column">
-                            <div>
-                                <div class="plan-title">STUDIO</div>
-                                <div class="price"><span class="currency">KES</span> 14,999</div>
-                                <div class="billing">BILLED YEARLY</div>
-
-                                <ul class="features">
-                                    <li>10 artist accounts</li>
-                                    <li>Music & video uploads</li>
-                                    <li>Studio dashboard</li>
-                                    <li>Promote Events</li>
-                                    <li>Merchandise store integration</li>
-                                    <li>Sell beats & get producing gigs</li>
-                                </ul>
-                            </div>
-                            <a href="{{ route('register') }}" class="btn btn-gold w-100 mt-auto">CREATE ACCOUNT</a>
-                        </div>
-                    </div>
-
-                    <!-- RECORD LABEL -->
-                    <div class="col-md-3">
-                        <div class="pricing-card d-flex flex-column">
-                            <div>
-                                <div class="plan-title">RECORD LABEL</div>
-                                <div class="price"><span class="currency">KES</span> 49,999</div>
-                                <div class="billing">BILLED YEARLY</div>
-
-                                <ul class="features">
-                                    <li>Unlimited artists</li>
-                                    <li>Promote Events</li>
-                                    <li>All studio features</li>
-                                    <li>Label payouts & analytics</li>
-                                    <li>Merchandise store integration</li>
-                                    <li>Sell beats & get producing gigs</li>
-                                </ul>
-                            </div>
-                            <a href="{{ route('register') }}" class="btn btn-gold w-100 mt-auto">CREATE ACCOUNT</a>
-                        </div>
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
         </section>

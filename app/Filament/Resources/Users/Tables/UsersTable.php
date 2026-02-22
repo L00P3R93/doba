@@ -27,6 +27,10 @@ class UsersTable
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
+                TextColumn::make('phone')
+                    ->label('Phone number')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable()
@@ -34,8 +38,7 @@ class UsersTable
                 TextColumn::make('roles.name')
                     ->badge()
                     ->label('Role')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('status')
                     ->label('User Status')
                     ->sortable()

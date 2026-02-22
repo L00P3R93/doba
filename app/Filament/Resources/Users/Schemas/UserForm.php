@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Users\Schemas;
 
 use App\Enums\UserStatus;
 use App\Models\User;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
@@ -34,9 +33,18 @@ class UserForm
                     ->validationMessages([
                         'email' => 'Invalid email address.',
                         'required' => 'Email address is required.',
-                        'unique' => 'This email address is already in use.'
+                        'unique' => 'This email address is already in use.',
                     ])
                     ->required(),
+                TextInput::make('phone')
+                    ->label('Phone number')
+                    ->tel()
+                    ->unique(ignoreRecord: true)
+                    ->prefixIcon(Heroicon::Phone)
+                    ->prefixIconColor('primary')
+                    ->validationMessages([
+                        'unique' => 'This phone number is already in use.',
+                    ]),
                 Select::make('status')
                     ->label('User Status')
                     ->options(UserStatus::class)
@@ -48,11 +56,11 @@ class UserForm
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->label('User Roles')
-                    //->preload()
+                    // ->preload()
                     ->multiple()
                     ->native(false)
-                    //->disabled(fn (?User $record) => $record !== null)
-                    //->createOptionAction(fn (Action $action) => $action->visible(auth()->user()->can('manage roles')))
+                    // ->disabled(fn (?User $record) => $record !== null)
+                    // ->createOptionAction(fn (Action $action) => $action->visible(auth()->user()->can('manage roles')))
                     /*->createOptionForm(function () {
                         return RoleForm::configure(Schema::wrap())->getComponents();
                     })*/
@@ -63,6 +71,7 @@ class UserForm
                     TextInput::make('password')
                         ->label('Password')
                         ->password()
+                        ->revealable()
                         ->required(fn (string $context) => $context === 'create')
                         ->dehydrated(fn ($state) => filled($state)) // only send if filled
                         ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null) // hash if filled
@@ -78,6 +87,7 @@ class UserForm
                     TextInput::make('password_confirmation')
                         ->label('Confirm Password')
                         ->password()
+                        ->revealable()
                         ->dehydrated(false) // don't send to DB
                         ->required(fn (string $context) => $context === 'create'),
                 ])->columnSpanFull()->hidden(fn (?User $record) => $record !== null),

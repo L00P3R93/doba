@@ -21,6 +21,7 @@ class UserSeeder extends BaseSeeder
         $name = 'Sntaks Admin';
         $nameArr = explode(' ', $name);
         $admin = User::query()->create([
+            'account_no' => 'ACC'.str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT),
             'name' => $name,
             'username' => Str::lower("{$nameArr[0]}.{$nameArr[1]}"),
             'email' => 'sntaksolutionsltd@gmail.com',

@@ -24,19 +24,38 @@
 
                     <div class="mb-4">
                         <!-- Name -->
-                        <input type="text" class="form-control" name="name" placeholder="{{ __('Full name') }}" value="{{ old('name') }}" required>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="{{ __('Full name') }}" value="{{ old('name') }}" required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
-                        <input type="email" class="form-control" name="email" placeholder="{{ __('Email Address') }}"  value="{{ old('email') }}" required>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="{{ __('Email Address') }}" value="{{ old('email') }}" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <input type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" placeholder="{{ __('Phone Number (e.g., 254712345678 or 0712345678)') }}" value="{{ old('phone') }}">
+                        @error('phone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <button type="submit" class="btn-gold">Create Account</button>

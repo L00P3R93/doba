@@ -32,12 +32,12 @@ class UnifiedLoginController extends Controller
 
         // Redirect based on user role
         return match (true) {
-            $user->hasRole('Guest') => redirect()->intended('/guest'),
-            $user->hasRole('Admin') => redirect()->intended('/admin'),
-            $user->hasRole('Artist') => redirect()->intended('/artist'),
-            $user->hasRole('Event') => redirect()->intended('/event'),
-            $user->hasRole('Studio') => redirect()->intended('/studio'),
-            $user->hasRole('Record') => redirect()->intended('/record'),
+            $user->hasRole('Guest') => redirect('/subscribe'),
+            $user->hasRole('Admin') => redirect('/admin'),
+            $user->hasRole('Artist') => redirect('/artist'),
+            $user->hasRole('Event') => redirect('/event'),
+            $user->hasRole('Studio') => redirect('/studio'),
+            $user->hasRole('Record') => redirect('/record'),
             default => redirect('/'),
         };
     }

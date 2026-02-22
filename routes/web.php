@@ -20,6 +20,13 @@ Route::post('/logout', [UnifiedLoginController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
+// Subscribe page for Guest users
+Route::get('/subscribe', function () {
+    return view('subscribe');
+})->middleware('auth')->name('subscribe');
+
+Route::post('/subscribe', \App\Http\Controllers\StkSubscribeController::class)->name('subscribe.pay');
+
 // Dashboard route with role-based redirect
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified', 'redirect.authenticated'])

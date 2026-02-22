@@ -27,9 +27,8 @@ class CreateNewUser implements CreatesNewUsers
 
         $user = User::query()->create([
             'name' => $input['name'],
-            'username' => Str::lower(Str::replace(' ', '_', $input['name'])),
             'email' => $input['email'],
-            'phone' => fake()->unique()->phoneNumber(),
+            'phone' => $input['phone'] ?? null,
             'password' => $input['password'],
         ]);
 
