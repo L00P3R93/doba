@@ -78,6 +78,22 @@ class User extends Authenticatable implements FilamentUser
             return $this->hasRole('Artist');
         }
 
+        if ($panel->getId() === 'guest') {
+            return $this->hasRole('Guest');
+        }
+
+        if ($panel->getId() === 'studio') {
+            return $this->hasRole('Studio');
+        }
+
+        if ($panel->getId() === 'record') {
+            return $this->hasRole('Record');
+        }
+
+        if ($panel->getId() === 'event') {
+            return $this->hasRole('Event');
+        }
+
         return false;
     }
 

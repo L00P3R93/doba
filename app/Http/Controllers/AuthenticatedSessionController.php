@@ -35,6 +35,14 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended('/admin');
         } elseif ($user->hasRole('Artist')) {
             return redirect()->intended('/artist');
+        } elseif ($user->hasRole('Guest')) {
+            return redirect()->intended('/guest');
+        } elseif ($user->hasRole('Studio')) {
+            return redirect()->intended('/studio');
+        } elseif ($user->hasRole('Record')) {
+            return redirect()->intended('/record');
+        } elseif ($user->hasRole('Event')) {
+            return redirect()->intended('/event');
         }
 
         // Members cannot access panels, redirect to home

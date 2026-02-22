@@ -22,6 +22,14 @@ class RedirectIfAuthenticated
                     return redirect('/admin');
                 } elseif ($user->hasRole('Artist')) {
                     return redirect('/artist');
+                } elseif ($user->hasRole('Guest')) {
+                    return redirect('/guest');
+                } elseif ($user->hasRole('Studio')) {
+                    return redirect('/studio');
+                } elseif ($user->hasRole('Record')) {
+                    return redirect('/record');
+                } elseif ($user->hasRole('Event')) {
+                    return redirect('/event');
                 }
 
                 // Members are redirected to home
