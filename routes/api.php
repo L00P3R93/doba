@@ -11,3 +11,4 @@ Route::apiResource('subscriptions', SubscriptionController::class);
 Route::apiResource('user-subscriptions', UserSubscriptionController::class);
 Route::apiResource('payments', PaymentController::class);
 
+Route::post('/stk/callback', \App\Http\Controllers\Api\StkCallbackController::class)->name('stk.callback');

@@ -7,6 +7,6 @@ class LNMO{
     public function __construct(){}
 
     public static function submit($userParams=[]): bool|string {
-        return Core::requestSTK(self::url, $userParams);
+        return Core::requestSTK(self::productionUrl, $userParams);
     }
 }

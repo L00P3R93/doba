@@ -24,11 +24,11 @@ class StkSubscribeController extends Controller
             $user_params = [
                 'Amount' => intval($request->amount),
                 'AccountReference' => "DP-{$user->account_no}-{$request->subscription_id}",
-                'PartyA' => $user->phone_no,
-                'PhoneNumber' => $user->phone_no,
+                'PartyA' => $user->phone,
+                'PhoneNumber' => $user->phone,
             ];
             $response_json = Mpesa::stkPush($user_params);
-            Log::channel('mpesa')->info('MPESA StkPush Subscribe Response: '.$response_json);
+            Log::channel('mpesa')->info("MPESA StkPush Subscribe Response: {$response_json}", ["request" => $user_params]);
 
             return redirect()->back()->with('success', 'STK push initiated successfully. Please check your phone to complete the payment.');
         } catch (\Exception $e) {
