@@ -30,6 +30,12 @@ class UnifiedLoginController extends Controller
 
         $user = Auth::user();
 
+        // Check if email is verified
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice')
+                ->with('message', 'Please verify your email address before accessing your account.');
+        }
+
         // Redirect based on user role
         return match (true) {
             $user->hasRole('Guest') => redirect('/subscribe'),

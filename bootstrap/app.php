@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'redirect.authenticated' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
