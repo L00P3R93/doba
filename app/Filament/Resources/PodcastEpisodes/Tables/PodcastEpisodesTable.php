@@ -19,10 +19,6 @@ class PodcastEpisodesTable
                     ->searchable(),
                 TextColumn::make('title')
                     ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('url')
-                    ->searchable(),
                 TextColumn::make('duration')
                     ->searchable(),
                 TextColumn::make('likes')
@@ -31,20 +27,9 @@ class PodcastEpisodesTable
                 TextColumn::make('views')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('comments')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('shares')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('downloads')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('favorites')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('video_url')
-                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -9,12 +9,16 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SinglesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                auth()->user()->isAdmin() ? $query->with('user') : $query->where('user_id', auth()->user()->id);
+            })
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Artist')

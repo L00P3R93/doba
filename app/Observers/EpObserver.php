@@ -13,6 +13,9 @@ class EpObserver
     public function creating(Ep $ep): void
     {
         $ep->slug = Str::slug($ep->title);
+        if (! $ep->user_id) {
+            $ep->user_id = auth()->user()->id;
+        }
     }
     /**
      * Handle the Ep "created" event.
@@ -28,6 +31,9 @@ class EpObserver
     public function updated(Ep $ep): void
     {
         $ep->slug = Str::slug($ep->title);
+        if (! $ep->user_id) {
+            $ep->user_id = auth()->user()->id;
+        }
     }
 
     /**

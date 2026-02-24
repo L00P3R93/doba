@@ -3,7 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Album;
+use App\Models\Ep;
+use App\Models\EpSong;
+use App\Models\Podcast;
+use App\Models\PodcastEpisode;
 use App\Observers\AlbumObserver;
+use App\Observers\EpObserver;
+use App\Observers\EpSongObserver;
+use App\Observers\PodcastObserver;
 use App\Observers\SongObserver;
 use App\Observers\UserObserver;
 use App\Models\Song;
@@ -66,5 +73,9 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Album::observe(AlbumObserver::class);
         Song::observe(SongObserver::class);
+        Ep::observe(EpObserver::class);
+        Podcast::observe(PodcastObserver::class);
+        EpSong::observe(EpSongObserver::class);
+        PodcastEpisode::observe(PodcastEpisode::class);
     }
 }

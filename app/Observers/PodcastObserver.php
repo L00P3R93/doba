@@ -13,6 +13,9 @@ class PodcastObserver
     public function creating(Podcast $podcast): void
     {
         $podcast->slug = Str::slug($podcast->title);
+        if (! $podcast->user_id) {
+            $podcast->user_id = auth()->user()->id;
+        }
     }
     /**
      * Handle the Podcast "created" event.
@@ -28,6 +31,9 @@ class PodcastObserver
     public function updated(Podcast $podcast): void
     {
         $podcast->slug = Str::slug($podcast->title);
+        if (! $podcast->user_id) {
+            $podcast->user_id = auth()->user()->id;
+        }
     }
 
     /**

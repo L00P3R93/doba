@@ -9,58 +9,40 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class EpSongsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                auth()->user()->isAdmin() ? $query->with('ep.user') : $query->whereHas('ep.user', function (Builder $query) {
+                    $query->where('id', auth()->user()->id);
+                });
+            })
             ->columns([
                 TextColumn::make('ep.title')
                     ->searchable(),
+                TextColumn::make('ep.user.name')
+                    ->label('Artist')
+                    ->searchable(),
                 TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('url')
                     ->searchable(),
                 TextColumn::make('duration')
                     ->searchable(),
-                TextColumn::make('streams')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('copyright_holder')
-                    ->searchable(),
-                TextColumn::make('copyright_year'),
-                TextColumn::make('production_year'),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('copyright_year')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('production_year')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('record_label')
-                    ->searchable(),
-                TextColumn::make('likes')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('views')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('comments')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('shares')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('downloads')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('favorites')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('jorna')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')
                     ->boolean(),
-                IconColumn::make('hot_or_cold')
-                    ->boolean(),
-                TextColumn::make('video_url')
-                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

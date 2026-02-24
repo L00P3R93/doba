@@ -6,6 +6,7 @@ use App\Filament\Resources\Eps\Pages\CreateEp;
 use App\Filament\Resources\Eps\Pages\EditEp;
 use App\Filament\Resources\Eps\Pages\ListEps;
 use App\Filament\Resources\Eps\Pages\ViewEp;
+use App\Filament\Resources\Eps\RelationManagers\EpSongsRelationManager;
 use App\Filament\Resources\Eps\Schemas\EpForm;
 use App\Filament\Resources\Eps\Schemas\EpInfolist;
 use App\Filament\Resources\Eps\Tables\EpsTable;
@@ -46,7 +47,7 @@ class EpResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EpSongsRelationManager::class
         ];
     }
 

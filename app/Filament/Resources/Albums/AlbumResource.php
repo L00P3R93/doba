@@ -10,6 +10,7 @@ use App\Filament\Resources\Albums\RelationManagers\SongsRelationManager;
 use App\Filament\Resources\Albums\Schemas\AlbumForm;
 use App\Filament\Resources\Albums\Schemas\AlbumInfolist;
 use App\Filament\Resources\Albums\Tables\AlbumsTable;
+use App\Filament\Resources\Albums\Widgets\AlbumStats;
 use App\Models\Album;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -42,10 +43,17 @@ class AlbumResource extends Resource
         return AlbumsTable::configure($table);
     }
 
+    public static function getWidgets(): array
+    {
+        return [
+            AlbumStats::class,
+        ];
+    }
+
     public static function getRelations(): array
     {
         return [
-            SongsRelationManager::class
+            SongsRelationManager::class,
         ];
     }
 

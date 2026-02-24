@@ -9,12 +9,18 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SongsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                auth()->user()->isAdmin() ? $query->with('album.user') : $query->whereHas('album.user', function (Builder $query) {
+                    $query->where('id', auth()->user()->id);
+                });
+            })
             ->columns([
                 TextColumn::make('album.title')
                     ->searchable(),
