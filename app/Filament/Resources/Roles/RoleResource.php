@@ -58,4 +58,9 @@ class RoleResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('view_roles');
+    }
 }

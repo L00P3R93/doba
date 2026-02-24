@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Album;
+use App\Observers\AlbumObserver;
+use App\Observers\SongObserver;
 use App\Observers\UserObserver;
+use App\Models\Song;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -60,5 +64,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configureObservers(): void
     {
         User::observe(UserObserver::class);
+        Album::observe(AlbumObserver::class);
+        Song::observe(SongObserver::class);
     }
 }

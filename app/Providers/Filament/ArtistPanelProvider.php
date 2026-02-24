@@ -30,12 +30,12 @@ class ArtistPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
-            ->discoverResources(in: app_path('Filament/Artist/Resources'), for: 'App\Filament\Artist\Resources')
-            ->discoverPages(in: app_path('Filament/Artist/Pages'), for: 'App\Filament\Artist\Pages')
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Artist/Widgets'), for: 'App\Filament\Artist\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,

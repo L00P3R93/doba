@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('albums', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
+            $table->string('title')->unique();
+            $table->string('slug')->unique();
+            $table->year('year')->default(now()->format('Y'));
+            $table->text('description')->nullable();
+            $table->string('cover')->nullable();
+            $table->integer('likes')->default(0);
+            $table->integer('views')->default(0);
+            $table->integer('comments')->default(0);
+            $table->integer('shares')->default(0);
+            $table->integer('downloads')->default(0);
+            $table->integer('favorites')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('hot_or_cold')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('albums');
+    }
+};

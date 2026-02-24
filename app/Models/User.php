@@ -102,6 +102,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
         return false;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
@@ -115,5 +120,25 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function albums(): HasMany
+    {
+        return $this->hasMany(Album::class);
+    }
+
+    public function eps(): HasMany
+    {
+        return $this->hasMany(Ep::class);
+    }
+
+    public function podcasts(): HasMany
+    {
+        return $this->hasMany(Podcast::class);
+    }
+
+    public function singles(): HasMany
+    {
+        return $this->hasMany(Single::class);
     }
 }

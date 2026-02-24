@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f2f8263479088bd6b5ebf89128ee437",
+    "content-hash": "c0cd0391a0842123e0dbf036897b36a8",
     "packages": [
         {
             "name": "afatmustafa/blade-hugeicons",
@@ -67,6 +67,64 @@
                 "source": "https://github.com/afatmustafa/blade-hugeicons/tree/v1.0.3"
             },
             "time": "2025-12-29T02:06:27+00:00"
+        },
+        {
+            "name": "andreiio/blade-iconoir",
+            "version": "4.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/andreiio/blade-iconoir.git",
+                "reference": "10facc5b137c8584baf7369c069d495960df5399"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/andreiio/blade-iconoir/zipball/10facc5b137c8584baf7369c069d495960df5399",
+                "reference": "10facc5b137c8584baf7369c069d495960df5399",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AndreiIonita\\BladeIconoir\\BladeIconoirServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AndreiIonita\\BladeIconoir\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrei Ioniță",
+                    "homepage": "https://andrei.io"
+                }
+            ],
+            "description": "A package to easily make use of Iconoir in your Laravel Blade views.",
+            "support": {
+                "issues": "https://github.com/andreiio/blade-iconoir/issues",
+                "source": "https://github.com/andreiio/blade-iconoir/tree/4.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/code4romania",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-04-23T08:59:06+00:00"
         },
         {
             "name": "anourvalar/eloquent-serialize",
