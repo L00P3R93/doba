@@ -15,7 +15,7 @@ class PodcastForm
     {
         return $schema
             ->components([
-                Section::make()->schema([
+                Section::make('Podcast Details')->schema([
                     TextInput::make('host'),
                     TextInput::make('title')
                         ->required(),
@@ -29,7 +29,7 @@ class PodcastForm
                             ->imageEditor(),
                     ]),
                 ])->columnSpanFull(),
-                Section::make('Update Podcasr')->schema([
+                Section::make('Update Podcast')->schema([
                     Select::make('user_id')
                         ->label('Uploader')
                         ->relationship(name: 'user', titleAttribute: 'name', modifyQueryUsing: fn ($query) => $query->latest()->limit(10))

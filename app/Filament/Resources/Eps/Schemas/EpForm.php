@@ -16,7 +16,7 @@ class EpForm
     {
         return $schema
             ->components([
-                Section::make()->schema([
+                Section::make('EP Details')->schema([
                     TextInput::make('title')
                         ->required(),
                     TextInput::make('year')

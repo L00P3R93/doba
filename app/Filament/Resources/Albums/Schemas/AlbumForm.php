@@ -16,7 +16,7 @@ class AlbumForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make()->schema([
+            Section::make('Album Details')->schema([
                 TextInput::make('title')
                     ->required(),
                 TextInput::make('year')

@@ -40,6 +40,12 @@ Route::get('/subscribe', function () {
     return view('subscribe');
 })->middleware('auth')->name('subscribe');
 
+// Premium Page
+Route::view('/premium', 'premium')->name('premium');
+
+// Adverts Page
+Route::view('/advertise', 'advertise')->name('advertise');
+
 Route::post('/subscribe', \App\Http\Controllers\StkSubscribeController::class)->name('subscribe.pay');
 
 // Dashboard route with role-based redirect

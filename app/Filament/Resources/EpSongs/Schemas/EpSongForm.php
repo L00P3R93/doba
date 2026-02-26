@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\EpSongs\Schemas;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -25,6 +27,48 @@ class EpSongForm
                         ->native(false)
                         ->searchable()
                         ->preload()
+                        ->createOptionForm([
+                            Section::make('EP Details')->schema([
+                                TextInput::make('title')
+                                    ->required(),
+                                TextInput::make('year')
+                                    ->required()
+                                    ->default('2026'),
+                                Section::make('Upload Cover')->schema([
+                                    SpatieMediaLibraryFileUpload::make('cover')
+                                        ->collection('covers')
+                                        ->preserveFilenames()
+                                        ->downloadable()
+                                        ->openable()
+                                        ->columnSpanFull(),
+                                ])->columnSpanFull(),
+                            ])->columns(2)->columnSpanFull(),
+                            Section::make('EP Description')->schema([
+                                MarkdownEditor::make('description')
+                                    ->columnSpanFull(),
+                            ])->columnSpanFull()->collapsed(),
+                            Section::make('Update EP')->schema([
+                                Toggle::make('is_active')
+                                    ->default(true)
+                                    ->required(),
+                                Toggle::make('hot_or_cold')
+                                    ->default(true)
+                                    ->required(),
+                                Select::make('user_id')
+                                    ->label('Artist')
+                                    ->relationship(name: 'user', titleAttribute: 'name', modifyQueryUsing: fn ($query) => $query->latest()->limit(10))
+                                    ->native(false)
+                                    ->preload()
+                                    ->searchable()
+                                    ->required(),
+                            ])->columns(2)->visible(fn () => auth()->user()->isAdmin())->columnSpanFull(),
+                        ])
+                        ->createOptionAction(function (Action $action) {
+                            $action
+                                ->modalHeading('Create New EP')
+                                ->modalDescription('Creat a New EP for this song upload')
+                                ->modalSubmitActionLabel('Create EP');
+                        })
                         ->required(),
                     TextInput::make('title')
                         ->required(),

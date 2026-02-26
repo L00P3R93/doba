@@ -13,7 +13,8 @@ class EnsureEmailIsVerified
     {
         if (! $request->user() || ! $request->user()->hasVerifiedEmail()) {
             // If accessing Filament panels, redirect to verification notice
-            if ($request->is(Filament::getCurrentPanel()->getPath() . '*') ||
+            $currentPanel = Filament::getCurrentPanel();
+            if (($currentPanel && $request->is($currentPanel->getPath() . '*')) ||
                 str_starts_with($request->path(), 'admin') ||
                 str_starts_with($request->path(), 'artist') ||
                 str_starts_with($request->path(), 'studio') ||

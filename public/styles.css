@@ -148,3 +148,17 @@ footer {
     color: #6f8797;
     font-size: 0.85rem;
 }
+
+/* Add this to your CSS to handle 5 columns */
+.col-md-2-4 {
+    flex: 0 0 auto;
+    width: 20%;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+@media (max-width: 768px) {
+    .col-md-2-4 {
+        width: 100%;
+    }
+}

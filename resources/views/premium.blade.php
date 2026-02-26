@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>DobaPlay - Earn as an Artist</title>
+    <title>DobaPlay - Premium</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-
 @include('components.navbar')
 
 <!-- HERO -->
@@ -43,7 +42,7 @@
     </div>
 </section>
 
-<!-- PREMIUM USERS PRICING -->
+<!-- PRICING -->
 <section class="pb-5">
     <div class="container">
         <!-- Flash Messages -->
@@ -154,149 +153,6 @@
                 </div>
             @endforeach
         </div>
-    </div>
-</section>
-
-<!-- INTRO -->
-<section class="hero">
-    <div class="container">
-        <h1 class="fw-bold">
-            Turn Your Music Into <span>Income</span>
-        </h1>
-        <p>
-            Monetize your music and videos as an artist, producer, studio, or
-            record label. Upload, distribute, and get paid — yearly plans, no stress.
-        </p>
-    </div>
-</section>
-
-<!-- ARTISTS, EVENTS, PRICING -->
-<section class="pb-5">
-    <div class="container">
-        <!-- Flash Messages -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        <div class="row g-4 align-items-stretch justify-content-center">
-            @php
-                $plans = [
-                    [
-                        'title' => 'EVENTS',
-                        'price' => '499',
-                        'features' => [
-                            'Sell tickets',
-                            'Promote Events',
-                            'Reach the right audience',
-                            'Merchandise store integration',
-                        ],
-                    ],
-                    [
-                        'title' => 'ARTIST + VIDEOS',
-                        'price' => '1499',
-                        'features' => [
-                            'Music & video uploads',
-                            'Streaming earnings',
-                            'Video monetization',
-                            'Artist analytics',
-                            'Promote Events',
-                            'Merchandise store integration',
-                        ],
-                    ],
-                    [
-                        'title' => 'STUDIO',
-                        'price' => '14999',
-                        'features' => [
-                            '10 artist accounts',
-                            'Music & video uploads',
-                            'Studio dashboard',
-                            'Promote Events',
-                            'Merchandise store integration',
-                            'Sell beats & get producing gigs',
-                        ],
-                    ],
-                    [
-                        'title' => 'RECORD LABEL',
-                        'price' => '49999',
-                        'features' => [
-                            'Unlimited artists',
-                            'Promote Events',
-                            'All studio features',
-                            'Label payouts & analytics',
-                            'Merchandise store integration',
-                            'Sell beats & get producing gigs',
-                        ],
-                    ],
-                ];
-            @endphp
-
-            @foreach($plans as $key=>$plan)
-                <div class="col-md-3">
-                    <div class="pricing-card d-flex flex-column">
-                        <div>
-                            <div class="plan-title">{{ $plan['title'] }}</div>
-                            <div class="price"><span class="currency">KES</span> {{ number_format($plan['price']) }}</div>
-                            <div class="billing">BILLED YEARLY</div>
-
-                            <ul class="features">
-                                @foreach($plan['features'] as $feature)
-                                    <li>{{ $feature }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <form action="{{ route('subscribe.pay') }}" method="POST" class="mt-auto">
-                            @csrf
-                            <input type="hidden" name="account_no" value="{{ auth()->user()->account_no }}">
-                            <input type="hidden" name="subscription_id" value="{{ __('1') }}">
-                            <input type="hidden" name="plan" value="{{ $plan['title'] }}">
-                            <input type="hidden" name="amount" value="{{ $plan['price'] }}">
-                            <button type="submit" class="btn btn-gold w-100">PAY NOW</button>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container">
-        <h3 class="text-center mb-4 fw-bold">
-            Why This Yearly Payment Matters
-        </h3>
-
-        <ul class="awesome-list mx-auto">
-            <li>
-                <i class="fa-solid fa-database"></i>
-                Secure storage for music and video uploads
-            </li>
-            <li>
-                <i class="fa-solid fa-gauge-high"></i>
-                High-speed streaming & bandwidth performance
-            </li>
-            <li>
-                <i class="fa-solid fa-shield-halved"></i>
-                Platform security & content protection
-            </li>
-            <li>
-                <i class="fa-solid fa-copyright"></i>
-                Copyright detection to protect original music and prevent unauthorized uploads
-            </li>
-            <li>
-                <i class="fa-solid fa-money-bill-transfer"></i>
-                Artist payouts, transaction fees, and payment processing infrastructure
-            </li>
-        </ul>
     </div>
 </section>
 

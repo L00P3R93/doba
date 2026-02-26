@@ -28,8 +28,11 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 position-relative">
                         <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
+                        <button type="button" class="btn password-toggle" onclick="togglePassword('password')">
+                            <i class="fa fa-eye" id="password-eye"></i>
+                        </button>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -61,4 +64,20 @@
         </div>
 
     </div>
+    <script>
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const eyeIcon = document.getElementById(fieldId + '-eye');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </x-layouts::auth>

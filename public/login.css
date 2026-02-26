@@ -127,6 +127,39 @@ body{
     font-size:0.85rem;
 }
 
+/* Password Toggle Styles */
+.position-relative {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9cc3d9;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.position-relative .form-control {
+    padding-right: 40px;
+}
+
+.password-toggle:hover {
+    color: #f5c542;
+}
+
+.password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 @keyframes fadeIn{
     from{opacity:0; transform:translateY(20px);}
     to{opacity:1; transform:translateY(0);}
