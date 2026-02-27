@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\SendEmailVerificationJob;
+use App\Jobs\SendWelcomeEmailJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
@@ -86,5 +87,24 @@ class EmailVerificationService
             ->exists();
 
         return ! $recentVerification;
+    }
+
+    public function sendWelcomeEmail(User $user, string $password): bool
+    {
+        try {
+            SendWelcomeEmailJob::dispatch($user, $password);
+
+            Log::info('Welcome email job dispatched', ['user_id' => $user->id, 'email' => $user->email]);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to dispatch welcome email job', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'error' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
     }
 }
