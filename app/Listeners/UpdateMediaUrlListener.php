@@ -10,6 +10,7 @@ use App\Models\Podcast;
 use App\Models\PodcastEpisode;
 use App\Models\Single;
 use App\Models\Song;
+use App\Models\User;
 
 class UpdateMediaUrlListener
 {
@@ -88,6 +89,11 @@ class UpdateMediaUrlListener
                     'covers' => 'cover',  // Images -> cover field
                 ],
             ],
+            User::class => [
+                'collections' => [
+                    'avatars' => 'profile_url',
+                ],
+            ],
         ];
 
         // Check if model type is configured
@@ -161,6 +167,11 @@ class UpdateMediaUrlListener
      */
     private function getMediaUrl($media, string $collectionName): string
     {
+        // For avatar/profile images
+        if ($collectionName === 'avatars') {
+            return $media->getUrl('medium'); // Use medium conversion for profile images
+        }
+
         // For cover images across any model
         if ($collectionName === 'covers') {
             // You can add image conversions here if needed

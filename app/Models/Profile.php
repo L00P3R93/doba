@@ -15,6 +15,13 @@ class Profile extends Model
 
     protected $table = 'profiles';
 
+    protected $fillable = [
+        'user_id',
+        'bio',
+        'mpesa_phone',
+        'tier',
+    ];
+
     protected function casts(): array
     {
         return [

@@ -15,12 +15,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmailContract
+class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmailContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Auditable, HasFactory, HasRoles, MustVerifyEmailTrait, Notifiable, TwoFactorAuthenticatable;
+    use Auditable, HasFactory, HasRoles, InteractsWithMedia, MustVerifyEmailTrait, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +36,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
         'password',
         'account_no',
         'phone',
+        'username',
+        'profile_url',
     ];
 
     /**
@@ -163,5 +168,42 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
     {
         // Do nothing - we handle this manually through EmailVerificationService
         // to prevent duplicate emails during registration
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatars')
+            ->useDisk('public')
+            ->acceptsFile(fn ($file) => in_array($file->mimeType, [
+                'image/jpeg', 'image/png', 'image/jpg', 'image/gif',
+            ]))
+            ->singleFile() // Only allow one file per collection
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('thumb')
+                    ->width(150)
+                    ->height(150)
+                    ->sharpen(10)
+                    ->nonQueued();
+
+                $this->addMediaConversion('medium')
+                    ->width(500)
+                    ->height(500)
+                    ->nonQueued();
+
+                $this->addMediaConversion('large')
+                    ->width(1200)
+                    ->height(1200)
+                    ->nonQueued();
+            });
+    }
+
+    /**
+     * Helper method to get the profile URL with a specific conversion
+     */
+    public function getCoverUrl(string $conversion = 'medium'): ?string
+    {
+        $media = $this->getFirstMedia('profiles');
+
+        return $media?->getUrl($conversion);
     }
 }

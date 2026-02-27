@@ -1,31 +1,42 @@
 <x-layouts::auth>
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Forgot password')" :description="__('Enter your email to receive a password reset link')" />
+    <div class="main-wrapper">
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <!-- LEFT BRAND SECTION -->
+        <div class="left-side">
+            <h1>DobaPlay</h1>
+            <p>Turn your music into income. Build your name. Own your future.</p>
 
-        <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-6">
-            @csrf
+            <div class="feature"><i class="fa-solid fa-chart-line"></i> Earn from every stream</div>
+            <div class="feature"><i class="fa-solid fa-calendar-check"></i> Promote events & shows</div>
+            <div class="feature"><i class="fa-solid fa-headphones"></i> Sell beats as a producer</div>
+        </div>
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="__('Email Address')"
-                type="email"
-                required
-                autofocus
-                placeholder="email@example.com"
-            />
+        <!-- RIGHT LOGIN -->
+        <div class="right-side">
+            <div class="login-box">
+                <x-auth-header :title="__('Forgot password')" :description="__('Enter your email to receive a password reset link')" />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="email-password-reset-link-button">
-                {{ __('Email password reset link') }}
-            </flux:button>
-        </form>
+                <!-- Session Status -->
+                <x-auth-session-status class="text-center" :status="session('status')" />
 
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-400">
-            <span>{{ __('Or, return to') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('log in') }}</flux:link>
+                <form method="POST" action="{{ route('password.email') }}" class="mt-4">
+                    @csrf
+
+                    <div class="mb-4">
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="{{ __('Email Address') }}" value="{{ old('email') }}" required autofocus>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn-gold">{{ __('Email password reset link') }}</button>
+
+                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+                        <span>{{ __('Or, return to') }}</span>
+                        <flux:link :href="route('login')" wire:navigate>{{ __('log in') }}</flux:link>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </x-layouts::auth>

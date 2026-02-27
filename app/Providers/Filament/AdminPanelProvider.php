@@ -2,7 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\EditProfilePage;
+use Filament\Actions\Action;
 use Filament\Enums\ThemeMode;
+use Filament\Enums\UserMenuPosition;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,6 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->homeUrl('/admin')
+            ->userMenu(position: UserMenuPosition::Sidebar)
+            ->userMenuItems([
+                'profile' => fn (Action $action) => $action
+                    ->label('Edit profile')
+                    ->icon('heroicon-s-user')
+                    ->url(fn (): string => EditProfilePage::getUrl()),
+            ])
             ->defaultThemeMode(ThemeMode::Dark)
             ->darkMode()
             ->colors([
@@ -41,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            //->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->databaseNotifications()
             ->unsavedChangesAlerts()
             ->spa()

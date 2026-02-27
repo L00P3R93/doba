@@ -64,3 +64,20 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+.filament-forms-wizard-container .fi-fo-wizard {
+    @apply p-6;
+}
+
+.filament-forms-wizard-container .fi-fo-wizard-step {
+    @apply transition-all duration-200;
+}
+
+.filament-forms-wizard-container .fi-fo-wizard-step:hover {
+    @apply bg-gray-50 dark:bg-gray-700/50;
+}
+
+/* Custom styling for the submit button container */
+.filament-forms-wizard-container .fi-fo-wizard-actions {
+    @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6;
+}
