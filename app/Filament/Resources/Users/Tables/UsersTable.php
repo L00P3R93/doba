@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -31,10 +32,11 @@ class UsersTable
                     ->label('Phone number')
                     ->searchable()
                     ->toggleable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('email_verified_at')
+                    ->icon(fn ($state): string => $state === null ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                    ->color(fn ($state): string => $state === null ? 'danger' : 'success')
+                    ->label('Verified')
+                    ->sortable(),
                 TextColumn::make('roles.name')
                     ->badge()
                     ->label('Role')
