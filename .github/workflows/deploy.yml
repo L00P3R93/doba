@@ -33,12 +33,23 @@ jobs:
       # Create deployment artifact
       - name: Prepare Deployment Artifact
         run: |
+          # Wait a moment for any file writes to complete
+          sleep 2
+
+          # Create tar excluding volatile directories
           tar czf deploy.tar.gz \
             --exclude='.git' \
             --exclude='node_modules' \
             --exclude='tests' \
             --exclude='.github' \
-            --exclude='deploy.tar.gz' \
+            --exclude='storage/logs/*' \
+            --exclude='storage/framework/cache/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='bootstrap/cache/*.php' \
+            --exclude='.env' \
+            --exclude='*.tar.gz' \
+            --exclude='phpunit.xml' \
+            --exclude='.phpunit.result.cache' \
             .
 
       # Deploy via SSH
