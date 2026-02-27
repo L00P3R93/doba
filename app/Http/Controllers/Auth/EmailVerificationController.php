@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendEmailVerificationJob;
+use App\Services\EmailVerificationService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 class EmailVerificationController extends Controller
 {
+    private EmailVerificationService $emailVerificationService;
+
+    public function __construct(EmailVerificationService $emailVerificationService)
+    {
+        $this->emailVerificationService = $emailVerificationService;
+    }
     public function notice(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
@@ -56,7 +62,7 @@ class EmailVerificationController extends Controller
                 ->with('info', 'Your email is already verified.');
         }
 
-        SendEmailVerificationJob::dispatch($request->user());
+        $this->emailVerificationService->resendVerificationEmail($request->user());
 
         return Redirect::back()
             ->with('status', 'verification-link-sent');

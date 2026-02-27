@@ -141,4 +141,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
     {
         return $this->hasMany(Single::class);
     }
+
+    /**
+     * Override the automatic email verification notification to prevent duplicate emails
+     * during registration. We'll handle this manually in CreateNewUser.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        // Do nothing - we handle this manually through EmailVerificationService
+        // to prevent duplicate emails during registration
+    }
 }
