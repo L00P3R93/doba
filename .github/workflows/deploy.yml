@@ -57,7 +57,6 @@ jobs:
             tar xzf /tmp/deploy.tar.gz 2>/dev/null || rsync -av /tmp/deploy-new/ . 2>/dev/null || echo "Files already in place"
 
             # Write .env file securely
-            echo "${{ secrets.ENV_FILE_BASE64 }}" | base64 -d > .env
             chmod 640 .env
 
             # Install dependencies
@@ -67,7 +66,7 @@ jobs:
             /usr/bin/php8.4 artisan package:discover --ansi || echo "Package discover completed with warnings"
 
             # Cache configs
-            /usr/bin/php8.4 artisan migrate --force || echo "Migration failed - check database connection"
+            /usr/bin/php8.4 artisan migrate --force --database=mysql || echo "Migration failed - check database connection"
             /usr/bin/php8.4 artisan optimize
 
             # Set permissions (without sudo where possible)
