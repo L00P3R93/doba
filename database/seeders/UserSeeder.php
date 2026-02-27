@@ -35,6 +35,7 @@ class UserSeeder extends BaseSeeder
         $this->command->info("✓ User {$name} created and assigned to Super Admin role.");
 
         // Create Non-Admin Users with Profiles
+        /*
         $this->command->warn(PHP_EOL.'Creating Non-Admin Users with Profiles...');
         $users = $this->withProgressBar(20, fn () => User::factory(1)->create());
         $users->each(function (User $user) {
@@ -60,5 +61,6 @@ class UserSeeder extends BaseSeeder
             ]);
         });
         $this->command->info('✓ Other users '.$users->count().' created with profiles, subscriptions and assigned roles.');
+         */
     }
 }
