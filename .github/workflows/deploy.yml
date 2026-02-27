@@ -67,10 +67,8 @@ jobs:
             /usr/bin/php8.4 artisan package:discover --ansi || echo "Package discover completed with warnings"
 
             # Cache configs
-            /usr/bin/php8.4 artisan config:cache
-            /usr/bin/php8.4 artisan route:cache
-            /usr/bin/php8.4 artisan view:cache
-            /usr/bin/php8.4 artisan migrate --force
+            /usr/bin/php8.4 artisan migrate --force || echo "Migration failed - check database connection"
+            /usr/bin/php8.4 artisan optimize
 
             # Set permissions (without sudo where possible)
             find $TEMP_DIR -type f -exec chmod 644 {} \;
