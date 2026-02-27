@@ -11,7 +11,7 @@ use Filament\Widgets\ChartWidget;
 
 class ContentDistributionWidget extends ChartWidget
 {
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 4;
 
     protected ?string $heading = 'Content Distribution';
 

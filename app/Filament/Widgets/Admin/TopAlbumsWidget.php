@@ -10,6 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class TopAlbumsWidget extends BaseWidget
 {
     protected static ?int $sort = 8;
+    protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

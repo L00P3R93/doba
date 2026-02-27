@@ -9,7 +9,7 @@ use Flowframe\Trend\TrendValue;
 
 class PaymentStatsWidget extends ChartWidget
 {
-    protected static ?int $sort = 9;
+    protected static ?int $sort = 6;
 
     protected ?string $heading = 'Payment Analytics';
 

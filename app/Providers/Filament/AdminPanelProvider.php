@@ -2,10 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Resources\Permissions\PermissionResource;
-use App\Filament\Resources\Roles\RoleResource;
-use App\Http\Resources\CustomerResource;
-use App\Http\Resources\UserResource;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -72,7 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\Admin\RevenueChartWidget::class,
                 \App\Filament\Widgets\Admin\UserRegistrationChartWidget::class,
                 \App\Filament\Widgets\Admin\ContentDistributionWidget::class,
-                //\App\Filament\Widgets\Admin\RecentActivityWidget::class,
+                \App\Filament\Widgets\Admin\RecentActivityWidget::class,
                 \App\Filament\Widgets\Admin\SubscriptionStatsWidget::class,
                 \App\Filament\Widgets\Admin\TopAlbumsWidget::class,
                 \App\Filament\Widgets\Admin\PaymentStatsWidget::class,

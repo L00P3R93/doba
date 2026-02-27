@@ -9,7 +9,7 @@ use Flowframe\Trend\TrendValue;
 
 class UserRegistrationChartWidget extends ChartWidget
 {
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 3;
 
     protected ?string $heading = 'User Registration Trends';
 

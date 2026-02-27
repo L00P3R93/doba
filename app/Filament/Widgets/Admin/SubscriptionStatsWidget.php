@@ -9,7 +9,7 @@ use Flowframe\Trend\TrendValue;
 
 class SubscriptionStatsWidget extends ChartWidget
 {
-    protected static ?int $sort = 7;
+    protected static ?int $sort = 5;
 
     protected ?string $heading = 'Subscription Trends';
 
