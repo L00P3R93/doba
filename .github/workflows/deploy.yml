@@ -1,0 +1,102 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, json, openssl, pdo, tokenizer, bcmath, gd, mysql
+
+      # Install dependencies (for artifact building)
+      - name: Install Composer Dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction
+
+      # Build frontend assets (if using Laravel Mix/Vite)
+      - name: Build Assets
+        run: |
+          npm ci
+          npm run build
+
+      # Create deployment artifact (exclude dev files)
+      - name: Prepare Deployment Artifact
+        run: |
+          tar czf deploy.tar.gz \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='.github' \
+            --exclude='deploy.tar.gz' \
+            .
+
+      # Deploy via SSH
+      - name: Deploy to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          source: "deploy.tar.gz"
+          target: "/tmp"
+          strip_components: 0
+
+      # Execute deployment commands
+      - name: Execute Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
+            TEMP_DIR=$(mktemp -d)
+
+            # Extract to temp directory first (atomic deployment)
+            cd $TEMP_DIR
+            tar xzf /tmp/deploy.tar.gz
+
+            # Write .env file securely
+            echo "${{ secrets.ENV_FILE }}" > .env
+            chmod 640 .env
+
+            # Install production dependencies on server
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            # Run Laravel deployment commands
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan migrate --force
+
+            # Set proper permissions
+            chown -R www-data:www-data $TEMP_DIR
+            chmod -R 755 $TEMP_DIR
+            chmod -R 775 $TEMP_DIR/storage
+            chmod -R 775 $TEMP_DIR/bootstrap/cache
+
+            # Atomic swap: move current to backup, move new to current
+            sudo mv $DEPLOY_PATH /var/www/dobaplay.com.backup.$(date +%Y%m%d%H%M%S) || true
+            sudo mv $TEMP_DIR $DEPLOY_PATH
+
+            # Reload PHP-FPM/Apache (adjust based on your setup)
+            sudo systemctl reload apache2
+
+            # Cleanup old backups (keep last 3)
+            ls -t /var/www/dobaplay.com.backup.* 2>/dev/null | tail -n +4 | xargs -r rm -rf
+
+            # Remove temp files
+            rm -f /tmp/deploy.tar.gz
+
+            echo "Deployment completed successfully!"
