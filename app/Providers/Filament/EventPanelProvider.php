@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,9 +27,15 @@ class EventPanelProvider extends PanelProvider
         return $panel
             ->id('event')
             ->path('event')
+            ->homeUrl('/event')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Green,
             ])
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode()
+            ->databaseNotifications()
+            ->unsavedChangesAlerts()
+            ->spa()
             ->discoverResources(in: app_path('Filament/Event/Resources'), for: 'App\Filament\Event\Resources')
             ->discoverPages(in: app_path('Filament/Event/Pages'), for: 'App\Filament\Event\Pages')
             ->pages([

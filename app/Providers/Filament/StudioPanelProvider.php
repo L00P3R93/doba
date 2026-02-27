@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,9 +27,15 @@ class StudioPanelProvider extends PanelProvider
         return $panel
             ->id('studio')
             ->path('studio')
+            ->homeUrl('/studio')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Purple,
             ])
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode()
+            ->databaseNotifications()
+            ->unsavedChangesAlerts()
+            ->spa()
             ->discoverResources(in: app_path('Filament/Studio/Resources'), for: 'App\Filament\Studio\Resources')
             ->discoverPages(in: app_path('Filament/Studio/Pages'), for: 'App\Filament\Studio\Pages')
             ->pages([

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,8 +27,14 @@ class RecordPanelProvider extends PanelProvider
         return $panel
             ->id('record')
             ->path('record')
+            ->homeUrl('/record')
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode()
+            ->databaseNotifications()
+            ->unsavedChangesAlerts()
+            ->spa()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Indigo,
             ])
             ->discoverResources(in: app_path('Filament/Record/Resources'), for: 'App\Filament\Record\Resources')
             ->discoverPages(in: app_path('Filament/Record/Pages'), for: 'App\Filament\Record\Pages')

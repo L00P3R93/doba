@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,6 +28,8 @@ class ArtistPanelProvider extends PanelProvider
             ->id('artist')
             ->path('artist')
             ->homeUrl('/artist')
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode()
             ->colors([
                 'primary' => Color::Cyan,
             ])
@@ -36,6 +39,9 @@ class ArtistPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->databaseNotifications()
+            ->unsavedChangesAlerts()
+            ->spa()
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,

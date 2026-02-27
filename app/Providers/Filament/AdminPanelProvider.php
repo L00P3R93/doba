@@ -6,6 +6,7 @@ use App\Filament\Resources\Permissions\PermissionResource;
 use App\Filament\Resources\Roles\RoleResource;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\UserResource;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -34,6 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->homeUrl('/admin')
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -43,7 +46,9 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->databaseNotifications()
             ->unsavedChangesAlerts()
+            ->spa()
             ->navigationGroups([
                 'Albums & Songs',
                 'EPs & Songs',
@@ -62,6 +67,15 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                \App\Filament\Widgets\Admin\OverviewStatsWidget::class,
+                \App\Filament\Widgets\Admin\TopSongsWidget::class,
+                \App\Filament\Widgets\Admin\RevenueChartWidget::class,
+                \App\Filament\Widgets\Admin\UserRegistrationChartWidget::class,
+                \App\Filament\Widgets\Admin\ContentDistributionWidget::class,
+                //\App\Filament\Widgets\Admin\RecentActivityWidget::class,
+                \App\Filament\Widgets\Admin\SubscriptionStatsWidget::class,
+                \App\Filament\Widgets\Admin\TopAlbumsWidget::class,
+                \App\Filament\Widgets\Admin\PaymentStatsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

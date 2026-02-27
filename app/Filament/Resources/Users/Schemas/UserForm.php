@@ -95,14 +95,16 @@ class UserForm
                     ->label('User Status')
                     ->options(UserStatus::class)
                     ->default('active')
-                    ->prefixIcon(Heroicon::ShieldExclamation)
+                    ->prefixIcon(Heroicon::OutlinedExclamationCircle)
                     ->prefixIconColor('primary')
                     ->native(false)
                     ->required(),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->label('User Roles')
-                    // ->preload()
+                    ->prefixIcon(Heroicon::OutlinedShieldExclamation)
+                    ->prefixIconColor('primary')
+                    ->preload()
                     ->multiple()
                     ->native(false)
                     // ->disabled(fn (?User $record) => $record !== null)
@@ -116,6 +118,8 @@ class UserForm
                 Section::make('Password')->schema([
                     TextInput::make('password')
                         ->label('Password')
+                        ->prefixIcon(Heroicon::OutlinedLockClosed)
+                        ->prefixIconColor('primary')
                         ->password()
                         ->revealable()
                         ->required(fn (string $context) => $context === 'create')
@@ -142,6 +146,8 @@ class UserForm
                         ]),
                     TextInput::make('password_confirmation')
                         ->label('Confirm Password')
+                        ->prefixIcon(Heroicon::OutlinedLockClosed)
+                        ->prefixIconColor('primary')
                         ->password()
                         ->revealable()
                         ->dehydrated(false) // don't send to DB
