@@ -21,6 +21,7 @@ class CreateUser extends CreateRecord
             /** @var User $user */
             $user = $this->record;
             $emailVerificationService->sendWelcomeEmail($user, $this->plainPassword);
+            $emailVerificationService->sendVerificationEmail($user);
         }
     }
 
