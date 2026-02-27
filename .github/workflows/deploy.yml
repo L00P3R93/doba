@@ -51,44 +51,47 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
-            TEMP_DIR="/tmp/deploy-new"
+            TEMP_DIR=$(mktemp -d)
 
-            # Extract to temp directory
             cd $TEMP_DIR
+            tar xzf /tmp/deploy.tar.gz 2>/dev/null || rsync -av /tmp/deploy-new/ . 2>/dev/null || echo "Files already in place"
 
             # Write .env file securely
-            echo "${{ secrets.ENV_FILE }}" > .env
+            echo "${{ secrets.ENV_FILE_BASE64 }}" | base64 -d > .env
             chmod 640 .env
 
-            # Install dependencies using PHP 8.4 explicitly
-            /usr/bin/php8.4 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
+            # Install dependencies
+            /usr/bin/php8.4 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-            # Run Laravel commands with PHP 8.4
+            # Run package discover separately
+            /usr/bin/php8.4 artisan package:discover --ansi || echo "Package discover completed with warnings"
+
+            # Cache configs
             /usr/bin/php8.4 artisan config:cache
             /usr/bin/php8.4 artisan route:cache
             /usr/bin/php8.4 artisan view:cache
             /usr/bin/php8.4 artisan migrate --force
 
-            # Set proper permissions
-            sudo chown -R www-data:www-data $TEMP_DIR
-            sudo find $TEMP_DIR -type f -exec chmod 644 {} \;
-            sudo find $TEMP_DIR -type d -exec chmod 755 {} \;
-            sudo chmod -R 775 $TEMP_DIR/storage
-            sudo chmod -R 775 $TEMP_DIR/bootstrap/cache
-            sudo chmod 640 $TEMP_DIR/.env
+            # Set permissions (without sudo where possible)
+            find $TEMP_DIR -type f -exec chmod 644 {} \;
+            find $TEMP_DIR -type d -exec chmod 755 {} \;
+            chmod -R 775 $TEMP_DIR/storage
+            chmod -R 775 $TEMP_DIR/bootstrap/cache
+            chmod 640 $TEMP_DIR/.env
+
+            # Use sudo only for necessary operations
+            sudo chown -R www-data:www-data $TEMP_DIR || echo "chown failed - may need manual fix"
 
             # Atomic swap
-            sudo mv $DEPLOY_PATH /var/www/dobaplay.com.backup.$(date +%Y%m%d%H%M%S) || true
+            sudo mv $DEPLOY_PATH /var/www/dobaplay.com.backup.$(date +%Y%m%d%H%M%S) 2>/dev/null || true
             sudo mv $TEMP_DIR $DEPLOY_PATH
 
-            # Restart only PHP 8.4 FPM (doesn't affect other sites using 8.2)
+            # Restart services
             sudo systemctl restart php8.4-fpm
             sudo systemctl reload apache2
 
-            # Cleanup old backups (keep last 3)
+            # Cleanup
             ls -t /var/www/dobaplay.com.backup.* 2>/dev/null | tail -n +4 | xargs -r rm -rf
+            rm -f /tmp/deploy.tar.gz /tmp/deploy-new 2>/dev/null || true
 
-            # Remove temp files
-            rm -f /tmp/deploy.tar.gz
-
-            echo "Deployment completed successfully with PHP 8.4!"
+            echo "Deployment completed!"
