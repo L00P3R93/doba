@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
         <a class="navbar-brand fw-bold text-white" href="{{ route('home') }}">
-            Doba<span>Play</span>
+            Doba<span>Play</span>.
         </a>
 
         <button
