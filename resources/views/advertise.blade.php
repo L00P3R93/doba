@@ -26,11 +26,16 @@
     />
 
     <link rel="stylesheet" href="/styles.css" />
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 </head>
 <body>
 @include('components.navbar')
 <!-- HERO -->
-<section class="hero">
+<section id="main-content" class="hero">
     <div class="container">
         <h1 class="fw-bold">
             Advertise With Doba<span>Play</span>
@@ -65,19 +70,20 @@
                         'title' => 'BANNER ADS',
                         'price' => '0.2',
                         'billing' => 'PER IMPRESSION',
-                        'href' => 'banners.php',
+                        'type' => 'banner',
                         'features' => [
                             'Visible on cover arts',
                             'Visible song sections',
                             'Clickable call-to-action',
                             'Custom creative support',
+                            'County to ward targeting',
                         ],
                     ],
                     [
                         'title' => 'AUDIO ADS',
                         'price' => '1',
                         'billing' => 'PER COMPLETION',
-                        'href' => 'audio_ads.php',
+                        'type' => 'audio',
                         'features' => [
                             'Play between tracks',
                             'No screen required',
@@ -88,7 +94,7 @@
                         'title' => 'INTERSTITIAL ADS',
                         'price' => '1.5',
                         'billing' => 'PER COMPLETION',
-                        'href' => 'interstitial.php',
+                        'type' => 'interstitial',
                         'features' => [
                             'Full-screen ad placements',
                             'Integrated directly into video playback',
@@ -101,7 +107,7 @@
                         'title' => 'REWARDED ADS',
                         'price' => '2',
                         'billing' => 'PER COMPLETION',
-                        'href' => 'rewarded.php',
+                        'type' => 'rewarded',
                         'features' => [
                             'Users watch to earn rewards',
                             'Play between tracks',
@@ -113,7 +119,7 @@
                 ];
             @endphp
 
-            @foreach($adTypes as $ad)
+            @foreach($adTypes as $key => $ad)
                 <div class="col-md-3">
                     <div class="pricing-card d-flex flex-column">
                         <div>
@@ -127,7 +133,27 @@
                                 @endforeach
                             </ul>
                         </div>
-                        <a class="btn btn-gold w-100 mt-auto" href="#">BUY NOW</a>
+                        @if($ad['type'] === 'banner')
+                            <button class="btn btn-gold w-100 mt-auto" type="button" data-bs-toggle="modal" data-bs-target="#bannerAdModal" data-ad-type="{{ $ad['type'] }}" data-price="{{ $ad['price'] }}">
+                                BUY NOW
+                            </button>
+                        @elseif($ad['type'] === 'audio')
+                            <button class="btn btn-gold w-100 mt-auto" type="button" data-bs-toggle="modal" data-bs-target="#audioAdModal" data-ad-type="{{ $ad['type'] }}" data-price="{{ $ad['price'] }}">
+                                BUY NOW
+                            </button>
+                        @elseif($ad['type'] === 'interstitial')
+                            <button class="btn btn-gold w-100 mt-auto" type="button" data-bs-toggle="modal" data-bs-target="#videoAdModal" data-ad-type="{{ $ad['type'] }}" data-price="{{ $ad['price'] }}">
+                                BUY NOW
+                            </button>
+                        @elseif($ad['type'] === 'rewarded')
+                            <button class="btn btn-gold w-100 mt-auto" type="button" data-bs-toggle="modal" data-bs-target="#videoAdModal" data-ad-type="{{ $ad['type'] }}" data-price="{{ $ad['price'] }}">
+                                BUY NOW
+                            </button>
+                        @else
+                            <button class="btn btn-gold w-100 mt-auto" type="button" data-bs-toggle="modal" data-bs-target="#bannerAdModal" data-ad-type="{{ $ad['type'] }}" data-price="{{ $ad['price'] }}">
+                                BUY NOW
+                            </button>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -169,10 +195,161 @@
     </div>
 </section>
 
+<!-- Banner Ad Modal -->
+<div class="modal fade" id="bannerAdModal" tabindex="-1" aria-labelledby="bannerAdModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background: linear-gradient(180deg, #0f2d3f, #091c28); border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: none;">
+            <div class="modal-header" style="background: rgba(15, 45, 63, 0.5); border-bottom: 1px solid rgba(240, 229, 84, 0.2);">
+                <h5 class="modal-title fw-bold" id="bannerAdModalLabel" style="color: #f5c542;">
+                    <i class="fas fa-bullhorn me-2"></i>Create Banner Ad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                @livewire('ads.create-banner-ad')
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Audio Ad Modal -->
+<div class="modal fade" id="audioAdModal" tabindex="-1" aria-labelledby="audioAdModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background: linear-gradient(180deg, #0f2d3f, #091c28); border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: none;">
+            <div class="modal-header" style="background: rgba(15, 45, 63, 0.5); border-bottom: 1px solid rgba(240, 229, 84, 0.2);">
+                <h5 class="modal-title fw-bold" id="audioAdModalLabel" style="color: #f5c542;">
+                    <i class="fas fa-volume-up me-2"></i>Create Audio Ad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                @livewire('audio.create-audio-ad')
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Ad Modal -->
+<div class="modal fade" id="videoAdModal" tabindex="-1" aria-labelledby="videoAdModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="background: linear-gradient(180deg, #0f2d3f, #091c28); border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: none;">
+            <div class="modal-header" style="background: rgba(15, 45, 63, 0.5); border-bottom: 1px solid rgba(240, 229, 84, 0.2);">
+                <h5 class="modal-title fw-bold" id="videoAdModalLabel" style="color: #f5c542;">
+                    <i class="fas fa-video me-2"></i>Create Video Ad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                @livewire('video.create-video-ad')
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer>
     © {{ date('Y') }} DobaPlay. All rights reserved.
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+@livewireScripts
+<script>
+    document.addEventListener('livewire:init', () => {
+        // Handle modal opening with ad type autofill
+        const bannerAdModal = document.getElementById('bannerAdModal');
+        const audioAdModal = document.getElementById('audioAdModal');
+        const videoAdModal = document.getElementById('videoAdModal');
+
+        if (bannerAdModal) {
+            bannerAdModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const adType = button.getAttribute('data-ad-type');
+                const price = button.getAttribute('data-price');
+
+                // Find the Livewire component inside this modal
+                const modalLivewireEl = bannerAdModal.querySelector('[wire\\:id]');
+                if (modalLivewireEl) {
+                    const componentId = modalLivewireEl.getAttribute('wire:id');
+                    // Get the Livewire component by its ID
+                    if (window.Livewire && window.Livewire.components) {
+                        const components = window.Livewire.components;
+                        const component = components[componentId];
+                        if (component) {
+                            component.setAdType(adType, price);
+                        }
+                    }
+                }
+            });
+        }
+
+        if (audioAdModal) {
+            audioAdModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const adType = button.getAttribute('data-ad-type');
+                const price = button.getAttribute('data-price');
+
+                // Find the Livewire component inside this modal
+                const modalLivewireEl = audioAdModal.querySelector('[wire\\:id]');
+                if (modalLivewireEl) {
+                    const componentId = modalLivewireEl.getAttribute('wire:id');
+                    // Get the Livewire component by its ID
+                    if (window.Livewire && window.Livewire.components) {
+                        const components = window.Livewire.components;
+                        const component = components[componentId];
+                        if (component) {
+                            component.setAdType(adType, price);
+                        }
+                    }
+                }
+            });
+        }
+
+        if (videoAdModal) {
+            videoAdModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const adType = button.getAttribute('data-ad-type');
+                const price = button.getAttribute('data-price');
+
+                // Find the Livewire component inside this modal
+                const modalLivewireEl = videoAdModal.querySelector('[wire\\:id]');
+                if (modalLivewireEl) {
+                    const componentId = modalLivewireEl.getAttribute('wire:id');
+                    // Get the Livewire component by its ID
+                    if (window.Livewire && window.Livewire.components) {
+                        const components = window.Livewire.components;
+                        const component = components[componentId];
+                        if (component) {
+                            component.setAdType(adType, price);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Handle modal closing events from Livewire components
+        Livewire.on('closeBannerModal', () => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('bannerAdModal'));
+            if (modal) {
+                modal.hide();
+            }
+        });
+
+        Livewire.on('closeAudioModal', () => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('audioAdModal'));
+            if (modal) {
+                modal.hide();
+            }
+        });
+
+        Livewire.on('closeVideoModal', () => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('videoAdModal'));
+            if (modal) {
+                modal.hide();
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -31,7 +31,7 @@
        @include('components.navbar')
 
         <!-- INTRO -->
-        <section class="hero">
+        <section id="main-content" class="hero">
             <div class="container">
                 <h1 class="fw-bold">
                     Turn Your Music Into <span>Income</span>

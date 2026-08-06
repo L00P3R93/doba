@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
+@import './baze-livery.css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,8 +10,96 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   DobaPlay Design System — "Baze Livery"
+   Street-poster energy (Matatu Livery) + analog warmth (Sound System)
+   + digital polish (Baze Frequency), unified into one token set.
+   ========================================================================== */
+
+:root {
+    /* ---- Core palette ---- */
+    --color-ink: #120f0d;              /* base background */
+    --color-ink-raised: #1d1815;       /* card / raised surface */
+    --color-ink-raised-end: #120f0d;   /* card gradient end */
+
+    --color-sunburst: #ff6b1a;         /* primary action / CTA */
+    --color-sunburst-hover: #e85a0f;
+    --color-frequency: #29e0c8;        /* data, audio, links, live states */
+    --color-frequency-hover: #1fc4ae;
+    --color-mustard: #e8a93b;          /* premium / rating / legacy-gold nod */
+    --color-mustard-hover: #c98f2b;
+    --color-hibiscus: #e6297a;         /* tags, notifications — use sparingly */
+    --color-hibiscus-hover: #c71e64;
+
+    --color-bone: #f5f0e8;             /* primary text */
+    --color-bone-dim: #d9cfc0;         /* secondary text */
+    --color-bone-muted: #9c9485;       /* muted / metadata text */
+    --color-bone-faint: #6b6459;       /* faintest text, disabled */
+    --color-border: #2a2420;
+
+    /* ---- Legacy-name aliases (backward compatible with existing markup) ---- */
+    --color-gold-primary: var(--color-mustard);
+    --color-gold-hover: var(--color-mustard-hover);
+    --color-bg-dark-start: #1a1512;
+    --color-bg-dark-end: var(--color-ink);
+    --color-bg-card-start: var(--color-ink-raised);
+    --color-bg-card-end: var(--color-ink-raised-end);
+    --color-text-primary: var(--color-bone);
+    --color-text-secondary: var(--color-bone-dim);
+    --color-text-muted: var(--color-bone-muted);
+    --color-text-faint: var(--color-bone-faint);
+
+    /* Spacing Scale (4px base unit) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+
+    /* Typography */
+    --font-display: 'Bebas Neue', ui-sans-serif, sans-serif;
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-size-xs: 0.7rem;
+    --font-size-sm: 0.75rem;
+    --font-size-base: 0.9rem;
+    --font-size-lg: 1rem;
+    --font-size-xl: 1.1rem;
+    --font-size-2xl: 1.25rem;
+    --font-size-3xl: 1.5rem;
+    --font-size-4xl: 2rem;
+    --font-size-5xl: 3rem;
+    --font-size-6xl: 4.5rem;   /* Bebas Neue hero headlines run larger */
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.45);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+    --shadow-accent: 0 0 20px rgba(255, 107, 26, 0.3);   /* sunburst glow */
+    --shadow-gold: 0 0 20px rgba(232, 169, 59, 0.3);     /* mustard glow, legacy alias */
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Bebas Neue', ui-sans-serif, sans-serif;
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -23,16 +113,16 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    --color-accent: var(--color-sunburst);
+    --color-accent-content: var(--color-sunburst);
+    --color-accent-foreground: var(--color-ink);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-sunburst);
+        --color-accent-content: var(--color-sunburst);
+        --color-accent-foreground: var(--color-ink);
     }
 }
 
@@ -43,7 +133,7 @@
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--color-border, currentColor);
     }
 }
 
@@ -61,10 +151,6 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
-
 .filament-forms-wizard-container .fi-fo-wizard {
     @apply p-6;
 }
@@ -77,7 +163,261 @@ select:focus[data-flux-control] {
     @apply bg-gray-50 dark:bg-gray-700/50;
 }
 
-/* Custom styling for the submit button container */
 .filament-forms-wizard-container .fi-fo-wizard-actions {
     @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6;
+}
+
+/* ==========================================================================
+   Utility Classes for Common Patterns
+   ========================================================================== */
+
+/* Headline / display text */
+.text-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    line-height: 1.05;
+}
+
+/* Card Container */
+.card {
+    background: linear-gradient(180deg, var(--color-bg-card-start), var(--color-bg-card-end));
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--color-border);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-accent);
+}
+
+.card-sm {
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+}
+
+.card-lg {
+    padding: var(--space-10);
+}
+
+/* Button Variants */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+}
+
+/* Primary: sunburst — main actions (subscribe, upload, buy ticket) */
+.btn-primary {
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+.btn-primary:hover {
+    background: var(--color-sunburst-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Gold: premium / upgrade actions — keeps legacy brand recognition */
+.btn-gold {
+    background: var(--color-mustard);
+    color: var(--color-ink);
+}
+
+.btn-gold:hover {
+    background: var(--color-mustard-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-gold);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-sunburst);
+    color: var(--color-sunburst);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-sunburst);
+    border: 1px solid var(--color-sunburst);
+}
+
+.btn-outline:hover {
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+.btn-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-lg);
+}
+
+.btn-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Badges — trending / live / new (frequency), rating / pro (mustard) */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-xl);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.badge-live {
+    background: rgba(41, 224, 200, 0.15);
+    color: var(--color-frequency);
+}
+
+.badge-trending {
+    background: rgba(230, 41, 122, 0.15);
+    color: var(--color-hibiscus);
+}
+
+.badge-pro {
+    background: rgba(232, 169, 59, 0.15);
+    color: var(--color-mustard);
+}
+
+/* Form Input Styling */
+.form-input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: rgba(29, 24, 21, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-sunburst);
+    box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.2);
+}
+
+.form-input::placeholder {
+    color: var(--color-text-faint);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: var(--space-4);
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--color-bg-card-start) 25%, var(--color-bg-card-end) 50%, var(--color-bg-card-start) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Responsive Container */
+.container-responsive {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .container-responsive {
+        padding: 0 var(--space-6);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-responsive {
+        padding: 0 var(--space-8);
+    }
+}
+
+/* Focus States */
+.focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.4);
+}
+
+/* Skip to Content */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+    padding: var(--space-2) var(--space-4);
+    z-index: 100;
+    transition: top var(--transition-base);
+}
+
+.skip-to-content:focus {
+    top: 0;
 }

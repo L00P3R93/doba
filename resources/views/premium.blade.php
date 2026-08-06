@@ -31,7 +31,7 @@
 @include('components.navbar')
 
 <!-- HERO -->
-<section class="hero">
+<section id="main-content" class="hero">
     <div class="container">
         <h1 class="fw-bold">
             Premium Users <span>Only</span>

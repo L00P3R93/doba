@@ -34,6 +34,8 @@ class RoleSeeder extends Seeder
             'view_roles', 'view_role', 'create_role', 'update_role', 'delete_role',
             'view_permissions', 'view_permission', 'create_permission', 'update_permission', 'delete_permission',
             'view_audit_logs',
+
+            'manage_banner_ads',
         ];
 
         foreach ($permissions as $permission) {

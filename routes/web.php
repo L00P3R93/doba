@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\UnifiedLoginController;
+use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', Home::class)->name('home');
 
 // Email verification routes
 Route::middleware('auth')->group(function () {
