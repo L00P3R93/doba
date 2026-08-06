@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\GoogleLinkController;
 use App\Http\Controllers\UnifiedLoginController;
 use App\Livewire\Home;
 use App\Livewire\Privacy;
@@ -9,18 +11,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
 
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
 // Email verification routes
 Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
-        ->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-        ->middleware(['signed'])
-        ->name('verification.verify');
-
-    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
-        ->middleware(['throttle:6,1'])
-        ->name('verification.send');
+    Route::get('/auth/google/link', [GoogleLinkController::class, 'redirect'])->name('auth.google.link');
+    Route::get('/auth/google/link/callback', [GoogleLinkController::class, 'callback'])->name('auth.google.link.callback');
 });
 
 // Unified login routes - single entry point for all users

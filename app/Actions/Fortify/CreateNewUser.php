@@ -41,12 +41,9 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $input['password'],
             'account_no' => $this->generateUniqueAccountNumber(),
         ]);
-
         $user->assignRole('Guest');
-
         // Send email verification
-        $this->emailVerificationService->sendVerificationEmail($user);
-
+        // $this->emailVerificationService->sendVerificationEmail($user);
         return $user;
     }
 

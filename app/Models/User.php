@@ -7,6 +7,7 @@ use App\Traits\Auditable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,10 +21,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmailContract
+class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Auditable, HasFactory, HasRoles, InteractsWithMedia, MustVerifyEmailTrait, Notifiable, TwoFactorAuthenticatable;
+    use Auditable, HasFactory, HasRoles, InteractsWithMedia, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -158,16 +159,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
             $phone = '254'.substr($phone, 1);
         }
         $this->attributes['phone'] = $phone;
-    }
-
-    /**
-     * Override the automatic email verification notification to prevent duplicate emails
-     * during registration. We'll handle this manually in CreateNewUser.
-     */
-    public function sendEmailVerificationNotification(): void
-    {
-        // Do nothing - we handle this manually through EmailVerificationService
-        // to prevent duplicate emails during registration
     }
 
     public function registerMediaCollections(): void

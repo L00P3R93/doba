@@ -10,4 +10,5 @@ return [
     App\Providers\Filament\StudioPanelProvider::class,
     App\Providers\FortifyServiceProvider::class,
     App\Providers\MediaEventServiceProvider::class,
+    App\Providers\BrevoMailServiceProvider::class,
 ];

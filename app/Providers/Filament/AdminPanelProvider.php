@@ -3,7 +3,17 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\EditProfilePage;
+use App\Filament\Widgets\Admin\ContentDistributionWidget;
+use App\Filament\Widgets\Admin\OverviewStatsWidget;
+use App\Filament\Widgets\Admin\PaymentStatsWidget;
+use App\Filament\Widgets\Admin\RecentActivityWidget;
+use App\Filament\Widgets\Admin\RevenueChartWidget;
+use App\Filament\Widgets\Admin\SubscriptionStatsWidget;
+use App\Filament\Widgets\Admin\TopAlbumsWidget;
+use App\Filament\Widgets\Admin\TopSongsWidget;
+use App\Filament\Widgets\Admin\UserRegistrationChartWidget;
 use Filament\Actions\Action;
+use Filament\Enums\DatabaseNotificationsPosition;
 use Filament\Enums\ThemeMode;
 use Filament\Enums\UserMenuPosition;
 use Filament\Http\Middleware\Authenticate;
@@ -33,27 +43,46 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->homeUrl('/admin')
+            ->homeUrl('/')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->userMenu(position: UserMenuPosition::Sidebar)
             ->userMenuItems([
                 'profile' => fn (Action $action) => $action
-                    ->label('Edit profile')
-                    ->icon('heroicon-s-user')
+                    ->label('Profile & Settings')
+                    ->icon('hugeicons-account-setting-01')
                     ->url(fn (): string => EditProfilePage::getUrl()),
             ])
             ->defaultThemeMode(ThemeMode::Dark)
             ->darkMode()
             ->colors([
                 'primary' => Color::Amber,
+                'secondary' => Color::Gray,
+                'info' => Color::Cyan,
+                'success' => Color::Green,
+                'warning' => Color::Orange,
+                'danger' => Color::Red,
+                'purple' => Color::Purple,
+                'orange' => Color::Orange,
+                'blue' => Color::Blue,
+                'pink' => Color::Pink,
+                'teal' => Color::Teal,
+                'yellow' => Color::Yellow,
+                'red' => Color::Red,
+                'green' => Color::Green,
+                'indigo' => Color::Indigo,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                EditProfilePage::class,
             ])
-            //->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->databaseNotifications()
             ->unsavedChangesAlerts()
+            ->databaseTransactions()
+            ->databaseNotifications(position: DatabaseNotificationsPosition::Sidebar)
+            ->databaseNotificationsPolling('30s')
             ->spa()
             ->navigationGroups([
                 'Albums & Songs',
@@ -73,15 +102,15 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
-                \App\Filament\Widgets\Admin\OverviewStatsWidget::class,
-                \App\Filament\Widgets\Admin\TopSongsWidget::class,
-                \App\Filament\Widgets\Admin\RevenueChartWidget::class,
-                \App\Filament\Widgets\Admin\UserRegistrationChartWidget::class,
-                \App\Filament\Widgets\Admin\ContentDistributionWidget::class,
-                \App\Filament\Widgets\Admin\RecentActivityWidget::class,
-                \App\Filament\Widgets\Admin\SubscriptionStatsWidget::class,
-                \App\Filament\Widgets\Admin\TopAlbumsWidget::class,
-                \App\Filament\Widgets\Admin\PaymentStatsWidget::class,
+                OverviewStatsWidget::class,
+                TopSongsWidget::class,
+                RevenueChartWidget::class,
+                UserRegistrationChartWidget::class,
+                ContentDistributionWidget::class,
+                RecentActivityWidget::class,
+                SubscriptionStatsWidget::class,
+                TopAlbumsWidget::class,
+                PaymentStatsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
