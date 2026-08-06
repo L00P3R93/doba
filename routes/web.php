@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\UnifiedLoginController;
 use App\Livewire\Home;
+use App\Livewire\Privacy;
+use App\Livewire\Terms;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
@@ -51,5 +53,8 @@ Route::post('/subscribe', \App\Http\Controllers\StkSubscribeController::class)->
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified', 'redirect.authenticated'])
     ->name('dashboard');
+
+Route::get('/privacy', Privacy::class)->name('privacy');
+Route::get('/terms', Terms::class)->name('terms');
 
 require __DIR__.'/settings.php';
