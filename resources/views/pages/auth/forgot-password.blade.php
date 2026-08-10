@@ -25,13 +25,13 @@
                     <div class="mb-4">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="{{ __('Email Address') }}" value="{{ old('email') }}" required autofocus>
                         @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-gold">{{ __('Email password reset link') }}</button>
+                    <button type="submit" class="btn-sunburst">{{ __('Email password reset link') }}</button>
 
-                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm mt-4">
                         <span>{{ __('Or, return to') }}</span>
                         <flux:link :href="route('login')" wire:navigate>{{ __('log in') }}</flux:link>
                     </div>

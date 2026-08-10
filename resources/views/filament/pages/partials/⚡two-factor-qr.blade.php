@@ -2,7 +2,7 @@
     <div class="flex justify-center">
         <div class="relative flex items-center justify-center w-56 h-56 p-3 bg-white border rounded-lg border-gray-200 dark:border-white/10">
             @if ($qrCodeSvg)
-                <div class="bg-white rounded p-2">
+                <div class="bg-white rounded p-6">
                     {!! $qrCodeSvg !!}
                     <p class="mt-4 text-xs break-all">
                         {{ auth()->user()->twoFactorQrCodeUrl() }}

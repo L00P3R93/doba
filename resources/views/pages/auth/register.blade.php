@@ -26,21 +26,21 @@
                         <!-- Name -->
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="{{ __('Full name') }}" value="{{ old('name') }}" required>
                         @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="{{ __('Email Address') }}" value="{{ old('email') }}" required>
                         @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <input type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" placeholder="{{ __('Phone Number (e.g., 254712345678 or 0712345678)') }}" value="{{ old('phone') }}">
                         @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -50,7 +50,7 @@
                             <i class="fa fa-eye" id="password-eye"></i>
                         </button>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -60,22 +60,25 @@
                             <i class="fa fa-eye" id="password_confirmation-eye"></i>
                         </button>
                         @error('password_confirmation')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-gold">Create Account</button>
+                    <button type="submit" class="btn-sunburst">Create Account</button>
 
                     <!-- Divider -->
-                    <div class="flex items-center gap-3">
-                        <div class="h-px flex-1 bg-zinc-700"></div>
-                        <span class="text-xs text-zinc-500">{{ __('or') }}</span>
-                        <div class="h-px flex-1 bg-zinc-700"></div>
+                    <div class="flex items-center gap-3 my-5">
+                        <div class="h-px flex-1" style="background: rgba(240,233,220,0.12);"></div>
+                        <span class="text-xs" style="color: rgba(240,233,220,0.4);">{{ __('or') }}</span>
+                        <div class="h-px flex-1" style="background: rgba(240,233,220,0.12);"></div>
                     </div>
 
                     <!-- Google OAuth -->
                     <a href="{{ route('auth.google') }}"
-                       class="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-800">
+                       class="flex w-full items-center justify-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium transition"
+                       style="border: 1px solid rgba(240,233,220,0.15); background: rgba(240,233,220,0.03); color: var(--color-bone);"
+                       onmouseover="this.style.background='rgba(240,233,220,0.08)'"
+                       onmouseout="this.style.background='rgba(240,233,220,0.03)'">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5" aria-hidden="true">
                             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -86,7 +89,7 @@
                         {{ __('Continue with Google') }}
                     </a>
 
-                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+                    <div class="links space-x-1 rtl:space-x-reverse text-center text-sm mt-5">
                         <span>{{ __('Already have an account?') }}</span>
                         <flux:link :href="route('login')" wire:navigate>{{ __('Sign in') }}</flux:link>
                     </div>

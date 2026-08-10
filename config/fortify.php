@@ -71,6 +71,9 @@ return [
     | authentication or password reset when the operations are successful
     | and the user is authenticated. You are free to change this value.
     |
+    | Note: This is overridden by Fortify::redirects() in FortifyServiceProvider
+    | to provide role-based redirection.
+    |
     */
 
     'home' => '/',
@@ -146,9 +149,7 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        Features::emailVerification(), // Disabled - using custom EmailVerificationService
-        // Features::updateProfileInformation(),
-        // Features::updatePasswords(),
+        Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,

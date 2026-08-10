@@ -3,10 +3,10 @@
         <a href="{{ route('home') }}" class="baze-display baze-nav-logo">Doba<span class="baze-accent">Play</span></a>
 
         <div class="baze-nav-links">
-            <a href="{{ url('/#plans') }}">Creator Plans</a>
+            <a href="{{ url('/#plans') }}">Creators</a>
+            <a href="{{ route('pricing') }}">Listeners</a>
             <a href="{{ url('/#cinema') }}">Cinema</a>
-            <a href="{{ url('/#why') }}">Why DobaPlay</a>
-            <a href="{{ url('/#listeners') }}">Listeners</a>
+            <a href="{{ route('advertise') }}">Advertise With Us</a>
         </div>
 
         <div class="baze-nav-cta">

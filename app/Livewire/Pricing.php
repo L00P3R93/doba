@@ -1,0 +1,176 @@
+<?php
+
+namespace App\Livewire;
+
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+
+#[Title('Pricing | Doba Play')]
+#[Layout('layouts.marketing')]
+class Pricing extends Component
+{
+    /**
+     * Which side of the fader is active on load.
+     * Synced to the URL (?mode=listener|creator) so /premium and /subscribe
+     * can redirect here with the right default, and links stay shareable.
+     */
+    #[Url(as: 'mode', history: true)]
+    public string $mode = 'listener';
+
+    /**
+     * Listener (premium) plans — ad-free streaming for consumers.
+     */
+    public array $listenerPlans = [
+        [
+            'key' => 'week',
+            'title' => '1 Week',
+            'price' => 50,
+            'downloads' => '150 downloads',
+            'features' => [
+                'Free listening',
+                'No ads',
+                'Full access to all songs',
+                'Priority access to new releases',
+            ],
+        ],
+        [
+            'key' => 'month',
+            'title' => '1 Month',
+            'price' => 180,
+            'downloads' => '900 downloads',
+            'features' => [
+                'Free listening',
+                'No ads',
+                'Full access to all songs',
+                'Priority access to new releases',
+            ],
+        ],
+        [
+            'key' => 'quarter',
+            'title' => '3 Months',
+            'price' => 500,
+            'downloads' => '3,000 downloads',
+            'features' => [
+                'Free listening',
+                'No ads',
+                'Full access to all songs',
+                'Priority access to new releases',
+            ],
+        ],
+        [
+            'key' => 'half-year',
+            'title' => '6 Months',
+            'price' => 950,
+            'downloads' => '7,500 downloads',
+            'features' => [
+                'Free listening',
+                'No ads',
+                'Full access to all songs',
+                'Priority access to new releases',
+            ],
+        ],
+        [
+            'key' => 'year',
+            'title' => '1 Year',
+            'price' => 1800,
+            'downloads' => '18,000 downloads',
+            'badge' => 'Best value',
+            'features' => [
+                'Free listening',
+                'No ads',
+                'Full access to all songs',
+                'Priority access to new releases',
+            ],
+        ],
+    ];
+
+    /**
+     * Creator (yearly) plans — matches the set on the Home page exactly
+     * (including Cinema) so the two pages never drift out of sync again.
+     */
+    public array $creatorPlans = [
+        [
+            'key' => 'events',
+            'title' => 'Events',
+            'price' => 499,
+            'features' => [
+                'Sell tickets',
+                'Promote events',
+                'Reach the right audience',
+                'Merch store integration',
+            ],
+        ],
+        [
+            'key' => 'artist-video',
+            'title' => 'Artist + Videos',
+            'price' => 1499,
+            'features' => [
+                'Music & video uploads',
+                'Streaming earnings',
+                'Video monetization',
+                'Artist analytics',
+                'Promote events',
+                'Merch store integration',
+            ],
+        ],
+        [
+            'key' => 'cinema',
+            'title' => 'Cinema',
+            'price' => 3999,
+            'badge' => 'For movie makers',
+            'features' => [
+                'VOD distribution',
+                'Pay-per-view & rental pricing',
+                'Subtitle support',
+                'Premiere promotion',
+            ],
+        ],
+        [
+            'key' => 'studio',
+            'title' => 'Studio',
+            'price' => 14999,
+            'features' => [
+                '10 artist accounts',
+                'Music & video uploads',
+                'Studio dashboard',
+                'Promote events',
+                'Merch store integration',
+                'Sell beats & get producing gigs',
+            ],
+        ],
+        [
+            'key' => 'label',
+            'title' => 'Record Label',
+            'price' => 49999,
+            'features' => [
+                'Unlimited artists',
+                'Promote events',
+                'All studio features',
+                'Label payouts & analytics',
+                'Merch store integration',
+                'Sell beats & get producing gigs',
+            ],
+        ],
+    ];
+
+    public function mount(): void
+    {
+        if (! in_array($this->mode, ['listener', 'creator'], true)) {
+            $this->mode = 'listener';
+        }
+    }
+
+    public function setMode(string $mode): void
+    {
+        $this->mode = in_array($mode, ['listener', 'creator'], true) ? $mode : 'listener';
+    }
+
+    public function render(): Factory|\Illuminate\Contracts\View\View|View
+    {
+        return view('livewire.⚡pricing');
+    }
+}

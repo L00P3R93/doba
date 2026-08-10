@@ -14,6 +14,6 @@ class Privacy extends Component
 {
     public function render(): Factory|\Illuminate\Contracts\View\View|View
     {
-        return view('livewire.privacy');
+        return view('livewire.⚡privacy');
     }
 }

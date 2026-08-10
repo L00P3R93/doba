@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\GoogleLinkController;
+use App\Http\Controllers\StkSubscribeController;
 use App\Http\Controllers\UnifiedLoginController;
+use App\Livewire\Advertise;
 use App\Livewire\Home;
+use App\Livewire\Pricing;
 use App\Livewire\Privacy;
 use App\Livewire\Terms;
 use Illuminate\Support\Facades\Route;
@@ -20,31 +22,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/auth/google/link/callback', [GoogleLinkController::class, 'callback'])->name('auth.google.link.callback');
 });
 
-// Unified login routes - single entry point for all users
-Route::get('/login', [UnifiedLoginController::class, 'create'])
-    ->middleware('guest')
-    ->name('login');
-
-Route::post('/login', [UnifiedLoginController::class, 'store'])
-    ->middleware('guest')
-    ->name('login.store');
-
+// Logout route (Fortify handles login)
 Route::post('/logout', [UnifiedLoginController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
-// Subscribe page for Guest users
-Route::get('/subscribe', function () {
-    return view('subscribe');
-})->middleware('auth')->name('subscribe');
+// Unified pricing page (listener + creator plans behind a fader toggle)
+Route::get('/pricing', Pricing::class)->name('pricing');
 
-// Premium Page
-Route::view('/premium', 'premium')->name('premium');
+// Legacy URLs redirect to the merged page, defaulting to the matching side
+Route::redirect('/premium', '/pricing?mode=listener', 301)->name('premium');
+Route::redirect('/subscribe', '/pricing?mode=creator', 301)->name('subscribe');
 
 // Adverts Page
-Route::view('/advertise', 'advertise')->name('advertise');
+Route::get('/advertise', Advertise::class)->name('advertise');
 
-Route::post('/subscribe', \App\Http\Controllers\StkSubscribeController::class)->name('subscribe.pay');
+Route::post('/subscribe', StkSubscribeController::class)->name('subscribe.pay');
 
 // Dashboard route with role-based redirect
 Route::view('dashboard', 'dashboard')

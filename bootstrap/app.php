@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\CheckApiKey;
+use App\Http\Middleware\DecryptIdentifier;
+use App\Http\Middleware\RedirectAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,15 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api([
-            \App\Http\Middleware\CheckApiKey::class,
+            CheckApiKey::class,
         ]);
 
         $middleware->alias([
-            'decrypt.identifier' => \App\Http\Middleware\DecryptIdentifier::class,
-            'redirect.authenticated' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'decrypt.identifier' => DecryptIdentifier::class,
+            'redirect.authenticated' => RedirectAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

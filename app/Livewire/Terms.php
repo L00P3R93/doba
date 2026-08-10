@@ -14,6 +14,6 @@ class Terms extends Component
 {
     public function render(): Factory|\Illuminate\Contracts\View\View|View
     {
-        return view('livewire.terms');
+        return view('livewire.⚡terms');
     }
 }

@@ -32,7 +32,7 @@
         <div class="baze-display baze-footer-logo">Doba<span class="baze-accent">Play</span></div>
         <div class="baze-footer-links">
             <a href="{{ url('/#plans') }}">Creator Plans</a>
-            <a href="{{ route('premium') }}">Listener Plans</a>
+            <a href="{{ route('pricing') }}">Listener Plans</a>
             <a href="{{ route('advertise') }}">Advertise</a>
             <a href="{{ url('/support') }}">Support</a>
             <a href="{{ url('/terms') }}">Terms</a>

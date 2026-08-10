@@ -15,7 +15,7 @@
         <div class="right-side">
             <div class="login-box">
                 <x-auth-header :title="__('Verify Your Email')" :description="__('Please check your inbox for the verification link')" />
-                
+
                 <!-- Session Status -->
                 <x-auth-session-status class="text-center" :status="session('status')" />
 

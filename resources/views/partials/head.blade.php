@@ -8,8 +8,12 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+<link href="https://fonts.bunny.net/css?family=bebas-neue&family=manrope:400,500,600,700,800" rel="stylesheet" />
+
+<!-- Font Awesome (icons used in the brand-panel feature list) -->
+<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance

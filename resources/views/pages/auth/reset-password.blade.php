@@ -27,7 +27,7 @@
                     <div class="mb-4">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="{{ __('Email Address') }}" value="{{ request('email') }}" required autocomplete="email">
                         @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -37,7 +37,7 @@
                             <i class="fa fa-eye" id="password-eye"></i>
                         </button>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -47,11 +47,11 @@
                             <i class="fa fa-eye" id="password_confirmation-eye"></i>
                         </button>
                         @error('password_confirmation')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-gold">{{ __('Reset password') }}</button>
+                    <button type="submit" class="btn-sunburst">{{ __('Reset password') }}</button>
                 </form>
             </div>
         </div>
@@ -60,7 +60,7 @@
         function togglePassword(fieldId) {
             const passwordField = document.getElementById(fieldId);
             const eyeIcon = document.getElementById(fieldId + '-eye');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 eyeIcon.classList.remove('fa-eye');

@@ -65,6 +65,8 @@
     /* Typography */
     --font-display: 'Bebas Neue', ui-sans-serif, sans-serif;
     --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-bebas: 'Bebas Neue', sans-serif;
+    --font-manrope: 'Manrope', var(--font-sans);
     --font-size-xs: 0.7rem;
     --font-size-sm: 0.75rem;
     --font-size-base: 0.9rem;
@@ -420,4 +422,295 @@ select:focus[data-flux-control] {
 
 .skip-to-content:focus {
     top: 0;
+}
+
+/* -----------------------------------------------------------
+   Auth split-screen layout
+   ----------------------------------------------------------- */
+
+body:has(.main-wrapper) {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-manrope);
+}
+
+.main-wrapper {
+    display: flex;
+    min-height: 100vh;
+    font-family: var(--font-manrope);
+    background: var(--color-ink);
+}
+
+/* Brand panel */
+.left-side {
+    position: relative;
+    flex: 1 1 50%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-16, 64px);
+    overflow: hidden;
+    background: var(--color-ink);
+}
+
+@media (min-width: 1024px) {
+    .left-side {
+        display: flex;
+    }
+}
+
+.left-side::before {
+    content: '';
+    position: absolute;
+    top: -10rem;
+    left: -6rem;
+    width: 28rem;
+    height: 28rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(255, 107, 26, 0.25), transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.left-side::after {
+    content: '';
+    position: absolute;
+    bottom: -8rem;
+    right: -6rem;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(41, 224, 200, 0.18), transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.left-side h1 {
+    position: relative;
+    font-family: var(--font-bebas);
+    font-weight: 400;
+    font-size: 3rem;
+    letter-spacing: 0.02em;
+    color: var(--color-bone);
+    margin-bottom: var(--space-4, 16px);
+}
+
+.left-side p {
+    position: relative;
+    max-width: 26rem;
+    color: rgba(240, 233, 220, 0.6);
+    font-size: var(--font-size-lg, 1rem);
+    line-height: 1.6;
+}
+
+.feature {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 12px);
+    margin-top: var(--space-5, 20px);
+    color: var(--color-bone);
+    font-size: var(--font-size-base, 0.9rem);
+}
+
+.feature i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-md, 10px);
+    background: rgba(255, 107, 26, 0.12);
+    color: var(--color-sunburst);
+    font-size: 0.85rem;
+}
+
+/* Form panel */
+.right-side {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8, 32px) var(--space-4, 16px);
+    background: var(--color-ink-raised);
+}
+
+.login-box {
+    width: 100%;
+    max-width: 26rem;
+    background: linear-gradient(180deg, rgba(240, 233, 220, 0.06), rgba(240, 233, 220, 0.02));
+    border: 1px solid rgba(240, 233, 220, 0.10);
+    border-radius: var(--radius-xl, 20px);
+    padding: var(--space-10, 40px) var(--space-8, 32px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.login-box h1,
+.login-box [data-auth-title] {
+    font-family: var(--font-bebas);
+    font-weight: 400;
+    font-size: 1.75rem;
+    letter-spacing: 0.02em;
+    color: var(--color-bone);
+}
+
+.login-box p,
+.login-box [data-auth-description] {
+    color: rgba(240, 233, 220, 0.55);
+    font-size: var(--font-size-sm, 0.75rem);
+    margin-top: var(--space-2, 8px);
+}
+
+/* Form controls */
+.login-box .form-control {
+    width: 100%;
+    padding: var(--space-3, 12px) var(--space-4, 16px);
+    background: rgba(240, 233, 220, 0.05);
+    border: 1px solid rgba(240, 233, 220, 0.15);
+    border-radius: var(--radius-sm, 6px);
+    color: var(--color-bone);
+    font-size: var(--font-size-base, 0.9rem);
+    font-family: var(--font-manrope);
+    transition: border-color var(--transition-base, 200ms ease), box-shadow var(--transition-base, 200ms ease);
+}
+
+.login-box .form-control::placeholder {
+    color: rgba(240, 233, 220, 0.35);
+}
+
+.login-box .form-control:focus {
+    outline: none;
+    border-color: var(--color-frequency);
+    box-shadow: 0 0 0 3px rgba(41, 224, 200, 0.2);
+}
+
+.login-box .form-control.is-invalid {
+    border-color: var(--color-hibiscus);
+}
+
+.login-box .invalid-feedback {
+    display: block;
+    margin-top: var(--space-2, 8px);
+    color: var(--color-hibiscus);
+    font-size: var(--font-size-xs, 0.7rem);
+}
+
+.login-box .position-relative .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: var(--space-3, 12px);
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(240, 233, 220, 0.45);
+    padding: 0;
+    cursor: pointer;
+    transition: color var(--transition-fast, 150ms ease);
+}
+
+.login-box .position-relative .password-toggle:hover {
+    color: var(--color-frequency);
+}
+
+/* Primary button (formerly .btn-gold) */
+.btn-sunburst {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--space-3, 12px) var(--space-6, 24px);
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+    border: none;
+    border-radius: var(--radius-sm, 6px);
+    font-weight: 700;
+    font-size: var(--font-size-base, 0.9rem);
+    cursor: pointer;
+    transition: all var(--transition-base, 200ms ease);
+}
+
+.btn-sunburst:hover {
+    background: #ff7f3d;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(255, 107, 26, 0.3);
+}
+
+/* Secondary links row under a form */
+.login-box .links {
+    color: rgba(240, 233, 220, 0.5) !important;
+}
+
+.login-box .links :where(a, [data-flux-link]) {
+    color: var(--color-frequency) !important;
+}
+
+.login-box .links :where(a, [data-flux-link]):hover {
+    color: var(--color-sunburst) !important;
+}
+
+/* Alerts (flash messages) */
+.login-box .alert {
+    border-radius: var(--radius-sm, 6px);
+    padding: var(--space-3, 12px) var(--space-4, 16px);
+    font-size: var(--font-size-sm, 0.75rem);
+    border: 1px solid transparent;
+}
+
+.login-box .alert-success {
+    background: rgba(41, 224, 200, 0.1);
+    border-color: rgba(41, 224, 200, 0.3);
+    color: var(--color-frequency);
+}
+
+.login-box .alert-danger {
+    background: rgba(230, 41, 122, 0.1);
+    border-color: rgba(230, 41, 122, 0.3);
+    color: var(--color-hibiscus);
+}
+
+.login-box .alert-info {
+    background: rgba(232, 169, 59, 0.1);
+    border-color: rgba(232, 169, 59, 0.3);
+    color: var(--color-mustard);
+}
+
+/* Flux components used inside the auth card (checkbox, link, otp, text, button) */
+.login-box [data-flux-label] {
+    color: var(--color-bone) !important;
+}
+
+.login-box input:focus[data-flux-control],
+.login-box [data-flux-control]:focus-within {
+    outline: none;
+    border-color: var(--color-frequency) !important;
+    box-shadow: 0 0 0 3px rgba(41, 224, 200, 0.2) !important;
+}
+
+.login-box a,
+.login-box [data-flux-link] {
+    color: var(--color-frequency);
+}
+
+.login-box a:hover,
+.login-box [data-flux-link]:hover {
+    color: var(--color-sunburst);
+}
+
+.login-box small,
+.login-box .text-muted,
+.login-box [data-flux-text] {
+    color: rgba(240, 233, 220, 0.55) !important;
+}
+
+.login-box hr {
+    border-color: rgba(240, 233, 220, 0.12);
+}
+
+/* Scope Flux's primary button accent to Sunburst only inside the auth card,
+   so flux:button variant="primary" (2FA, verify-email) matches the brand
+   without touching --color-accent globally (dashboard/Filament untouched) */
+.login-box {
+    --color-accent: var(--color-sunburst);
+    --color-accent-content: var(--color-ink);
+    --color-accent-foreground: var(--color-ink);
 }

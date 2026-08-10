@@ -31,11 +31,11 @@
                             <i class="fa fa-eye" id="password-eye"></i>
                         </button>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-gold">{{ __('Confirm') }}</button>
+                    <button type="submit" class="btn-sunburst">{{ __('Confirm') }}</button>
                 </form>
             </div>
         </div>
@@ -44,7 +44,7 @@
         function togglePassword(fieldId) {
             const passwordField = document.getElementById(fieldId);
             const eyeIcon = document.getElementById(fieldId + '-eye');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 eyeIcon.classList.remove('fa-eye');

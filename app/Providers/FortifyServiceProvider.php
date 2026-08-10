@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -56,12 +57,12 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure authentication redirection.
+     * Configure authentication.
      */
     private function configureAuthentication(): void
     {
         Fortify::authenticateUsing(function (Request $request) {
-            $user = \App\Models\User::query()->where('email', $request->email)->first();
+            $user = User::query()->where('email', $request->email)->first();
 
             if ($user && \Hash::check($request->password, $user->password)) {
                 // Check if user has appropriate role for panel access
