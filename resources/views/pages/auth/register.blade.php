@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="mb-3 position-relative">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" autocomplete="new-password" required>
                         <button type="button" class="btn password-toggle" onclick="togglePassword('password')">
                             <i class="fa fa-eye" id="password-eye"></i>
                         </button>

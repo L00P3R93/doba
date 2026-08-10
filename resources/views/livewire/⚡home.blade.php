@@ -17,13 +17,18 @@
                 </p>
                 <div class="baze-hero-ctas">
                     <a href="#plans" class="baze-btn baze-btn-primary">Pick your plan &nbsp;↓</a>
-                    <a href="{{ route('advertise') }}" class="baze-btn baze-btn-outline-freq">▶ See how payouts work</a>
+                    {{--
+                        <a href="{{ route('advertise') }}" class="baze-btn baze-btn-outline-freq">▶ See how payouts work</a>
+                    --}}
                 </div>
+                {{--
                 <div class="baze-trust-row">
                     <span><b>5</b>plan types for every creator</span>
                     <span><b>M-Pesa</b>instant payouts</span>
                     <span><b>0</b>upload fees</span>
                 </div>
+                --}}
+
             </div>
 
             <div class="baze-turntable-stage">

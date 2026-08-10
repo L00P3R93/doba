@@ -7,6 +7,7 @@
    kept as aliases so older Bootstrap-era markup that references them
    doesn't break while the migration is in progress.
    ========================================================================== */
+[x-cloak] { display: none !important; }
 
 :root {
     /* Baze Livery palette */
@@ -40,6 +41,7 @@
 
 .baze-display { font-family: var(--font-display); letter-spacing: 0.02em; }
 .baze-wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.baze-wrap-pricing { max-width: 1180px; margin: 0 auto; padding: 70px 0 40px; }
 
 .baze-eyebrow {
     font-family: var(--font-display);
@@ -77,6 +79,75 @@
 .baze-nav-cta { display: flex; gap: 12px; align-items: center; }
 @media (max-width: 900px) { .baze-nav-links { display: none; } }
 
+/* Mobile nav toggle (hamburger) */
+.baze-nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
+.baze-nav-toggle-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--color-bone);
+    border-radius: 2px;
+    transition: transform .25s ease, opacity .25s ease;
+}
+.baze-nav-toggle-bar.is-open:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.baze-nav-toggle-bar.is-open:nth-child(2) { opacity: 0; }
+.baze-nav-toggle-bar.is-open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.baze-nav-toggle:focus-visible { outline: 2px solid var(--color-frequency); outline-offset: 3px; border-radius: 6px; }
+
+/* Mobile dropdown panel */
+.baze-nav-mobile {
+    display: none;
+    border-top: 1px solid var(--color-hairline);
+    background: var(--color-ink);
+}
+.baze-nav-mobile-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px 28px;
+}
+.baze-nav-mobile-inner a {
+    color: var(--color-bone-dim);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--color-hairline);
+    transition: color .2s;
+}
+.baze-nav-mobile-inner a:hover,
+.baze-nav-mobile-inner a:focus-visible { color: var(--color-bone); }
+.baze-nav-mobile-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+}
+.baze-nav-mobile-cta .baze-btn { justify-content: center; width: 100%; }
+
+@media (max-width: 900px) {
+    .baze-nav-cta { display: none; }
+    .baze-nav-toggle { display: flex; }
+    .baze-nav-mobile { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .baze-nav-toggle-bar { transition: none; }
+}
+
 /* Footer */
 .baze-footer { border-top: 1px solid var(--color-hairline); padding: 48px 0 32px; background: var(--color-ink); }
 .baze-footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 32px; }
@@ -87,7 +158,7 @@
 .baze-footer-bottom { font-size: 12px; color: var(--color-bone-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--color-hairline); padding-top: 22px; font-family: var(--font-body); }
 
 /* Hero */
-.baze-hero { position: relative; padding: 88px 0 40px; overflow: hidden; background: var(--color-ink); color: var(--color-bone); }
+.baze-hero { position: relative; padding: 65px 0 40px; overflow: hidden; background: var(--color-ink); color: var(--color-bone); }
 .baze-hero::before {
     content: ''; position: absolute; inset: -20% -10% auto -10%; height: 600px;
     background: radial-gradient(ellipse at 70% 20%, rgba(41,224,200,0.14), transparent 60%),

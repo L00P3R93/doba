@@ -595,6 +595,10 @@ body:has(.main-wrapper) {
     font-size: var(--font-size-xs, 0.7rem);
 }
 
+.login-box .position-relative {
+    position: relative;
+}
+
 .login-box .position-relative .password-toggle {
     position: absolute;
     top: 50%;
@@ -713,4 +717,44 @@ body:has(.main-wrapper) {
     --color-accent: var(--color-sunburst);
     --color-accent-content: var(--color-ink);
     --color-accent-foreground: var(--color-ink);
+}
+
+/* ==========================================================================
+   Advertise & Pricing — shared plan/ad card refinements
+   Reuses .baze-crate-rail / .baze-record-card / .baze-plans-* carousel
+   system from Home. Only adds a price-subline pattern and breathing room.
+   ========================================================================== */
+
+.baze-plan-sub {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 22px;
+}
+
+.baze-plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 9px 0;
+}
+
+.baze-plan-cta:focus-visible {
+    outline: 2px solid var(--color-bone);
+    outline-offset: 2px;
+}
+
+/* Fader toggle — clearer active/focus state */
+.baze-fader-label {
+    transition: color .2s ease, opacity .2s ease;
+}
+.baze-fader-label[aria-pressed="true"] {
+    opacity: 1;
+}
+.baze-fader-label[aria-pressed="false"] {
+    opacity: 0.55;
+}
+.baze-fader-track:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 4px;
 }
