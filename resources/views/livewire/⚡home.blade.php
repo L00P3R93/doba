@@ -52,10 +52,12 @@
     </div>
 
     {{-- ============================================================
-         PLANS — "The Crate"
-         Five plan cards styled as album sleeves in a record crate,
-         each with a colour-coded spine and a circular label icon.
-         ============================================================ --}}
+     PLANS — "The Crate"
+     Five plan cards styled as album sleeves in a record crate,
+     each with a colour-coded spine and a circular label icon.
+     Horizontally scrollable carousel: all cards in one line when
+     they fit, swipe/scroll + arrows when they don't.
+     ============================================================ --}}
     <section class="baze-section" id="plans">
         <div class="baze-wrap">
             <div class="baze-section-head">
@@ -64,38 +66,121 @@
                 <p>One yearly plan. Everything you need to upload, distribute, and get paid — with no monthly juggling.</p>
             </div>
 
-            <div class="baze-crate-rail">
-                @foreach ($plans as $plan)
-                    <div class="baze-record-card @if($plan['popular']) baze-record-card--wide @endif">
-                        <div class="baze-spine baze-spine-{{ $plan['spine'] }}"></div>
+            <div
+                x-data="{
+                atStart: true,
+                atEnd: false,
+                hasOverflow: false,
+                activeIndex: 0,
+                cardCount: {{ count($plans) }},
+                showHint: true,
+                init() {
+                    this.measure();
+                    this.$refs.rail.addEventListener('scroll', () => this.onScroll(), { passive: true });
+                    if (window.ResizeObserver) {
+                        new ResizeObserver(() => this.measure()).observe(this.$refs.rail);
+                    }
+                    window.addEventListener('resize', () => this.measure());
+                },
+                measure() {
+                    const rail = this.$refs.rail;
+                    this.hasOverflow = rail.scrollWidth > rail.clientWidth + 4;
+                    this.onScroll();
+                },
+                onScroll() {
+                    const rail = this.$refs.rail;
+                    const max = rail.scrollWidth - rail.clientWidth;
+                    this.atStart = rail.scrollLeft <= 4;
+                    this.atEnd = max <= 4 || rail.scrollLeft >= max - 4;
+                    if (rail.scrollLeft > 4) this.showHint = false;
+                    const card = rail.querySelector('.baze-record-card');
+                    if (card) {
+                        const step = card.getBoundingClientRect().width + 16;
+                        this.activeIndex = Math.max(0, Math.round(rail.scrollLeft / step));
+                    }
+                },
+                scrollByCard(direction) {
+                    const rail = this.$refs.rail;
+                    const card = rail.querySelector('.baze-record-card');
+                    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    const step = card ? card.getBoundingClientRect().width + 16 : rail.clientWidth * 0.85;
+                    rail.scrollBy({ left: direction * step, behavior: reduceMotion ? 'auto' : 'smooth' });
+                }
+            }"
+                x-init="init()"
+            >
+                <div class="baze-plans-carousel">
+                    <button
+                        type="button"
+                        class="baze-plans-arrow baze-plans-arrow--prev"
+                        @click="scrollByCard(-1)"
+                        x-show="hasOverflow"
+                        :disabled="atStart"
+                        aria-label="Previous plans"
+                    >‹</button>
 
-                        @if ($plan['popular'])
-                            <div class="baze-ribbon">POPULAR</div>
-                        @endif
+                    <div class="baze-plans-viewport">
+                        <div
+                            class="baze-crate-rail"
+                            x-ref="rail"
+                            role="region"
+                            aria-label="Pricing plans"
+                            tabindex="0"
+                        >
+                            @foreach ($plans as $plan)
+                                <div class="baze-record-card @if($plan['popular']) baze-record-card--wide @endif">
+                                    <div class="baze-spine baze-spine-{{ $plan['spine'] }}"></div>
 
-                        <div class="baze-disc-icon">
-                            <img src="{{ asset('home/'.$plan['icon']) }}" alt="{{ $plan['title'] }}">
-                        </div>
+                                    @if ($plan['popular'])
+                                        <div class="baze-ribbon">POPULAR</div>
+                                    @endif
 
-                        <div class="baze-plan-title">{{ $plan['title'] }}</div>
-                        <div class="baze-plan-price">
-                            <span class="baze-plan-cur">KES</span>{{ $plan['price'] }}
-                        </div>
-                        <div class="baze-plan-billed">BILLED YEARLY</div>
+                                    <div class="baze-disc-icon">
+                                        <img src="{{ asset('home/'.$plan['icon']) }}" alt="{{ $plan['title'] }}">
+                                    </div>
 
-                        <ul class="baze-plan-features">
-                            @foreach ($plan['features'] as $feature)
-                                <li>✓ {{ $feature }}</li>
+                                    <div class="baze-plan-title">{{ $plan['title'] }}</div>
+                                    <div class="baze-plan-price">
+                                        <span class="baze-plan-cur">KES</span>{{ $plan['price'] }}
+                                    </div>
+                                    <div class="baze-plan-billed">BILLED YEARLY</div>
+
+                                    <ul class="baze-plan-features">
+                                        @foreach ($plan['features'] as $feature)
+                                            <li>✓ {{ $feature }}</li>
+                                        @endforeach
+                                    </ul>
+
+                                    <a href="{{ route('register') }}"
+                                       class="baze-plan-cta"
+                                       style="background:{{ $plan['cta_bg'] }};color:{{ $plan['cta_text'] }}">
+                                        Create account
+                                    </a>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
 
-                        <a href="{{ route('register') }}"
-                           class="baze-plan-cta"
-                           style="background:{{ $plan['cta_bg'] }};color:{{ $plan['cta_text'] }}">
-                            Create account
-                        </a>
+                        <div class="baze-plans-fade baze-plans-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
+                        <div class="baze-plans-fade baze-plans-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
                     </div>
-                @endforeach
+
+                    <button
+                        type="button"
+                        class="baze-plans-arrow baze-plans-arrow--next"
+                        @click="scrollByCard(1)"
+                        x-show="hasOverflow"
+                        :disabled="atEnd"
+                        aria-label="Next plans"
+                    >›</button>
+                </div>
+
+                <div class="baze-plans-dots" x-show="hasOverflow" aria-hidden="true">
+                    <template x-for="i in cardCount" :key="i">
+                        <span class="baze-plans-dot" :class="{ 'is-active': (i - 1) === activeIndex }"></span>
+                    </template>
+                </div>
+
+                <p class="baze-plans-hint" x-show="showHint && hasOverflow" x-transition.opacity>Swipe to explore →</p>
             </div>
         </div>
     </section>

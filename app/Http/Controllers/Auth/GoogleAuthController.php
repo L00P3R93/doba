@@ -73,12 +73,15 @@ class GoogleAuthController extends Controller
             'google_id' => $googleUser->getId(),
             'avatar' => $googleUser->getAvatar(),
             'password' => Hash::make(Str::random(32)),
-            'account_no' => 'KK-'.strtoupper(uniqid()),
+            'account_no' => 'DP-'.strtoupper(uniqid()),
             'email_verified_at' => now(),
         ]);
 
+        // Assign Role
+        $user->assignRole('Guest');
+
         Auth::login($user, remember: true);
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('pricing'));
     }
 }
