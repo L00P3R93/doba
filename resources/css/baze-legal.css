@@ -1,0 +1,340 @@
+/* ==========================================================================
+   DobaPlay Legal Pages
+   Scoped under .baze-legal- so these rules cannot leak into the rest of
+   the application. Reuses existing Baze Livery tokens, .baze-wrap,
+   .baze-eyebrow, .baze-display, and .btn/.btn-outline from above.
+   ========================================================================== */
+
+/* ---- Hero ---- */
+.baze-legal-hero {
+    padding: 72px 0 40px;
+    text-align: center;
+    background: var(--color-ink);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.baze-legal-h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin: 18px 0 10px;
+    color: var(--color-bone);
+}
+
+.baze-legal-subhead {
+    font-size: var(--font-size-xl);
+    color: var(--color-bone-dim);
+    margin-bottom: var(--space-4);
+}
+
+.baze-legal-updated {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-mustard);
+    margin-bottom: var(--space-8);
+}
+
+.baze-legal-switch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+}
+
+.baze-legal-switch a {
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-base), background var(--transition-base);
+}
+
+.baze-legal-switch a:hover {
+    color: var(--color-bone);
+}
+
+.baze-legal-switch a[aria-current="page"] {
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+/* ---- Mobile table of contents (native <details>, no JS) ---- */
+.baze-legal-toc-mobile {
+    padding: var(--space-6) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.baze-legal-toc-mobile details {
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+}
+
+.baze-legal-toc-mobile summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    font-size: var(--font-size-lg);
+    color: var(--color-bone);
+    list-style: none;
+}
+
+.baze-legal-toc-mobile summary::-webkit-details-marker {
+    display: none;
+}
+
+.baze-legal-toc-mobile ul {
+    list-style: none;
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    gap: var(--space-2);
+}
+
+.baze-legal-toc-mobile a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+}
+
+.baze-legal-toc-mobile a:hover,
+.baze-legal-toc-mobile a:focus-visible {
+    color: var(--color-frequency);
+}
+
+@media (min-width: 1024px) {
+    .baze-legal-toc-mobile {
+        display: none;
+    }
+}
+
+/* ---- Layout: sidebar TOC + content ---- */
+.baze-legal-layout {
+    display: block;
+    padding: var(--space-12) 0 var(--space-20);
+}
+
+@media (max-width: 1024px) {
+    .baze-legal-layout {
+        display: block;
+        padding: 0 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .baze-legal-layout {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: var(--space-12);
+        align-items: start;
+    }
+}
+
+.baze-legal-toc {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .baze-legal-toc {
+        display: block;
+        position: sticky;
+        top: 96px;
+    }
+}
+
+.baze-legal-toc-inner {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    background: var(--color-ink-raised);
+}
+
+.baze-legal-toc-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-bone-muted);
+    margin-bottom: var(--space-3);
+}
+
+.baze-legal-toc-inner ol {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.baze-legal-toc-inner a {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.baze-legal-toc-inner a:hover,
+.baze-legal-toc-inner a:focus-visible {
+    color: var(--color-bone);
+    background: rgba(240, 233, 220, 0.05);
+}
+
+.baze-legal-toc-num {
+    font-family: var(--font-display);
+    color: var(--color-frequency);
+    font-size: 0.8em;
+    flex-shrink: 0;
+}
+
+/* ---- Legal content ---- */
+.baze-legal-content {
+    max-width: 74ch;
+}
+
+.baze-legal-section {
+    position: relative;
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+}
+
+.baze-legal-section:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.baze-legal-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.1em;
+    color: var(--color-sunburst);
+    margin-bottom: var(--space-2);
+}
+
+.baze-legal-section h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    color: var(--color-bone);
+    margin-bottom: var(--space-4);
+}
+
+.baze-legal-section p {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-base);
+    line-height: 1.75;
+    margin-bottom: var(--space-4);
+    max-width: 68ch;
+}
+
+.baze-legal-section p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---- Definitions ---- */
+.baze-legal-definitions {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-5) 0;
+    padding: var(--space-4) var(--space-5);
+    border-left: 2px solid var(--color-frequency);
+    background: rgba(41, 224, 200, 0.05);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.baze-legal-definitions dt {
+    font-family: var(--font-display);
+    color: var(--color-frequency);
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.02em;
+}
+
+.baze-legal-definitions dd {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-sm);
+    margin: 2px 0 0;
+    line-height: 1.6;
+}
+
+/* ---- Notice / warning callout ---- */
+.baze-legal-notice {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid rgba(230, 41, 122, 0.35);
+    background: rgba(230, 41, 122, 0.08);
+    border-radius: var(--radius-md);
+}
+
+.baze-legal-notice strong {
+    display: block;
+    font-family: var(--font-display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    color: var(--color-hibiscus);
+    margin-bottom: var(--space-2);
+}
+
+.baze-legal-notice p {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-sm);
+    line-height: 1.65;
+    margin: 0;
+    max-width: none;
+}
+
+/* ---- Contact panel ---- */
+.baze-legal-contact {
+    margin-top: var(--space-12);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, var(--color-bg-card-start), var(--color-bg-card-end));
+    text-align: left;
+}
+
+.baze-legal-contact h3 {
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    color: var(--color-bone);
+    margin: 4px 0 10px;
+}
+
+.baze-legal-contact p {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-sm);
+    line-height: 1.65;
+    margin-bottom: var(--space-5);
+    max-width: 52ch;
+}
+
+/* ---- Focus visibility (legal pages carry a lot of links) ---- */
+.baze-legal a:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ---- Small screens: guard against overflow from long words/links ---- */
+.baze-legal-content,
+.baze-legal-contact {
+    overflow-wrap: anywhere;
+}
