@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $title ?? 'DobaPlay - Earn as an Artist' }}</title>
-
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -18,6 +16,36 @@
 
     <!-- Font Awesome (icons used in the brand-panel feature list) -->
     <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    {{-- NEW: replaces the old {{ $title ?? '...' }} line --}}
+    <x-seo-meta
+        :title="$title ?? null"
+        :description="$metaDescription ?? null"
+        :image="$metaImage ?? null"
+        :canonical="$canonical ?? null"
+        :type="$ogType ?? 'website'"
+        :noindex="$noindex ?? false"
+        :json-ld="$jsonLd ?? null"
+    />
+
+    {{-- Sitewide structured data — every marketing page gets this once --}}
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'DobaPlay',
+            'url' => url('/'),
+            'logo' => asset('favicon-32x32.png'),
+            'description' => "East Africa's music and video distribution and monetisation platform for artists, studios, record labels, events, and filmmakers.",
+            'areaServed' => 'KE',
+            'sameAs' => [
+                // add your real social profile URLs here, e.g.:
+                // 'https://www.instagram.com/dobaplay',
+                // 'https://twitter.com/dobaplay',
+                // 'https://www.facebook.com/dobaplay',
+            ],
+        ], JSON_UNESCAPED_SLASHES) !!}
+    </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles

@@ -8,8 +8,12 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Advertise | Doba Play')]
-#[Layout('layouts.marketing')]
+#[Title('Advertise | DobaPlay')]
+#[Layout('layouts.marketing', [
+    'metaDescription' => 'Reach real listeners across East Africa. Banner, audio, interstitial, and rewarded ad formats on DobaPlay, targetable from national level down to county and ward.',
+    'metaImage' => 'og/advertise-og.png',
+    'keywords' => 'advertise on music streaming app, audio advertising kenya, targeted ads by county kenya, reach music listeners kenya, banner ads music platform',
+])]
 class Advertise extends Component
 {
     /**

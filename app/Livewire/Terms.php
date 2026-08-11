@@ -8,8 +8,13 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Terms of Service | Doba Play')]
-#[Layout('layouts.marketing')]
+#[Title('Terms of Service | DobaPlay')]
+#[Layout('layouts.marketing', [
+    'metaDescription' => 'Read the DobaPlay Terms & Conditions covering creator accounts, content ownership, payouts, and platform use for artists, studios, labels, events, and filmmakers.',
+    'metaImage' => 'og/legal-og.png',
+    'keywords' => 'dobaplay terms of service, music distribution platform terms kenya',
+    'canonical' => null, // route('terms') resolves via url(request()->path())
+])]
 class Terms extends Component
 {
     public string $effectiveDate = '[EFFECTIVE DATE]';

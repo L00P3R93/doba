@@ -5,9 +5,16 @@ namespace App\Livewire;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Layout('layouts.marketing')]
+#[Title('DobaPlay - Turn Your Sound Into Income')]
+#[Layout('layouts.marketing', [
+    'metaDescription' => 'Upload once, get paid everywhere. DobaPlay is East Africa\'s distribution home for artists, studios, and record labels — one yearly plan, Instant payouts, zero upload fees.',
+    'metaImage' => 'og/home-og.png',
+    'keywords' => 'doba, dobaplay, doba play, dobaplay kenya, dobaplay login, dobaplay register, dobaplay sign up, dobaplay pricing, dobaplay app, dobaplay artist account, is dobaplay legit, music distribution kenya, music distribution east africa, upload music online kenya, platform for musicians in kenya, music royalties payout m-pesa',
+    'jsonLd' => null, // Organization schema already covers the homepage sitewide
+])]
 class Home extends Component
 {
     /**

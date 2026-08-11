@@ -3,14 +3,13 @@
 namespace App\Livewire;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Title('Pricing | Doba Play')]
-#[Layout('layouts.marketing')]
+#[Title('Pricing — Listener & Creator Plans | DobaPlay')]
 class Pricing extends Component
 {
     /**
@@ -169,8 +168,64 @@ class Pricing extends Component
         $this->mode = in_array($mode, ['listener', 'creator'], true) ? $mode : 'listener';
     }
 
+    /**
+     * Build schema.org Product/Offer JSON-LD from the plan arrays so
+     * individual plans are eligible for Google price/rich results.
+     * Assumes each plan has: title, price, key, features[] — matches
+     * the fields already used in the Blade view (adjust field names
+     * below if your actual array keys differ).
+     */
+    protected function buildPricingJsonLd(): string
+    {
+        $toOffers = function (array $plans, string $category) {
+            return collect($plans)->map(function ($plan) use ($category) {
+                return [
+                    '@type' => 'Product',
+                    'name' => "DobaPlay {$plan['title']} Plan",
+                    'category' => $category,
+                    'url' => route('pricing').'#'.($plan['key'] ?? Str::slug($plan['title'])),
+                    'brand' => [
+                        '@type' => 'Brand',
+                        'name' => 'DobaPlay',
+                    ],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'price' => (string) $plan['price'],
+                        'priceCurrency' => 'KES',
+                        'availability' => 'https://schema.org/InStock',
+                        'url' => route('pricing').'#'.($plan['key'] ?? Str::slug($plan['title'])),
+                        'priceValidUntil' => now()->addYear()->toDateString(),
+                    ],
+                ];
+            })->values()->all();
+        };
+
+        $items = array_merge(
+            $toOffers($this->listenerPlans, 'Listener Subscription'),
+            $toOffers($this->creatorPlans, 'Creator Distribution Plan'),
+        );
+
+        return json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'ItemList',
+            'itemListElement' => collect($items)->map(function ($item, $i) {
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $i + 1,
+                    'item' => $item,
+                ];
+            })->values()->all(),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
     public function render(): Factory|\Illuminate\Contracts\View\View|View
     {
-        return view('livewire.⚡pricing');
+        return view('livewire.⚡pricing')
+            ->layout('layouts.marketing', [
+                'metaDescription' => 'Premium music streaming plans for listeners and one yearly distribution plan for artists, studios, record labels, events, and filmmakers — all payable via M-Pesa.',
+                'metaImage' => 'og/pricing-og.jpg',
+                'keywords' => 'premium music streaming kenya, m-pesa music subscription, record label distribution platform africa, ad-free music streaming africa, offline music download app kenya',
+                'jsonLd' => $this->buildPricingJsonLd(),
+            ]);
     }
 }

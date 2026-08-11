@@ -8,8 +8,12 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Privacy | Doba Play')]
-#[Layout('layouts.marketing')]
+#[Title('Privacy | DobaPlay')]
+#[Layout('layouts.marketing', [
+    'metaDescription' => 'DobaPlay\'s Privacy Policy: what data we collect from creators and listeners, how M-Pesa payment data is handled, and your rights over your information.',
+    'metaImage' => 'og/legal-og.jpg',
+    'keywords' => 'dobaplay privacy policy, m-pesa data privacy kenya',
+])]
 class Privacy extends Component
 {
     public string $effectiveDate = '[EFFECTIVE DATE]';

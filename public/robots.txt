@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /confirm-password
+Disallow: /reset-password
+Disallow: /two-factor-challenge
+Disallow: /verify-email
+Disallow: /admin
+
+Sitemap: https://dobaplay.com/sitemap.xml
