@@ -1,0 +1,932 @@
+/* ==========================================================================
+   DobaPlay Streaming Homepage — "Baze Livery" extension
+   Scoped under .baze-stream- / .baze-rail- / .baze-poster- / .baze-music-
+   so these rules cannot collide with existing baze-livery.css classes.
+   Built entirely from tokens already defined in app.css :root — no new
+   colors or fonts introduced.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------
+   HERO
+   --------------------------------------------------------------------- */
+
+.baze-stream-hero {
+    position: relative;
+    min-height: 78vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--color-ink);
+    /* Contains all of the hero's z-index'd children (nav, content,
+       thumbrail) in their own stacking context, so nothing they do —
+       including mid-transition layout shifts — can ever paint above
+       sibling sections like the marquee strip below. */
+    isolation: isolate;
+}
+
+@media (max-width: 640px) {
+    .baze-stream-hero {
+        min-height: 62vh;
+    }
+}
+
+.baze-stream-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Slides stack on top of each other; only .is-active is visible/painted. */
+.baze-stream-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 900ms ease, transform 8000ms linear;
+    will-change: opacity, transform;
+    z-index: 0;
+}
+
+.baze-stream-slide-img.is-active {
+    opacity: 1;
+    transform: scale(1.08);
+    z-index: 1;
+}
+
+@keyframes baze-hero-kenburns {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+}
+
+.baze-stream-hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+        linear-gradient(180deg, rgba(18, 15, 13, 0.15) 0%, rgba(18, 15, 13, 0.55) 55%, var(--color-ink) 100%),
+        linear-gradient(90deg, rgba(18, 15, 13, 0.92) 0%, rgba(18, 15, 13, 0.55) 45%, rgba(18, 15, 13, 0.15) 85%);
+}
+
+.baze-stream-hero-glow {
+    position: absolute;
+    z-index: 2;
+    width: 26rem;
+    height: 26rem;
+    border-radius: 9999px;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+.baze-stream-hero-glow--sun {
+    top: -8rem;
+    left: -6rem;
+    background: radial-gradient(circle, rgba(255, 107, 26, 0.5), transparent 70%);
+}
+
+.baze-stream-hero-glow--freq {
+    bottom: -10rem;
+    right: -8rem;
+    background: radial-gradient(circle, rgba(41, 224, 200, 0.35), transparent 70%);
+}
+
+.baze-stream-hero-content {
+    position: relative;
+    z-index: 3;
+    padding-bottom: var(--space-16);
+    padding-top: var(--space-16);
+    max-width: 640px;
+}
+
+@media (max-width: 768px) {
+    .baze-stream-hero-content {
+        max-width: 100%;
+        padding-bottom: var(--space-10);
+    }
+}
+
+/* Reserves the vertical space the tallest slide's copy needs, then
+   stacks every .baze-stream-slide-copy absolutely inside it — exactly
+   like the background images. Without this, the outgoing and incoming
+   slide's text both sit in normal document flow for the ~150ms they
+   overlap during a crossfade, which nearly doubles this wrapper's
+   height for a frame and shoves the marquee strip (and everything
+   below it) down and behind the hero. Absolute positioning removes
+   slide copy from flow entirely, so a transition can never resize it. */
+.baze-stream-slides {
+    position: relative;
+    min-height: 440px;
+}
+
+@media (max-width: 768px) {
+    .baze-stream-slides {
+        min-height: 380px;
+    }
+}
+
+.baze-stream-slide-copy {
+    position: absolute;
+    inset: 0;
+}
+
+.baze-stream-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-sunburst);
+    margin-bottom: var(--space-4);
+}
+
+.baze-stream-title {
+    font-size: clamp(2.5rem, 6vw, 4.75rem);
+    line-height: 0.95;
+    color: var(--color-bone);
+    margin-bottom: var(--space-4);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    /* Long TMDB titles (e.g. "Spider-Man: Brand New Day") can otherwise
+       wrap to 3-4 lines and blow past .baze-stream-slides' reserved
+       height. Capping at 2 lines keeps every slide's height predictable
+       regardless of how long the source title is. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 640px) {
+    /* clamp()'s 2.5rem floor is still too large for phone-width
+       columns — a multi-word title ends up one word-fragment per line
+       ("SPIDER-" / "MAN:...") instead of wrapping naturally. Drop the
+       floor so the title actually fits 2-3 words per line here. */
+    .baze-stream-title {
+        font-size: clamp(1.85rem, 9vw, 2.75rem);
+        line-height: 1.05;
+    }
+}
+
+.baze-stream-tagline {
+    font-size: var(--font-size-xl);
+    color: var(--color-bone-dim);
+    max-width: 46ch;
+    line-height: 1.5;
+    margin-bottom: var(--space-5);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.baze-stream-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: var(--color-bone-muted);
+    font-weight: 600;
+    margin-bottom: var(--space-8);
+}
+
+.baze-stream-meta-dot {
+    color: var(--color-bone-faint);
+}
+
+.baze-stream-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.baze-stream-btn-watch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-sm);
+    background: var(--color-sunburst);
+    color: var(--color-ink);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    text-decoration: none;
+    transition: all var(--transition-base);
+}
+
+.baze-stream-btn-watch:hover {
+    background: var(--color-sunburst-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-accent);
+}
+
+.baze-stream-btn-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: var(--space-4) var(--space-6);
+    border-radius: var(--radius-sm);
+    background: rgba(245, 240, 232, 0.1);
+    border: 1px solid rgba(245, 240, 232, 0.25);
+    color: var(--color-bone);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    backdrop-filter: blur(4px);
+}
+
+.baze-stream-btn-list:hover {
+    background: rgba(245, 240, 232, 0.18);
+}
+
+.baze-stream-btn-list[aria-pressed="true"] {
+    border-color: var(--color-frequency);
+    color: var(--color-frequency);
+}
+
+.baze-stream-hero-subcta {
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    color: var(--color-bone-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.baze-stream-hero-subcta:hover {
+    color: var(--color-frequency);
+    border-color: var(--color-frequency);
+}
+
+/* ---------------------------------------------------------------------
+   HERO CAROUSEL — nav arrows, progress bar, thumbnail rail
+   --------------------------------------------------------------------- */
+
+.baze-stream-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    border: 1px solid rgba(245, 240, 232, 0.25);
+    background: rgba(18, 15, 13, 0.45);
+    color: var(--color-bone);
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .25s ease, background .2s ease, color .2s ease, transform .2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.baze-stream-hero:hover .baze-stream-nav,
+.baze-stream-nav:focus-visible {
+    opacity: 1;
+}
+
+.baze-stream-nav--prev { left: var(--space-6); }
+.baze-stream-nav--next { right: var(--space-6); }
+
+.baze-stream-nav:hover {
+    background: var(--color-sunburst);
+    border-color: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+.baze-stream-nav:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+    /* 768px left a gap where a narrow browser window (or a device
+       between phone and tablet width) could still trigger the
+       hover-reveal and land the arrow directly on top of the hero
+       copy. 900px matches the breakpoint the rest of the site already
+       uses to switch to mobile chrome (see .baze-nav-toggle). */
+    .baze-stream-nav {
+        display: none;
+        pointer-events: none;
+    }
+}
+
+.baze-stream-progress {
+    display: flex;
+    gap: 6px;
+    max-width: 340px;
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: 0;
+}
+
+.baze-stream-progress-seg {
+    flex: 1;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(245, 240, 232, 0.18);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.baze-stream-progress-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    height: 100%;
+    width: 0%;
+    background: var(--color-sunburst);
+    border-radius: 999px;
+    transition: width 100ms linear;
+}
+
+.baze-stream-progress-seg[aria-selected="true"] {
+    background: rgba(245, 240, 232, 0.28);
+}
+
+.baze-stream-progress-seg:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+.baze-stream-thumbrail {
+    position: absolute;
+    z-index: 4;
+    right: var(--space-8);
+    bottom: 0;
+    transform: translateY(50%);
+    display: flex;
+    gap: 10px;
+    background: rgba(18, 15, 13, 0.55);
+    border: 1px solid rgba(245, 240, 232, 0.14);
+    border-radius: var(--radius-lg);
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.baze-stream-thumb {
+    width: 46px;
+    height: 66px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0.55;
+    flex-shrink: 0;
+    transition: opacity .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.baze-stream-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.baze-stream-thumb:hover {
+    opacity: 0.85;
+    transform: translateY(-3px);
+}
+
+.baze-stream-thumb.is-active {
+    opacity: 1;
+    border-color: var(--color-sunburst);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 900px) {
+    /* Keeps the mobile hero uncluttered — progress segments + swipe still work. */
+    .baze-stream-thumbrail { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .baze-stream-slide-img {
+        transform: none !important;
+        transition: opacity 300ms ease !important;
+    }
+    .baze-stream-nav,
+    .baze-stream-thumb {
+        transition: none;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   RAIL SECTION SHELL (shared by all content rails)
+   --------------------------------------------------------------------- */
+
+.baze-rail-section {
+    padding: var(--space-12) 0;
+}
+
+.baze-rail-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.baze-rail-sub {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-base);
+    margin-top: var(--space-2);
+    max-width: 60ch;
+}
+
+.baze-rail-shell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.baze-rail-viewport {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.baze-rail-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding: 4px 2px 12px;
+}
+
+.baze-rail-track::-webkit-scrollbar {
+    display: none;
+}
+
+.baze-rail-track:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 4px;
+}
+
+.baze-rail-arrow {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    color: var(--color-bone);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.baze-rail-arrow:hover:not(:disabled) {
+    border-color: var(--color-sunburst);
+    color: var(--color-sunburst);
+}
+
+.baze-rail-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.baze-rail-arrow:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .baze-rail-arrow {
+        display: none;
+    }
+}
+
+/* Subtle feedback while a genre-chip click is round-tripping to the
+   server — the rail dims and stops accepting scroll/click until the
+   new movieGrid arrives. */
+.baze-rail-shell--loading {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+}
+
+.baze-genre-chip:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.baze-rail-fade {
+    position: absolute;
+    top: 0;
+    bottom: 12px;
+    width: 48px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    z-index: 1;
+}
+
+.baze-rail-fade--left {
+    left: 0;
+    background: linear-gradient(90deg, var(--color-ink), transparent);
+}
+
+.baze-rail-fade--right {
+    right: 0;
+    background: linear-gradient(270deg, var(--color-ink), transparent);
+}
+
+.baze-rail-fade.is-visible {
+    opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+   POSTER CARD (landscape — Trending Today/This Week, New Releases,
+   Popular, Top Rated, Movies). Uses TMDB backdrop art (mapResults()
+   prefers backdrop_path over poster_path) so the crop is genuinely
+   widescreen rather than a cropped portrait poster.
+   --------------------------------------------------------------------- */
+
+.baze-poster-card {
+    flex-shrink: 0;
+    width: 240px;
+    scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+    .baze-poster-card { width: 280px; }
+}
+
+@media (min-width: 1024px) {
+    .baze-poster-card { width: 320px; }
+}
+
+.baze-poster-art {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.baze-poster-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.baze-poster-card:hover .baze-poster-art {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.baze-poster-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: var(--color-bone);
+    background: rgba(18, 15, 13, 0.35);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.baze-poster-card:hover .baze-poster-play,
+.baze-poster-card:focus-within .baze-poster-play {
+    opacity: 1;
+}
+
+.baze-poster-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+.baze-poster-tag--top-10 { background: var(--color-sunburst); color: var(--color-ink); }
+.baze-poster-tag--trending { background: var(--color-hibiscus); color: var(--color-bone); }
+.baze-poster-tag--new { background: var(--color-frequency); color: var(--color-ink); }
+
+.baze-poster-info {
+    padding-top: var(--space-2);
+}
+
+.baze-poster-title {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-bone);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.baze-poster-meta {
+    font-size: 0.7rem;
+    color: var(--color-bone-muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------------------------------------------------------------------
+   LANDSCAPE CARD (Continue Watching, Trailers)
+   --------------------------------------------------------------------- */
+
+.baze-landscape-card,
+.baze-trailer-card {
+    flex-shrink: 0;
+    width: 260px;
+    scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+    .baze-landscape-card,
+    .baze-trailer-card { width: 300px; }
+}
+
+@media (min-width: 1024px) {
+    .baze-landscape-card,
+    .baze-trailer-card { width: 340px; }
+}
+
+.baze-landscape-art {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    box-shadow: var(--shadow-md);
+}
+
+.baze-landscape-art img,
+.baze-trailer-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.baze-landscape-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(18, 15, 13, 0.85) 100%);
+}
+
+.baze-landscape-playbtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    background: rgba(245, 240, 232, 0.15);
+    border: 1px solid rgba(245, 240, 232, 0.4);
+    color: var(--color-bone);
+    font-size: 1.1rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all var(--transition-fast);
+}
+
+button.baze-landscape-playbtn:hover {
+    background: var(--color-sunburst);
+    border-color: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+.baze-trailer-poster-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.baze-landscape-info {
+    padding-top: var(--space-2);
+}
+
+.baze-progress-track {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(245, 240, 232, 0.12);
+    margin-top: var(--space-2);
+    overflow: hidden;
+}
+
+.baze-progress-fill {
+    height: 100%;
+    background: var(--color-sunburst);
+    border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   GENRE CHIPS (Movies section)
+   --------------------------------------------------------------------- */
+
+.baze-genre-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--space-6);
+}
+
+.baze-genre-chip {
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.baze-genre-chip:hover {
+    border-color: var(--color-sunburst);
+    color: var(--color-bone);
+}
+
+.baze-genre-chip.is-active {
+    background: var(--color-sunburst);
+    border-color: var(--color-sunburst);
+    color: var(--color-ink);
+}
+
+.baze-genre-chip:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   MUSIC CARD
+   --------------------------------------------------------------------- */
+
+.baze-music-card {
+    flex-shrink: 0;
+    width: 150px;
+    scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+    .baze-music-card { width: 170px; }
+}
+
+.baze-music-art {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    box-shadow: var(--shadow-md);
+}
+
+.baze-music-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.baze-music-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--color-bone);
+    background: rgba(18, 15, 13, 0.4);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.baze-music-card:hover .baze-music-play {
+    opacity: 1;
+}
+
+.baze-music-info {
+    padding-top: var(--space-2);
+}
+
+/* ---------------------------------------------------------------------
+   WATCH / LISTEN / CREATE TRIPTYCH
+   --------------------------------------------------------------------- */
+
+.baze-triptych {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+    .baze-triptych {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.baze-triptych-card {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, var(--color-bg-card-start), var(--color-bg-card-end));
+}
+
+.baze-triptych-icon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-4);
+}
+
+.baze-triptych-card h4 {
+    font-size: var(--font-size-2xl);
+    letter-spacing: 0.02em;
+    color: var(--color-bone);
+    margin-bottom: var(--space-2);
+}
+
+.baze-triptych-card p {
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+}
+
+.baze-triptych-link {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ---------------------------------------------------------------------
+   CREATOR BANNER
+   --------------------------------------------------------------------- */
+
+.baze-creator-banner {
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 107, 26, 0.12), transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(41, 224, 200, 0.1), transparent 55%),
+        linear-gradient(180deg, var(--color-bg-card-start), var(--color-bg-card-end));
+}
+
+.baze-creator-banner h2 {
+    max-width: 20ch;
+    margin: 0 auto var(--space-4);
+}
+
+.baze-creator-banner p {
+    color: var(--color-bone-dim);
+    max-width: 52ch;
+    margin: 0 auto var(--space-6);
+    font-size: var(--font-size-lg);
+}
+
+.baze-creator-banner-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+}

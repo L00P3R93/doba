@@ -16,9 +16,8 @@
         <a href="{{ route('home') }}" class="baze-display baze-nav-logo">Doba<span class="baze-accent">Play</span></a>
 
         <div class="baze-nav-links">
-            <a href="{{ url('/#plans') }}">Creators</a>
-            <a href="{{ route('pricing') }}">Listeners</a>
-            <a href="{{ url('/#cinema') }}">Cinema</a>
+            <a href="{{ route('home') }}">Home</a>
+            <a href="{{ route('pricing') }}">Pricing</a>
             <a href="{{ route('advertise') }}">Advertise With Us</a>
         </div>
 
@@ -59,9 +58,8 @@
         x-transition:leave-end="opacity-0 -translate-y-2"
     >
         <div class="baze-wrap baze-nav-mobile-inner">
-            <a href="{{ url('/#plans') }}" @click="mobileOpen = false">Creators</a>
-            <a href="{{ route('pricing') }}" @click="mobileOpen = false">Listeners</a>
-            <a href="{{ url('/#cinema') }}" @click="mobileOpen = false">Cinema</a>
+            <a href="{{ route('home') }}" @click="mobileOpen = false">Home</a>
+            <a href="{{ route('pricing') }}" @click="mobileOpen = false">Pricing</a>
             <a href="{{ route('advertise') }}" @click="mobileOpen = false">Advertise With Us</a>
 
             <div class="baze-nav-mobile-cta">

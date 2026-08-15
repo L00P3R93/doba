@@ -48,4 +48,10 @@ return [
         'endpoint' => env('BREVO_ENDPOINT', 'https://api.brevo.com/v3/smtp/email'),
     ],
 
+    'tmdb' => [
+        'key' => env('TMDB_API_KEY'),
+        'access_token' => env('TMDB_ACCESS_TOKEN'),
+        'endpoint' => env('TMDB_ENDPOINT', 'https://api.themoviedb.org/3'),
+    ]
+
 ];

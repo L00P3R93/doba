@@ -11,7 +11,55 @@
     class="min-h-screen"
     style="background: linear-gradient(180deg, var(--color-bg-dark-start), var(--color-bg-dark-end)); color: var(--color-text-primary); font-family: var(--font-sans);"
 >
-    {{-- HERO --}}
+    {{-- ============================================================
+         HERO — "The Turntable"
+         Signature moment: an idling vinyl (record.png) as the hero
+         visual, framed like a turntable platter with a tonearm.
+         ============================================================
+    <section class="baze-hero">
+        <div class="baze-wrap baze-hero-grid">
+            <div>
+                <div class="baze-eyebrow">MUSIC · VIDEO · PODCASTS · EVENTS · CINEMA</div>
+                <h1 class="baze-display baze-hero-h1">
+                    TURN YOUR SOUND INTO <span class="baze-accent">INCOME</span>
+                </h1>
+                <p class="baze-lede">
+                    DobaPlay is East Africa's distribution home for artists, studios, and record labels.
+                    Upload once, get paid everywhere — one yearly plan, no hidden cuts.
+                </p>
+                <div class="baze-hero-ctas">
+                    <a href="#plans" class="baze-btn baze-btn-primary">Pick your plan &nbsp;↓</a>
+                </div>
+
+            </div>
+
+            <div class="baze-turntable-stage">
+                <div class="baze-platter-glow"></div>
+                <div class="baze-badge-chip baze-chip-1">
+                    <span class="baze-dot" style="background:var(--color-frequency)"></span>
+                    Now streaming: 12,400+ tracks
+                </div>
+                <div class="baze-tonearm"></div>
+                <div class="baze-vinyl-wrap">
+                    <img src="{{ asset('home/record.png') }}" alt="DobaPlay record" loading="eager">
+                </div>
+                <div class="baze-badge-chip baze-chip-2">
+                    <span class="baze-dot" style="background:var(--color-sunburst)"></span>
+                    Payouts every Friday
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="baze-marquee-strip">
+        <div class="baze-marquee-track">
+            <span>♪ ARTISTS</span><span>▤ STUDIOS</span><span>◉ RECORD LABELS</span><span>▲ EVENTS</span><span>▶ CINEMA</span>
+            <span>♪ ARTISTS</span><span>▤ STUDIOS</span><span>◉ RECORD LABELS</span><span>▲ EVENTS</span><span>▶ CINEMA</span>
+        </div>
+    </div>
+    --}}
+
+    {{-- OLD HERO --}}
     <section class="baze-hero">
         <div class="baze-wrap pt-28 pb-16 text-center">
             <div class="baze-eyebrow" style="justify-content:center; margin-bottom: 22px;">
@@ -331,7 +379,7 @@
         </div>
     </section>
 
-    {{-- WHY IT MATTERS --}}
+    {{-- WHY IT MATTERS
     <section class="baze-section">
         <div class="baze-wrap">
             <div class="baze-section-head" style="margin-bottom: 44px;">
@@ -364,4 +412,5 @@
             </ul>
         </div>
     </section>
+    --}}
 </div>

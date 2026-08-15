@@ -40,7 +40,7 @@
 }
 
 .baze-display { font-family: var(--font-display); letter-spacing: 0.02em; }
-.baze-wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.baze-wrap { /*max-width: 1180px; margin: 0 auto;*/ padding: 0 24px; }
 .baze-wrap-pricing { max-width: 1180px; margin: 0 auto; padding: 70px 0 40px; }
 
 .baze-eyebrow {

@@ -1,119 +1,49 @@
 <div>
     {{-- ============================================================
-         HERO — "Now Streaming" carousel
-         Auto-advancing, cross-fading hero built on TMDB's daily
-         trending list (Home::$heroFeatures). Ken-Burns zoom on the
-         active backdrop, an Instagram/Netflix-style segmented
-         progress bar that doubles as a slide picker, hover-reveal
-         arrows, and a floating "coming up" thumbnail rail. Respects
-         prefers-reduced-motion (no autoplay, no zoom) and pauses on
-         hover/focus/touch.
+         HERO — "Now Streaming"
+         Cinematic featured-title hero. Background art crops via
+         object-fit so it survives either portrait or landscape
+         source assets; verify the crop against the real file and
+         swap $heroFeature['image'] if a wider still frames better.
          ============================================================ --}}
-    <section class="baze-stream-hero"
-             x-data="heroCarousel({{ count($heroFeatures) }})"
-             x-init="init()"
-             @mouseenter="pause()" @mouseleave="resume()"
-             @focusin="pause()" @focusout="resume()"
-             @touchstart="touchX = $event.changedTouches[0].clientX"
-             @touchend="Math.abs($event.changedTouches[0].clientX - touchX) > 40 && (($event.changedTouches[0].clientX - touchX) < 0 ? next() : prev())">
-
+    <section class="baze-stream-hero" x-data="{ saved: false }">
         <div class="baze-stream-hero-bg">
-            @foreach ($heroFeatures as $index => $feature)
-                <img src="{{ $feature['image'] }}"
-                     alt="{{ $feature['title'] }}"
-                     loading="eager"
-                     fetchpriority="{{ $index === 0 ? 'high' : 'auto' }}"
-                     decoding="async"
-                     class="baze-stream-slide-img"
-                     :class="{ 'is-active': active === {{ $index }} }">
-            @endforeach
+            <img src="{{ asset('movies/images/'.$heroFeature['image']) }}"
+                 alt="{{ $heroFeature['title'] }}"
+                 loading="eager"
+                 fetchpriority="high">
             <div class="baze-stream-hero-scrim"></div>
             <div class="baze-stream-hero-glow baze-stream-hero-glow--sun"></div>
             <div class="baze-stream-hero-glow baze-stream-hero-glow--freq"></div>
         </div>
 
-        @if (count($heroFeatures) > 1)
-            <button type="button" class="baze-stream-nav baze-stream-nav--prev" @click="prev()" aria-label="Previous title">‹</button>
-            <button type="button" class="baze-stream-nav baze-stream-nav--next" @click="next()" aria-label="Next title">›</button>
-        @endif
-
         <div class="baze-wrap baze-stream-hero-content">
-            {{-- Slides are absolutely stacked inside this reserved-height
-                 wrapper, same as the background images, so the outgoing
-                 and incoming slide's text can briefly coexist during the
-                 crossfade WITHOUT changing the hero's layout height. --}}
-            <div class="baze-stream-slides">
-                @foreach ($heroFeatures as $index => $feature)
-                    <div class="baze-stream-slide-copy"
-                         x-show="active === {{ $index }}"
-                         x-cloak
-                         x-transition:enter="transition ease-out duration-500"
-                         x-transition:enter-start="opacity-0 translate-y-3"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100"
-                         x-transition:leave-end="opacity-0">
+            <span class="baze-stream-badge">{{ $heroFeature['kicker'] }}</span>
+            <h1 class="baze-display baze-stream-title">{{ $heroFeature['title'] }}</h1>
+            <p class="baze-stream-tagline">{{ $heroFeature['tagline'] }}</p>
 
-                        <span class="baze-stream-badge">{{ $feature['kicker'] }}</span>
-                        <h1 class="baze-display baze-stream-title">{{ $feature['title'] }}</h1>
-                        <p class="baze-stream-tagline">{{ $feature['tagline'] }}</p>
-
-                        <div class="baze-stream-meta" aria-label="Title details">
-                            @foreach ($feature['meta'] as $i => $item)
-                                @if ($i > 0)<span class="baze-stream-meta-dot" aria-hidden="true">·</span>@endif
-                                <span>{{ $item }}</span>
-                            @endforeach
-                        </div>
-
-                        <div class="baze-stream-ctas" x-data="{ saved: false }">
-                            <a href="{{ $feature['watch_href'] }}" class="baze-stream-btn-watch">
-                                <span aria-hidden="true">▶</span> Watch Now
-                            </a>
-                            {{--
-                             <button type="button"
-                                    class="baze-stream-btn-list"
-                                    :aria-pressed="saved"
-                                    @click="saved = !saved">
-                                <span x-text="saved ? '✓' : '+'" aria-hidden="true"></span>
-                                <span x-text="saved ? 'On My List' : 'Add to My List'"></span>
-                            </button>
-                             --}}
-                        </div>
-                    </div>
+            <div class="baze-stream-meta" aria-label="Title details">
+                @foreach ($heroFeature['meta'] as $i => $item)
+                    @if ($i > 0)<span class="baze-stream-meta-dot" aria-hidden="true">·</span>@endif
+                    <span>{{ $item }}</span>
                 @endforeach
+            </div>
+
+            <div class="baze-stream-ctas">
+                <a href="{{ $heroFeature['watch_href'] }}" class="baze-stream-btn-watch">
+                    <span aria-hidden="true">▶</span> Watch Now
+                </a>
+                <button type="button"
+                        class="baze-stream-btn-list"
+                        :aria-pressed="saved"
+                        @click="saved = !saved">
+                    <span x-text="saved ? '✓' : '+'" aria-hidden="true"></span>
+                    <span x-text="saved ? 'On My List' : 'Add to My List'"></span>
+                </button>
             </div>
 
             <a href="{{ url('/pricing?mode=creator') }}" class="baze-stream-hero-subcta">Are you a filmmaker or artist? See Creator Plans →</a>
-
-            @if (count($heroFeatures) > 1)
-                <div class="baze-stream-progress" role="tablist" aria-label="Featured titles" style="margin-top: 12px !important;">
-                    @foreach ($heroFeatures as $index => $feature)
-                        <button type="button"
-                                class="baze-stream-progress-seg"
-                                role="tab"
-                                :aria-selected="active === {{ $index }}"
-                                aria-label="Show {{ $feature['title'] }}"
-                                @click="goTo({{ $index }})">
-                            <span class="baze-stream-progress-fill" :style="{ width: fillWidth({{ $index }}) }"></span>
-                        </button>
-                    @endforeach
-                </div>
-            @endif
         </div>
-
-        @if (count($heroFeatures) > 1)
-            <div class="baze-stream-thumbrail" aria-hidden="true">
-                @foreach ($heroFeatures as $index => $feature)
-                    <button type="button"
-                            class="baze-stream-thumb"
-                            :class="{ 'is-active': active === {{ $index }} }"
-                            @click="goTo({{ $index }})"
-                            tabindex="-1">
-                        <img src="{{ $feature['poster'] ?? $feature['image'] }}" alt="" loading="lazy">
-                    </button>
-                @endforeach
-            </div>
-        @endif
     </section>
 
     <div class="baze-marquee-strip">
@@ -168,14 +98,14 @@
     </section>
 
     {{-- ============================================================
-         TRENDING TODAY — landscape poster rail
+         TRENDING NOW — portrait poster rail
          ============================================================ --}}
-    <section class="baze-rail-section" id="trending-today">
+    <section class="baze-rail-section" id="trending">
         <div class="baze-wrap">
             <div class="baze-rail-head">
                 <div>
-                    <div class="baze-eyebrow">WHAT EVERYONE'S WATCHING RIGHT NOW</div>
-                    <h2 class="baze-display baze-h2">Trending Today</h2>
+                    <div class="baze-eyebrow">WHAT EVERYONE'S WATCHING</div>
+                    <h2 class="baze-display baze-h2">Trending Now</h2>
                 </div>
             </div>
 
@@ -183,11 +113,11 @@
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Trending today" tabindex="0">
-                        @foreach ($trendingToday as $item)
+                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Trending now" tabindex="0">
+                        @foreach ($trendingNow as $item)
                             <div class="baze-poster-card">
                                 <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
+                                    <img src="{{ asset('movies/images/'.$item['image']) }}" alt="{{ $item['title'] }}" loading="lazy">
                                     @if ($item['badge'])
                                         <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
                                     @endif
@@ -210,49 +140,7 @@
     </section>
 
     {{-- ============================================================
-         TRENDING THIS WEEK — landscape poster rail
-         ============================================================ --}}
-    <section class="baze-rail-section" id="trending-week">
-        <div class="baze-wrap">
-            <div class="baze-rail-head">
-                <div>
-                    <div class="baze-eyebrow">THIS WEEK'S BIGGEST</div>
-                    <h2 class="baze-display baze-h2">Trending This Week</h2>
-                </div>
-            </div>
-
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
-
-                <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Trending this week" tabindex="0">
-                        @foreach ($trendingWeek as $item)
-                            <div class="baze-poster-card">
-                                <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
-                                    @endif
-                                    <div class="baze-poster-play" aria-hidden="true">▶</div>
-                                </div>
-                                <div class="baze-poster-info">
-                                    <div class="baze-poster-title">{{ $item['title'] }}</div>
-                                    <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
-                    <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
-                </div>
-
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next titles">›</button>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============================================================
-         NEW RELEASES — landscape poster rail
+         NEW RELEASES — portrait poster rail
          ============================================================ --}}
     <section class="baze-rail-section" id="new-releases">
         <div class="baze-wrap">
@@ -271,91 +159,7 @@
                         @foreach ($newReleases as $item)
                             <div class="baze-poster-card">
                                 <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
-                                    @endif
-                                    <div class="baze-poster-play" aria-hidden="true">▶</div>
-                                </div>
-                                <div class="baze-poster-info">
-                                    <div class="baze-poster-title">{{ $item['title'] }}</div>
-                                    <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
-                    <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
-                </div>
-
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next titles">›</button>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============================================================
-         POPULAR — landscape poster rail
-         ============================================================ --}}
-    <section class="baze-rail-section" id="popular">
-        <div class="baze-wrap">
-            <div class="baze-rail-head">
-                <div>
-                    <div class="baze-eyebrow">CROWD FAVOURITES</div>
-                    <h2 class="baze-display baze-h2">Popular</h2>
-                </div>
-            </div>
-
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
-
-                <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Popular" tabindex="0">
-                        @foreach ($popularMovies as $item)
-                            <div class="baze-poster-card">
-                                <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
-                                    @endif
-                                    <div class="baze-poster-play" aria-hidden="true">▶</div>
-                                </div>
-                                <div class="baze-poster-info">
-                                    <div class="baze-poster-title">{{ $item['title'] }}</div>
-                                    <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
-                    <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
-                </div>
-
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next titles">›</button>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============================================================
-         TOP RATED — landscape poster rail
-         ============================================================ --}}
-    <section class="baze-rail-section" id="top-rated">
-        <div class="baze-wrap">
-            <div class="baze-rail-head">
-                <div>
-                    <div class="baze-eyebrow">CRITICALLY ACCLAIMED</div>
-                    <h2 class="baze-display baze-h2">Top Rated</h2>
-                </div>
-            </div>
-
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
-
-                <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Top rated" tabindex="0">
-                        @foreach ($topRatedMovies as $item)
-                            <div class="baze-poster-card">
-                                <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
+                                    <img src="{{ asset('movies/images/'.$item['image']) }}" alt="{{ $item['title'] }}" loading="lazy">
                                     @if ($item['badge'])
                                         <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
                                     @endif
@@ -379,12 +183,8 @@
 
     {{-- ============================================================
          MOVIES — genre chips + browse rail
-         Chips call selectGenre() on the Home component, which re-queries
-         TMDB (byGenre / byKeyword / byOriginCountry — each cached on
-         its own key) and swaps $movieGrid. wire:key on the rail-shell
-         forces Alpine's baseRail() to fully reinitialize whenever the
-         genre changes, so the arrow/overflow state is re-measured
-         against the new set of cards rather than the previous one.
+         Chips are visual-only for now; wire wire:click / a query
+         string to $movieGenres later without touching this markup.
          ============================================================ --}}
     <section class="baze-rail-section" id="movies">
         <div class="baze-wrap">
@@ -397,25 +197,12 @@
             </div>
 
             <div class="baze-genre-chips" role="tablist" aria-label="Filter movies by genre">
-                @foreach ($movieGenres as $genre)
-                    <button type="button"
-                            class="baze-genre-chip {{ $activeGenre === $genre ? 'is-active' : '' }}"
-                            role="tab"
-                            aria-selected="{{ $activeGenre === $genre ? 'true' : 'false' }}"
-                            wire:click="selectGenre('{{ $genre }}')"
-                            wire:loading.attr="disabled"
-                            wire:target="selectGenre('{{ $genre }}')">
-                        {{ $genre }}
-                    </button>
+                @foreach ($movieGenres as $i => $genre)
+                    <button type="button" class="baze-genre-chip {{ $i === 0 ? 'is-active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}">{{ $genre }}</button>
                 @endforeach
             </div>
 
-            <div class="baze-rail-shell"
-                 wire:key="movies-rail-{{ $activeGenre }}"
-                 wire:loading.class="baze-rail-shell--loading"
-                 wire:target="selectGenre"
-                 x-data="baseRail('.baze-poster-card')"
-                 x-init="init()">
+            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
@@ -423,7 +210,7 @@
                         @foreach ($movieGrid as $item)
                             <div class="baze-poster-card">
                                 <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
+                                    <img src="{{ asset('movies/images/'.$item['image']) }}" alt="{{ $item['title'] }}" loading="lazy">
                                     <div class="baze-poster-play" aria-hidden="true">▶</div>
                                 </div>
                                 <div class="baze-poster-info">
@@ -441,7 +228,6 @@
             </div>
         </div>
     </section>
-
 
     {{-- ============================================================
          TRAILERS — click-to-play landscape rail
@@ -548,7 +334,7 @@
                     <div class="baze-triptych-icon" style="color:var(--color-sunburst)">▶</div>
                     <h4 class="baze-display">WATCH</h4>
                     <p>Movies, series, documentaries, and trailers — new titles added every week.</p>
-                    <a href="#trending-today" class="baze-triptych-link" style="color:var(--color-sunburst)">Browse titles →</a>
+                    <a href="#trending" class="baze-triptych-link" style="color:var(--color-sunburst)">Browse titles →</a>
                 </div>
                 <div class="baze-triptych-card">
                     <div class="baze-triptych-icon" style="color:var(--color-frequency)">♪</div>
@@ -616,11 +402,11 @@
     </section>
 
     {{-- ============================================================
-         Reusable Alpine components: the rail-scroll carousel used by
-         every content rail, and the hero carousel used above. Wrapped
-         in @once so they only register once even if this partial is
-         ever included more than once on a page. Consider moving both
-         into resources/js/app.js as permanent globals.
+         Reusable rail-scroll Alpine component.
+         Wrapped in @once so it only renders if this partial is ever
+         included more than once on a page. Consider moving this
+         function into resources/js/app.js as a permanent global if
+         you add more rails elsewhere on the site.
          ============================================================ --}}
     @once
         <script>
@@ -657,64 +443,6 @@
                         const step = card ? card.getBoundingClientRect().width + 16 : rail.clientWidth * 0.85;
                         rail.scrollBy({ left: direction * step, behavior: reduceMotion ? 'auto' : 'smooth' });
                     }
-                }
-            }
-
-            /**
-             * Netflix-style hero carousel: autoplay with a segmented,
-             * fillable progress bar (also a slide picker), manual
-             * prev/next, click-to-jump thumbnails, and full
-             * pause-on-hover/focus/touch support. Skips autoplay
-             * entirely under prefers-reduced-motion — segments still
-             * work as static tabs, just without the timer or zoom.
-             */
-            function heroCarousel(count, intervalMs = 7000) {
-                return {
-                    active: 0,
-                    count: count,
-                    progress: 0,
-                    paused: false,
-                    reduceMotion: false,
-                    touchX: 0,
-                    timer: null,
-                    init() {
-                        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                        if (this.count > 1 && !this.reduceMotion) this.start();
-                    },
-                    start() {
-                        clearInterval(this.timer);
-                        this.progress = 0;
-                        const tickMs = 100;
-                        this.timer = setInterval(() => {
-                            if (this.paused) return;
-                            this.progress += (tickMs / intervalMs) * 100;
-                            if (this.progress >= 100) this.next();
-                        }, tickMs);
-                    },
-                    stop() {
-                        clearInterval(this.timer);
-                    },
-                    goTo(i) {
-                        this.active = i;
-                        this.progress = 0;
-                        if (!this.reduceMotion) this.start(); else this.stop();
-                    },
-                    next() {
-                        this.active = (this.active + 1) % this.count;
-                        this.progress = 0;
-                    },
-                    prev() {
-                        this.active = (this.active - 1 + this.count) % this.count;
-                        this.progress = 0;
-                        if (!this.reduceMotion) this.start();
-                    },
-                    pause() { this.paused = true; },
-                    resume() { this.paused = false; },
-                    fillWidth(i) {
-                        if (i < this.active) return '100%';
-                        if (i > this.active) return '0%';
-                        return (this.reduceMotion ? 100 : this.progress) + '%';
-                    },
                 }
             }
         </script>
