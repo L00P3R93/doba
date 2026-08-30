@@ -434,14 +434,6 @@
     padding: var(--space-12) 0;
 }
 
-.baze-rail-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-}
-
 .baze-rail-sub {
     color: var(--color-bone-dim);
     font-size: var(--font-size-base);
@@ -798,6 +790,139 @@ button.baze-landscape-playbtn:hover {
 }
 
 /* ---------------------------------------------------------------------
+   RAIL TOGGLE (per-rail Movies / TV)
+   --------------------------------------------------------------------- */
+
+.baze-rail-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.baze-rail-toggle {
+    display: inline-flex;
+    border-radius: 9999px;
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    padding: 2px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.baze-rail-toggle-btn {
+    padding: 4px 14px;
+    border-radius: 9999px;
+    border: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--color-bone-dim);
+    background: transparent;
+    white-space: nowrap;
+}
+
+.baze-rail-toggle-btn.is-active {
+    background: var(--color-mustard);
+    color: var(--color-ink);
+}
+
+.baze-rail-toggle-btn:hover:not(.is-active) {
+    color: var(--color-bone);
+}
+
+.baze-rail-toggle-btn:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   SCORE BADGE
+   --------------------------------------------------------------------- */
+
+.baze-score-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    z-index: 2;
+}
+
+.baze-score-badge--high {
+    background: #22c55e;
+    color: #fff;
+}
+
+.baze-score-badge--mid {
+    background: #eab308;
+    color: #000;
+}
+
+.baze-score-badge--low {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* ---------------------------------------------------------------------
+   ADD TO LIST BUTTON (+)
+   --------------------------------------------------------------------- */
+
+.baze-poster-add {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}
+
+.baze-poster-add:hover {
+    background: var(--color-mustard);
+    border-color: var(--color-mustard);
+    color: var(--color-ink);
+    transform: scale(1.1);
+}
+
+.baze-poster-add:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   RAIL EMPTY STATE
+   --------------------------------------------------------------------- */
+
+.baze-rail-empty {
+    padding: var(--space-8) var(--space-4);
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    width: 100%;
+}
+
+/* ---------------------------------------------------------------------
    MUSIC CARD
    --------------------------------------------------------------------- */
 
@@ -929,4 +1054,34 @@ button.baze-landscape-playbtn:hover {
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--space-4);
+}
+
+/* ---------------------------------------------------------------------
+   WATCH / PLAYER
+   --------------------------------------------------------------------- */
+
+.baze-player-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.baze-player-container iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .baze-player-container {
+        border-radius: 0;
+        max-width: 100%;
+    }
 }

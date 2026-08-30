@@ -1,12 +1,27 @@
 {
     "agents": [
         "claude_code",
-        "phpstorm"
+        "opencode",
+        "cursor",
+        "codex"
     ],
-    "editors": [
-        "claude_code",
-        "phpstorm",
-        "vscode"
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
+        "filament/filament",
+        "laravel/fortify",
+        "laravel/socialite",
+        "spatie/laravel-permission"
     ],
-    "guidelines": []
+    "sail": false,
+    "skills": [
+        "fluxui-development",
+        "livewire-development",
+        "pest-testing",
+        "tailwindcss-development",
+        "fortify-development",
+        "socialite-development",
+        "laravel-permission-development"
+    ]
 }

@@ -9,9 +9,17 @@ use App\Livewire\Home;
 use App\Livewire\Pricing;
 use App\Livewire\Privacy;
 use App\Livewire\Terms;
+use App\Livewire\TvShow;
+use App\Livewire\WatchMovie;
+use App\Livewire\WatchTv;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
+
+// Watch routes — movie and TV streaming pages
+Route::get('/watch/movie/{tmdbId}', WatchMovie::class)->name('watch.movie');
+Route::get('/watch/tv/{tmdbId}/{season}/{episode}', WatchTv::class)->name('watch.tv');
+Route::get('/tv/{tmdbId}', TvShow::class)->name('tv.show');
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');

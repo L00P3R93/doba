@@ -7,14 +7,15 @@ use App\Models\Ep;
 use App\Models\EpSong;
 use App\Models\Podcast;
 use App\Models\PodcastEpisode;
+use App\Models\Song;
+use App\Models\User;
 use App\Observers\AlbumObserver;
 use App\Observers\EpObserver;
 use App\Observers\EpSongObserver;
 use App\Observers\PodcastObserver;
 use App\Observers\SongObserver;
 use App\Observers\UserObserver;
-use App\Models\Song;
-use App\Models\User;
+use App\Services\StreamingProviderService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -30,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(StreamingProviderService::class);
     }
 
     /**

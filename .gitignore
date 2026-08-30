@@ -24,3 +24,8 @@ yarn-error.log
 
 /tasks
 /public/movies
+/.agents
+/.claude
+/.ai
+/.codex
+/.cursor

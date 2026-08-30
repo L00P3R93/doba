@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Title('DobaPlay - Stream Movies, Series & Music From Africa & Beyond')]
@@ -41,15 +42,34 @@ class Home extends Component
     /** "Top Rated" — landscape rail, TMDB's top_rated. */
     public array $topRatedMovies = [];
 
-    /**
-     * "Movies" — the genre-filterable browse rail. Starts as $popularMovies
-     * ("All") and swaps to a byGenre()/byKeyword()/byOriginCountry() result
-     * whenever a chip is clicked. See selectGenre() below.
-     */
-    public array $movieGrid = [];
+    /** "New Episodes" — TV shows currently on air. */
+    public array $newEpisodes = [];
 
-    /** Currently selected "Movies" genre chip. */
-    public string $activeGenre = 'All';
+    /** TV counterpart data for per-rail toggles. */
+    public array $tvTrendingToday = [];
+
+    public array $tvTrendingWeek = [];
+
+    public array $tvPopular = [];
+
+    public array $tvTopRated = [];
+
+    /**
+     * Per-rail content type toggles.
+     * Each rail independently switches between 'movies' and 'tv'.
+     * Persisted in the URL so sharing or refreshing keeps the user's choice.
+     */
+    #[Url]
+    public string $trendingTodayType = 'movies';
+
+    #[Url]
+    public string $trendingWeekType = 'movies';
+
+    #[Url]
+    public string $topRatedType = 'movies';
+
+    #[Url]
+    public string $popularType = 'movies';
 
     /**
      * "Continue Watching" — landscape cards with demo progress.
@@ -62,33 +82,6 @@ class Home extends Component
         ['title' => 'The Wolf of Wall Street', 'image' => 'the wolf of wall street.PNG', 'remaining' => '42m remaining', 'progress' => 78],
         ['title' => 'Terminator: Dark Fate', 'image' => 'terimator.PNG', 'remaining' => '55m remaining', 'progress' => 30],
         ['title' => 'Zodiac', 'image' => 'zodiac.PNG', 'remaining' => '1h 40m remaining', 'progress' => 15],
-    ];
-
-    /**
-     * "Movies" — genre filter chips shown to the user. Keys in
-     * $genreFilters below must match these labels exactly.
-     */
-    public array $movieGenres = ['All', 'Action', 'Drama', 'Thriller', 'Anime', 'Sci-Fi', 'Horror', 'War', 'African Cinema'];
-
-    /**
-     * Maps each genre chip label to how it should query TMDB:
-     *  - 'genre'   -> TMDB::byGenre($id)              (standard TMDB genre id)
-     *  - 'keyword' -> TMDB::byKeyword($id)             (TMDB keyword id — for
-     *                 chips with no clean matching genre, e.g. Anime)
-     *  - 'origin'  -> TMDB::byOriginCountry($countries) (production country —
-     *                 for "African Cinema", which isn't a TMDB genre at all)
-     *  - 'popular' -> falls back to $popularMovies      ("All")
-     */
-    protected array $genreFilters = [
-        'All' => ['type' => 'popular'],
-        'Action' => ['type' => 'genre', 'id' => 28],
-        'Drama' => ['type' => 'genre', 'id' => 18],
-        'Thriller' => ['type' => 'genre', 'id' => 53],
-        'Anime' => ['type' => 'keyword', 'id' => 210024], // TMDB's canonical "anime" keyword
-        'Sci-Fi' => ['type' => 'genre', 'id' => 878],
-        'Horror' => ['type' => 'genre', 'id' => 27],
-        'War' => ['type' => 'genre', 'id' => 10752],
-        'African Cinema' => ['type' => 'origin', 'countries' => ['KE', 'NG', 'ZA', 'GH', 'ET']],
     ];
 
     /**
@@ -250,34 +243,31 @@ class Home extends Component
         $this->popularMovies = $feed['popular'] ?: $this->fallbackMovieGrid();
         $this->topRatedMovies = $feed['top_rated'] ?: $this->fallbackMovieGrid();
 
-        // "Movies" starts on the "All" chip, which is just $popularMovies.
-        $this->movieGrid = $this->popularMovies;
+        // TV data
+        $tvFeed = TMDB::tvHomeFeed();
+        $this->tvTrendingToday = $tvFeed['trending_today'] ?: [];
+        $this->tvTrendingWeek = $tvFeed['trending_week'] ?: [];
+        $this->tvPopular = $tvFeed['popular'] ?: [];
+        $this->tvTopRated = $tvFeed['top_rated'] ?: [];
+        $this->newEpisodes = TMDB::tvOnTheAir() ?: $this->fallbackTrending();
     }
 
     /**
-     * Genre chip click handler. Re-queries TMDB (through its own cache —
-     * see TMDBService::byGenre()/byKeyword()/byOriginCountry()) for the
-     * selected chip and swaps $movieGrid. "All" is free — it just points
-     * back at the already-loaded $popularMovies instead of firing a
-     * request.
+     * Switch a rail between movies and tv content.
      */
-    public function selectGenre(string $genre): void
+    public function switchRail(string $rail, string $type): void
     {
-        if (! array_key_exists($genre, $this->genreFilters)) {
+        if (! in_array($type, ['movies', 'tv'])) {
             return;
         }
 
-        $this->activeGenre = $genre;
-        $filter = $this->genreFilters[$genre];
-
-        $results = match ($filter['type']) {
-            'genre' => TMDB::byGenre($filter['id'], 12),
-            'keyword' => TMDB::byKeyword($filter['id'], 12),
-            'origin' => TMDB::byOriginCountry($filter['countries'], 12),
-            default => $this->popularMovies,
+        match ($rail) {
+            'trendingToday' => $this->trendingTodayType = $type,
+            'trendingWeek' => $this->trendingWeekType = $type,
+            'topRated' => $this->topRatedType = $type,
+            'popular' => $this->popularType = $type,
+            default => null,
         };
-
-        $this->movieGrid = $results ?: $this->fallbackMovieGrid();
     }
 
     public function render(): Factory|View|\Illuminate\View\View
@@ -294,6 +284,7 @@ class Home extends Component
     {
         return collect([
             [
+                'tmdb_id' => 76600,
                 'kicker' => 'DOBAPLAY PICK · NOW STREAMING',
                 'title' => 'THE COVENANT',
                 'tagline' => "A soldier's promise becomes a race against time, loyalty, and betrayal.",
@@ -301,6 +292,7 @@ class Home extends Component
                 'image' => 'the covenant.PNG',
             ],
             [
+                'tmdb_id' => 603,
                 'kicker' => 'TRENDING TODAY',
                 'title' => 'JOHN WICK',
                 'tagline' => 'An ex-hitman comes out of retirement to track down the gangsters that took everything from him.',
@@ -308,6 +300,7 @@ class Home extends Component
                 'image' => 'wick.PNG',
             ],
             [
+                'tmdb_id' => 315162,
                 'kicker' => 'TRENDING TODAY',
                 'title' => 'GODZILLA',
                 'tagline' => 'A colossal force of nature resurfaces, and humanity must find a way to survive.',
@@ -315,6 +308,7 @@ class Home extends Component
                 'image' => 'godzilla.PNG',
             ],
             [
+                'tmdb_id' => 872585,
                 'kicker' => 'TRENDING TODAY',
                 'title' => 'OPPENHEIMER',
                 'tagline' => 'The story of J. Robert Oppenheimer and the race to build the atomic bomb.',
@@ -325,49 +319,49 @@ class Home extends Component
             ...$item,
             'image' => asset('movies/images/'.$item['image']),
             'poster' => asset('movies/images/'.$item['image']),
-            'watch_href' => '#trending-today',
+            'watch_href' => route('watch.movie', $item['tmdb_id'] ?? 0),
         ])->all();
     }
 
     protected function fallbackTrending(): array
     {
         return $this->localiseImages([
-            ['title' => 'Solo Leveling', 'image' => 'solo leveling.PNG', 'year' => '2024', 'genre' => 'Anime · Action', 'badge' => 'TOP 10'],
-            ['title' => 'Godzilla', 'image' => 'godzilla.PNG', 'year' => '2023', 'genre' => 'Action · Sci-Fi', 'badge' => null],
-            ['title' => 'The Meg', 'image' => 'the meg.PNG', 'year' => '2023', 'genre' => 'Action · Thriller', 'badge' => null],
-            ['title' => 'John Wick', 'image' => 'wick.PNG', 'year' => '2023', 'genre' => 'Action · Crime', 'badge' => 'TRENDING'],
-            ['title' => 'Oppenheimer', 'image' => 'oppenheimer.PNG', 'year' => '2023', 'genre' => 'Drama · Biography', 'badge' => null],
-            ['title' => 'Sakamoto Days', 'image' => 'sakamoto days.PNG', 'year' => '2024', 'genre' => 'Anime · Action', 'badge' => 'NEW'],
-            ['title' => 'Black Clover', 'image' => 'black clover.jpg', 'year' => '2023', 'genre' => 'Anime · Fantasy', 'badge' => null],
-            ['title' => 'Game of Thrones', 'image' => 'game of thrones.PNG', 'year' => 'Series', 'genre' => 'Fantasy · Drama', 'badge' => null],
+            ['title' => 'Solo Leveling', 'image' => 'solo leveling.PNG', 'year' => '2024', 'genre' => 'Anime · Action', 'score' => 85, 'badge' => 'TOP 10'],
+            ['title' => 'Godzilla', 'image' => 'godzilla.PNG', 'year' => '2023', 'genre' => 'Action · Sci-Fi', 'score' => 72, 'badge' => null],
+            ['title' => 'The Meg', 'image' => 'the meg.PNG', 'year' => '2023', 'genre' => 'Action · Thriller', 'score' => 68, 'badge' => null],
+            ['title' => 'John Wick', 'image' => 'wick.PNG', 'year' => '2023', 'genre' => 'Action · Crime', 'score' => 79, 'badge' => 'TRENDING'],
+            ['title' => 'Oppenheimer', 'image' => 'oppenheimer.PNG', 'year' => '2023', 'genre' => 'Drama · Biography', 'score' => 88, 'badge' => null],
+            ['title' => 'Sakamoto Days', 'image' => 'sakamoto days.PNG', 'year' => '2024', 'genre' => 'Anime · Action', 'score' => 82, 'badge' => 'NEW'],
+            ['title' => 'Black Clover', 'image' => 'black clover.jpg', 'year' => '2023', 'genre' => 'Anime · Fantasy', 'score' => 76, 'badge' => null],
+            ['title' => 'Game of Thrones', 'image' => 'game of thrones.PNG', 'year' => 'Series', 'genre' => 'Fantasy · Drama', 'score' => 91, 'badge' => null],
         ]);
     }
 
     protected function fallbackNewReleases(): array
     {
         return $this->localiseImages([
-            ['title' => 'Dhurandhar: The Revenge', 'image' => 'Dhurandhar-_The_Revenge_poster.jpg.webp', 'year' => '2026', 'genre' => 'Action · Thriller', 'badge' => 'NEW'],
-            ['title' => 'El Camino', 'image' => 'el camino.PNG', 'year' => '2019', 'genre' => 'Drama · Crime', 'badge' => null],
-            ['title' => 'War Machine', 'image' => 'war_machine.jpg', 'year' => '2017', 'genre' => 'War · Drama', 'badge' => null],
-            ['title' => 'Mosul', 'image' => 'mosul.PNG', 'year' => '2019', 'genre' => 'War · Action', 'badge' => null],
-            ['title' => 'Priest', 'image' => 'priest.PNG', 'year' => '2011', 'genre' => 'Action · Horror', 'badge' => null],
-            ['title' => 'Van Helsing', 'image' => 'van hellsing.PNG', 'year' => '2004', 'genre' => 'Fantasy · Action', 'badge' => null],
-            ['title' => 'IT', 'image' => 'IT.PNG', 'year' => '2017', 'genre' => 'Horror', 'badge' => null],
-            ['title' => 'Slender Man', 'image' => 'slender man.PNG', 'year' => '2018', 'genre' => 'Horror', 'badge' => null],
+            ['title' => 'Dhurandhar: The Revenge', 'image' => 'Dhurandhar-_The_Revenge_poster.jpg.webp', 'year' => '2026', 'genre' => 'Action · Thriller', 'score' => null, 'badge' => 'NEW'],
+            ['title' => 'El Camino', 'image' => 'el camino.PNG', 'year' => '2019', 'genre' => 'Drama · Crime', 'score' => 74, 'badge' => null],
+            ['title' => 'War Machine', 'image' => 'war_machine.jpg', 'year' => '2017', 'genre' => 'War · Drama', 'score' => 65, 'badge' => null],
+            ['title' => 'Mosul', 'image' => 'mosul.PNG', 'year' => '2019', 'genre' => 'War · Action', 'score' => 71, 'badge' => null],
+            ['title' => 'Priest', 'image' => 'priest.PNG', 'year' => '2011', 'genre' => 'Action · Horror', 'score' => 58, 'badge' => null],
+            ['title' => 'Van Helsing', 'image' => 'van hellsing.PNG', 'year' => '2004', 'genre' => 'Fantasy · Action', 'score' => 55, 'badge' => null],
+            ['title' => 'IT', 'image' => 'IT.PNG', 'year' => '2017', 'genre' => 'Horror', 'score' => 73, 'badge' => null],
+            ['title' => 'Slender Man', 'image' => 'slender man.PNG', 'year' => '2018', 'genre' => 'Horror', 'score' => 42, 'badge' => null],
         ]);
     }
 
     protected function fallbackMovieGrid(): array
     {
         return $this->localiseImages([
-            ['title' => '300', 'image' => '300.jpg', 'year' => '2006', 'genre' => 'Action · War'],
-            ['title' => 'Ninja Assassin', 'image' => 'ninja assasin.PNG', 'year' => '2009', 'genre' => 'Action · Thriller'],
-            ['title' => 'Shooter', 'image' => 'shooter.PNG', 'year' => '2007', 'genre' => 'Action · Thriller'],
-            ['title' => 'Warcraft', 'image' => 'warcraft.jpg', 'year' => '2016', 'genre' => 'Fantasy · Action'],
-            ['title' => 'The Irishman', 'image' => 'the irishman.PNG', 'year' => '2019', 'genre' => 'Crime · Drama'],
-            ['title' => 'Spiderman', 'image' => 'spiderman.PNG', 'year' => '2002', 'genre' => 'Action · Sci-Fi'],
-            ['title' => 'Megalodon', 'image' => 'megaladon.PNG', 'year' => '2018', 'genre' => 'Action · Thriller'],
-            ['title' => 'Van Helsing', 'image' => 'van hellsing.PNG', 'year' => '2004', 'genre' => 'Fantasy · Action'],
+            ['title' => '300', 'image' => '300.jpg', 'year' => '2006', 'genre' => 'Action · War', 'score' => 72, 'badge' => null],
+            ['title' => 'Ninja Assassin', 'image' => 'ninja assasin.PNG', 'year' => '2009', 'genre' => 'Action · Thriller', 'score' => 58, 'badge' => null],
+            ['title' => 'Shooter', 'image' => 'shooter.PNG', 'year' => '2007', 'genre' => 'Action · Thriller', 'score' => 75, 'badge' => null],
+            ['title' => 'Warcraft', 'image' => 'warcraft.jpg', 'year' => '2016', 'genre' => 'Fantasy · Action', 'score' => 68, 'badge' => null],
+            ['title' => 'The Irishman', 'image' => 'the irishman.PNG', 'year' => '2019', 'genre' => 'Crime · Drama', 'score' => 80, 'badge' => null],
+            ['title' => 'Spiderman', 'image' => 'spiderman.PNG', 'year' => '2002', 'genre' => 'Action · Sci-Fi', 'score' => 73, 'badge' => null],
+            ['title' => 'Megalodon', 'image' => 'megaladon.PNG', 'year' => '2018', 'genre' => 'Action · Thriller', 'score' => 52, 'badge' => null],
+            ['title' => 'Van Helsing', 'image' => 'van hellsing.PNG', 'year' => '2004', 'genre' => 'Fantasy · Action', 'score' => 55, 'badge' => null],
         ]);
     }
 

@@ -1,13 +1,6 @@
 <div>
     {{-- ============================================================
          HERO — "Now Streaming" carousel
-         Auto-advancing, cross-fading hero built on TMDB's daily
-         trending list (Home::$heroFeatures). Ken-Burns zoom on the
-         active backdrop, an Instagram/Netflix-style segmented
-         progress bar that doubles as a slide picker, hover-reveal
-         arrows, and a floating "coming up" thumbnail rail. Respects
-         prefers-reduced-motion (no autoplay, no zoom) and pauses on
-         hover/focus/touch.
          ============================================================ --}}
     <section class="baze-stream-hero"
              x-data="heroCarousel({{ count($heroFeatures) }})"
@@ -38,10 +31,6 @@
         @endif
 
         <div class="baze-wrap baze-stream-hero-content">
-            {{-- Slides are absolutely stacked inside this reserved-height
-                 wrapper, same as the background images, so the outgoing
-                 and incoming slide's text can briefly coexist during the
-                 crossfade WITHOUT changing the hero's layout height. --}}
             <div class="baze-stream-slides">
                 @foreach ($heroFeatures as $index => $feature)
                     <div class="baze-stream-slide-copy"
@@ -69,15 +58,6 @@
                             <a href="{{ $feature['watch_href'] }}" class="baze-stream-btn-watch">
                                 <span aria-hidden="true">▶</span> Watch Now
                             </a>
-                            {{--
-                             <button type="button"
-                                    class="baze-stream-btn-list"
-                                    :aria-pressed="saved"
-                                    @click="saved = !saved">
-                                <span x-text="saved ? '✓' : '+'" aria-hidden="true"></span>
-                                <span x-text="saved ? 'On My List' : 'Add to My List'"></span>
-                            </button>
-                             --}}
                         </div>
                     </div>
                 @endforeach
@@ -125,7 +105,6 @@
 
     {{-- ============================================================
          CONTINUE WATCHING — landscape cards with progress
-         Static demo data, shaped to swap in real watch-history later.
          ============================================================ --}}
     <section class="baze-rail-section" id="continue-watching">
         <div class="baze-wrap">
@@ -168,7 +147,7 @@
     </section>
 
     {{-- ============================================================
-         TRENDING TODAY — landscape poster rail
+         TRENDING TODAY — with Movies/TV toggle
          ============================================================ --}}
     <section class="baze-rail-section" id="trending-today">
         <div class="baze-wrap">
@@ -177,28 +156,45 @@
                     <div class="baze-eyebrow">WHAT EVERYONE'S WATCHING RIGHT NOW</div>
                     <h2 class="baze-display baze-h2">Trending Today</h2>
                 </div>
+                <div class="baze-rail-toggle" role="tablist" aria-label="Trending Today content type">
+                    <button class="baze-rail-toggle-btn {{ $trendingTodayType === 'movies' ? 'is-active' : '' }}"
+                            wire:click="switchRail('trendingToday', 'movies')" role="tab"
+                            aria-selected="{{ $trendingTodayType === 'movies' ? 'true' : 'false' }}">Movies</button>
+                    <button class="baze-rail-toggle-btn {{ $trendingTodayType === 'tv' ? 'is-active' : '' }}"
+                            wire:click="switchRail('trendingToday', 'tv')" role="tab"
+                            aria-selected="{{ $trendingTodayType === 'tv' ? 'true' : 'false' }}">TV</button>
+                </div>
             </div>
 
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
+            <div class="baze-rail-shell" wire:key="trending-today-{{ $trendingTodayType }}" x-data="baseRail('.baze-poster-card')" x-init="init()">
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
                     <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Trending today" tabindex="0">
-                        @foreach ($trendingToday as $item)
-                            <div class="baze-poster-card">
+                        @php $items = $trendingTodayType === 'tv' ? $tvTrendingToday : $trendingToday; @endphp
+                        @forelse ($items as $item)
+                            @php
+                                $cardHref = (!empty($item['type']) && $item['type'] === 'tv')
+                                    ? route('tv.show', $item['tmdb_id'] ?? 0)
+                                    : route('watch.movie', $item['tmdb_id'] ?? 0);
+                            @endphp
+                            <a href="{{ $cardHref }}" class="baze-poster-card" style="text-decoration: none; color: inherit;">
                                 <div class="baze-poster-art">
                                     <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
+                                    @if (!empty($item['score']))
+                                        <span class="baze-score-badge {{ $item['score'] >= 70 ? 'baze-score-badge--high' : ($item['score'] >= 50 ? 'baze-score-badge--mid' : 'baze-score-badge--low') }}">{{ $item['score'] }}%</span>
                                     @endif
+                                    <button type="button" class="baze-poster-add" aria-label="Add {{ $item['title'] }} to list">+</button>
                                     <div class="baze-poster-play" aria-hidden="true">▶</div>
                                 </div>
                                 <div class="baze-poster-info">
                                     <div class="baze-poster-title">{{ $item['title'] }}</div>
                                     <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
                                 </div>
-                            </div>
-                        @endforeach
+                            </a>
+                        @empty
+                            <div class="baze-rail-empty">No trending titles available right now.</div>
+                        @endforelse
                     </div>
                     <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
                     <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
@@ -210,7 +206,7 @@
     </section>
 
     {{-- ============================================================
-         TRENDING THIS WEEK — landscape poster rail
+         TRENDING THIS WEEK — with Movies/TV toggle
          ============================================================ --}}
     <section class="baze-rail-section" id="trending-week">
         <div class="baze-wrap">
@@ -219,28 +215,45 @@
                     <div class="baze-eyebrow">THIS WEEK'S BIGGEST</div>
                     <h2 class="baze-display baze-h2">Trending This Week</h2>
                 </div>
+                <div class="baze-rail-toggle" role="tablist" aria-label="Trending This Week content type">
+                    <button class="baze-rail-toggle-btn {{ $trendingWeekType === 'movies' ? 'is-active' : '' }}"
+                            wire:click="switchRail('trendingWeek', 'movies')" role="tab"
+                            aria-selected="{{ $trendingWeekType === 'movies' ? 'true' : 'false' }}">Movies</button>
+                    <button class="baze-rail-toggle-btn {{ $trendingWeekType === 'tv' ? 'is-active' : '' }}"
+                            wire:click="switchRail('trendingWeek', 'tv')" role="tab"
+                            aria-selected="{{ $trendingWeekType === 'tv' ? 'true' : 'false' }}">TV</button>
+                </div>
             </div>
 
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
+            <div class="baze-rail-shell" wire:key="trending-week-{{ $trendingWeekType }}" x-data="baseRail('.baze-poster-card')" x-init="init()">
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
                     <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Trending this week" tabindex="0">
-                        @foreach ($trendingWeek as $item)
-                            <div class="baze-poster-card">
+                        @php $items = $trendingWeekType === 'tv' ? $tvTrendingWeek : $trendingWeek; @endphp
+                        @forelse ($items as $item)
+                            @php
+                                $cardHref = (!empty($item['type']) && $item['type'] === 'tv')
+                                    ? route('tv.show', $item['tmdb_id'] ?? 0)
+                                    : route('watch.movie', $item['tmdb_id'] ?? 0);
+                            @endphp
+                            <a href="{{ $cardHref }}" class="baze-poster-card" style="text-decoration: none; color: inherit;">
                                 <div class="baze-poster-art">
                                     <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
+                                    @if (!empty($item['score']))
+                                        <span class="baze-score-badge {{ $item['score'] >= 70 ? 'baze-score-badge--high' : ($item['score'] >= 50 ? 'baze-score-badge--mid' : 'baze-score-badge--low') }}">{{ $item['score'] }}%</span>
                                     @endif
+                                    <button type="button" class="baze-poster-add" aria-label="Add {{ $item['title'] }} to list">+</button>
                                     <div class="baze-poster-play" aria-hidden="true">▶</div>
                                 </div>
                                 <div class="baze-poster-info">
                                     <div class="baze-poster-title">{{ $item['title'] }}</div>
                                     <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
                                 </div>
-                            </div>
-                        @endforeach
+                            </a>
+                        @empty
+                            <div class="baze-rail-empty">No trending titles available right now.</div>
+                        @endforelse
                     </div>
                     <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
                     <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
@@ -252,91 +265,52 @@
     </section>
 
     {{-- ============================================================
-         NEW RELEASES — landscape poster rail
+         NEW EPISODES — TV-only rail, no toggle
          ============================================================ --}}
-    <section class="baze-rail-section" id="new-releases">
+    <section class="baze-rail-section" id="new-episodes">
         <div class="baze-wrap">
             <div class="baze-rail-head">
                 <div>
-                    <div class="baze-eyebrow">JUST ADDED</div>
-                    <h2 class="baze-display baze-h2">New Releases</h2>
+                    <div class="baze-eyebrow">FRESH EPISODES DROPPING NOW</div>
+                    <h2 class="baze-display baze-h2">New Episodes</h2>
                 </div>
             </div>
 
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
+            <div class="baze-rail-shell" x-data="baseRail('.baze-landscape-card')" x-init="init()">
+                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous episodes">‹</button>
 
                 <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="New releases" tabindex="0">
-                        @foreach ($newReleases as $item)
-                            <div class="baze-poster-card">
-                                <div class="baze-poster-art">
+                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="New episodes" tabindex="0">
+                        @forelse ($newEpisodes as $item)
+                            <div class="baze-landscape-card">
+                                <div class="baze-landscape-art">
                                     <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
+                                    @if (!empty($item['score']))
+                                        <span class="baze-score-badge {{ $item['score'] >= 70 ? 'baze-score-badge--high' : ($item['score'] >= 50 ? 'baze-score-badge--mid' : 'baze-score-badge--low') }}">{{ $item['score'] }}%</span>
                                     @endif
-                                    <div class="baze-poster-play" aria-hidden="true">▶</div>
+                                    <div class="baze-landscape-scrim"></div>
+                                    <button type="button" class="baze-landscape-playbtn" aria-label="Play {{ $item['title'] }}">▶</button>
                                 </div>
-                                <div class="baze-poster-info">
+                                <div class="baze-landscape-info">
                                     <div class="baze-poster-title">{{ $item['title'] }}</div>
                                     <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="baze-rail-empty">No new episodes available right now.</div>
+                        @endforelse
                     </div>
                     <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
                     <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
                 </div>
 
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next titles">›</button>
+                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next episodes">›</button>
             </div>
         </div>
     </section>
 
     {{-- ============================================================
-         POPULAR — landscape poster rail
-         ============================================================ --}}
-    <section class="baze-rail-section" id="popular">
-        <div class="baze-wrap">
-            <div class="baze-rail-head">
-                <div>
-                    <div class="baze-eyebrow">CROWD FAVOURITES</div>
-                    <h2 class="baze-display baze-h2">Popular</h2>
-                </div>
-            </div>
-
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
-
-                <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Popular" tabindex="0">
-                        @foreach ($popularMovies as $item)
-                            <div class="baze-poster-card">
-                                <div class="baze-poster-art">
-                                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
-                                    @endif
-                                    <div class="baze-poster-play" aria-hidden="true">▶</div>
-                                </div>
-                                <div class="baze-poster-info">
-                                    <div class="baze-poster-title">{{ $item['title'] }}</div>
-                                    <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
-                    <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
-                </div>
-
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next titles">›</button>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============================================================
-         TOP RATED — landscape poster rail
+         TOP RATED — with Movies/TV toggle
          ============================================================ --}}
     <section class="baze-rail-section" id="top-rated">
         <div class="baze-wrap">
@@ -345,28 +319,45 @@
                     <div class="baze-eyebrow">CRITICALLY ACCLAIMED</div>
                     <h2 class="baze-display baze-h2">Top Rated</h2>
                 </div>
+                <div class="baze-rail-toggle" role="tablist" aria-label="Top Rated content type">
+                    <button class="baze-rail-toggle-btn {{ $topRatedType === 'movies' ? 'is-active' : '' }}"
+                            wire:click="switchRail('topRated', 'movies')" role="tab"
+                            aria-selected="{{ $topRatedType === 'movies' ? 'true' : 'false' }}">Movies</button>
+                    <button class="baze-rail-toggle-btn {{ $topRatedType === 'tv' ? 'is-active' : '' }}"
+                            wire:click="switchRail('topRated', 'tv')" role="tab"
+                            aria-selected="{{ $topRatedType === 'tv' ? 'true' : 'false' }}">TV</button>
+                </div>
             </div>
 
-            <div class="baze-rail-shell" x-data="baseRail('.baze-poster-card')" x-init="init()">
+            <div class="baze-rail-shell" wire:key="top-rated-{{ $topRatedType }}" x-data="baseRail('.baze-poster-card')" x-init="init()">
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
                     <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Top rated" tabindex="0">
-                        @foreach ($topRatedMovies as $item)
-                            <div class="baze-poster-card">
+                        @php $items = $topRatedType === 'tv' ? $tvTopRated : $topRatedMovies; @endphp
+                        @forelse ($items as $item)
+                            @php
+                                $cardHref = (!empty($item['type']) && $item['type'] === 'tv')
+                                    ? route('tv.show', $item['tmdb_id'] ?? 0)
+                                    : route('watch.movie', $item['tmdb_id'] ?? 0);
+                            @endphp
+                            <a href="{{ $cardHref }}" class="baze-poster-card" style="text-decoration: none; color: inherit;">
                                 <div class="baze-poster-art">
                                     <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
-                                    @if ($item['badge'])
-                                        <span class="baze-poster-tag baze-poster-tag--{{ \Illuminate\Support\Str::slug($item['badge']) }}">{{ $item['badge'] }}</span>
+                                    @if (!empty($item['score']))
+                                        <span class="baze-score-badge {{ $item['score'] >= 70 ? 'baze-score-badge--high' : ($item['score'] >= 50 ? 'baze-score-badge--mid' : 'baze-score-badge--low') }}">{{ $item['score'] }}%</span>
                                     @endif
+                                    <button type="button" class="baze-poster-add" aria-label="Add {{ $item['title'] }} to list">+</button>
                                     <div class="baze-poster-play" aria-hidden="true">▶</div>
                                 </div>
                                 <div class="baze-poster-info">
                                     <div class="baze-poster-title">{{ $item['title'] }}</div>
                                     <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
                                 </div>
-                            </div>
-                        @endforeach
+                            </a>
+                        @empty
+                            <div class="baze-rail-empty">No top rated titles available right now.</div>
+                        @endforelse
                     </div>
                     <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
                     <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
@@ -378,60 +369,54 @@
     </section>
 
     {{-- ============================================================
-         MOVIES — genre chips + browse rail
-         Chips call selectGenre() on the Home component, which re-queries
-         TMDB (byGenre / byKeyword / byOriginCountry — each cached on
-         its own key) and swaps $movieGrid. wire:key on the rail-shell
-         forces Alpine's baseRail() to fully reinitialize whenever the
-         genre changes, so the arrow/overflow state is re-measured
-         against the new set of cards rather than the previous one.
+         POPULAR — with Movies/TV toggle
          ============================================================ --}}
-    <section class="baze-rail-section" id="movies">
+    <section class="baze-rail-section" id="popular">
         <div class="baze-wrap">
             <div class="baze-rail-head">
                 <div>
-                    <div class="baze-eyebrow">BIG STORIES, FRESH RELEASES</div>
-                    <h2 class="baze-display baze-h2">Movies</h2>
-                    <p class="baze-rail-sub">Big stories. Fresh releases. Independent films. One place.</p>
+                    <div class="baze-eyebrow">CROWD FAVOURITES</div>
+                    <h2 class="baze-display baze-h2">Popular</h2>
+                </div>
+                <div class="baze-rail-toggle" role="tablist" aria-label="Popular content type">
+                    <button class="baze-rail-toggle-btn {{ $popularType === 'movies' ? 'is-active' : '' }}"
+                            wire:click="switchRail('popular', 'movies')" role="tab"
+                            aria-selected="{{ $popularType === 'movies' ? 'true' : 'false' }}">Movies</button>
+                    <button class="baze-rail-toggle-btn {{ $popularType === 'tv' ? 'is-active' : '' }}"
+                            wire:click="switchRail('popular', 'tv')" role="tab"
+                            aria-selected="{{ $popularType === 'tv' ? 'true' : 'false' }}">TV</button>
                 </div>
             </div>
 
-            <div class="baze-genre-chips" role="tablist" aria-label="Filter movies by genre">
-                @foreach ($movieGenres as $genre)
-                    <button type="button"
-                            class="baze-genre-chip {{ $activeGenre === $genre ? 'is-active' : '' }}"
-                            role="tab"
-                            aria-selected="{{ $activeGenre === $genre ? 'true' : 'false' }}"
-                            wire:click="selectGenre('{{ $genre }}')"
-                            wire:loading.attr="disabled"
-                            wire:target="selectGenre('{{ $genre }}')">
-                        {{ $genre }}
-                    </button>
-                @endforeach
-            </div>
-
-            <div class="baze-rail-shell"
-                 wire:key="movies-rail-{{ $activeGenre }}"
-                 wire:loading.class="baze-rail-shell--loading"
-                 wire:target="selectGenre"
-                 x-data="baseRail('.baze-poster-card')"
-                 x-init="init()">
+            <div class="baze-rail-shell" wire:key="popular-{{ $popularType }}" x-data="baseRail('.baze-poster-card')" x-init="init()">
                 <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous titles">‹</button>
 
                 <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Browse movies" tabindex="0">
-                        @foreach ($movieGrid as $item)
-                            <div class="baze-poster-card">
+                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Popular" tabindex="0">
+                        @php $items = $popularType === 'tv' ? $tvPopular : $popularMovies; @endphp
+                        @forelse ($items as $item)
+                            @php
+                                $cardHref = (!empty($item['type']) && $item['type'] === 'tv')
+                                    ? route('tv.show', $item['tmdb_id'] ?? 0)
+                                    : route('watch.movie', $item['tmdb_id'] ?? 0);
+                            @endphp
+                            <a href="{{ $cardHref }}" class="baze-poster-card" style="text-decoration: none; color: inherit;">
                                 <div class="baze-poster-art">
                                     <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
+                                    @if (!empty($item['score']))
+                                        <span class="baze-score-badge {{ $item['score'] >= 70 ? 'baze-score-badge--high' : ($item['score'] >= 50 ? 'baze-score-badge--mid' : 'baze-score-badge--low') }}">{{ $item['score'] }}%</span>
+                                    @endif
+                                    <button type="button" class="baze-poster-add" aria-label="Add {{ $item['title'] }} to list">+</button>
                                     <div class="baze-poster-play" aria-hidden="true">▶</div>
                                 </div>
                                 <div class="baze-poster-info">
                                     <div class="baze-poster-title">{{ $item['title'] }}</div>
                                     <div class="baze-poster-meta">{{ $item['year'] }} · {{ $item['genre'] }}</div>
                                 </div>
-                            </div>
-                        @endforeach
+                            </a>
+                        @empty
+                            <div class="baze-rail-empty">No popular titles available right now.</div>
+                        @endforelse
                     </div>
                     <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
                     <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
@@ -442,11 +427,8 @@
         </div>
     </section>
 
-
     {{-- ============================================================
          TRAILERS — click-to-play landscape rail
-         Poster first; video only loads/plays on interaction.
-         Only one trailer plays at a time.
          ============================================================ --}}
     <section class="baze-rail-section" id="trailers" x-data="{ playingIndex: null }">
         <div class="baze-wrap">
@@ -499,77 +481,7 @@
     </section>
 
     {{-- ============================================================
-         MUSIC — "Stream the sounds behind the stories"
-         ============================================================
-    <section class="baze-rail-section" id="music">
-        <div class="baze-wrap">
-            <div class="baze-rail-head">
-                <div>
-                    <div class="baze-eyebrow" style="color:var(--color-frequency)">MUSIC</div>
-                    <h2 class="baze-display baze-h2">Stream the sounds behind the stories</h2>
-                </div>
-            </div>
-
-            <div class="baze-rail-shell" x-data="baseRail('.baze-music-card')" x-init="init()">
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--prev" @click="scrollByCard(-1)" x-show="hasOverflow" :disabled="atStart" aria-label="Previous tracks">‹</button>
-
-                <div class="baze-rail-viewport">
-                    <div class="baze-rail-track" x-ref="rail" role="region" aria-label="Music" tabindex="0">
-                        @foreach ($musicRails as $track)
-                            <div class="baze-music-card">
-                                <div class="baze-music-art">
-                                    <img src="{{ asset('home/'.$track['cover']) }}" alt="{{ $track['track'] }} cover art" loading="lazy">
-                                    <div class="baze-music-play" aria-hidden="true">▶</div>
-                                </div>
-                                <div class="baze-music-info">
-                                    <div class="baze-poster-title">{{ $track['track'] }}</div>
-                                    <div class="baze-poster-meta">{{ $track['artist'] }} · {{ $track['duration'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="baze-rail-fade baze-rail-fade--left" :class="{ 'is-visible': hasOverflow && !atStart }"></div>
-                    <div class="baze-rail-fade baze-rail-fade--right" :class="{ 'is-visible': hasOverflow && !atEnd }"></div>
-                </div>
-
-                <button type="button" class="baze-rail-arrow baze-rail-arrow--next" @click="scrollByCard(1)" x-show="hasOverflow" :disabled="atEnd" aria-label="Next tracks">›</button>
-            </div>
-        </div>
-    </section>
-    --}}
-
-    {{-- ============================================================
-         WATCH / LISTEN / CREATE
-         ============================================================
-    <section class="baze-section baze-section--tight">
-        <div class="baze-wrap">
-            <div class="baze-triptych">
-                <div class="baze-triptych-card">
-                    <div class="baze-triptych-icon" style="color:var(--color-sunburst)">▶</div>
-                    <h4 class="baze-display">WATCH</h4>
-                    <p>Movies, series, documentaries, and trailers — new titles added every week.</p>
-                    <a href="#trending-today" class="baze-triptych-link" style="color:var(--color-sunburst)">Browse titles →</a>
-                </div>
-                <div class="baze-triptych-card">
-                    <div class="baze-triptych-icon" style="color:var(--color-frequency)">♪</div>
-                    <h4 class="baze-display">LISTEN</h4>
-                    <p>Music from independent and established artists across East Africa.</p>
-                    <a href="#music" class="baze-triptych-link" style="color:var(--color-frequency)">Hear what's new →</a>
-                </div>
-                <div class="baze-triptych-card">
-                    <div class="baze-triptych-icon" style="color:var(--color-mustard)">＋</div>
-                    <h4 class="baze-display">CREATE</h4>
-                    <p>Upload your film, album, or event and get paid straight to M-Pesa.</p>
-                    <a href="#plans" class="baze-triptych-link" style="color:var(--color-mustard)">See creator plans →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    --}}
-
-    {{-- ============================================================
          AFRICAN STORIES — creator spotlight
-         Folds in the original "made for movie makers" cinema block.
          ============================================================ --}}
     <section class="baze-section baze-section--tight" id="creators">
         <div class="baze-wrap">
@@ -601,7 +513,7 @@
     </section>
 
     {{-- ============================================================
-         LISTENER STRIP (unchanged)
+         LISTENER STRIP
          ============================================================ --}}
     <section class="baze-section baze-section--tight" id="listeners">
         <div class="baze-wrap">
@@ -615,13 +527,6 @@
         </div>
     </section>
 
-    {{-- ============================================================
-         Reusable Alpine components: the rail-scroll carousel used by
-         every content rail, and the hero carousel used above. Wrapped
-         in @once so they only register once even if this partial is
-         ever included more than once on a page. Consider moving both
-         into resources/js/app.js as permanent globals.
-         ============================================================ --}}
     @once
         <script>
             function baseRail(cardSelector = '.baze-rail-card') {
@@ -660,14 +565,6 @@
                 }
             }
 
-            /**
-             * Netflix-style hero carousel: autoplay with a segmented,
-             * fillable progress bar (also a slide picker), manual
-             * prev/next, click-to-jump thumbnails, and full
-             * pause-on-hover/focus/touch support. Skips autoplay
-             * entirely under prefers-reduced-motion — segments still
-             * work as static tabs, just without the timer or zoom.
-             */
             function heroCarousel(count, intervalMs = 7000) {
                 return {
                     active: 0,
