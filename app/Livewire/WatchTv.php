@@ -33,6 +33,13 @@ class WatchTv extends Component
 
     public string $activeProvider = '';
 
+    public bool $saved = false;
+
+    /** @var array{name: string, key: string}[] */
+    public array $providers = [];
+
+    public int $totalEpisodes = 0;
+
     public function mount(int $tmdbId, int $season, int $episode): void
     {
         $this->tmdbId = $tmdbId;
@@ -44,7 +51,70 @@ class WatchTv extends Component
             abort(404);
         }
 
+        $this->loadProviders();
+        $this->loadSeasonData();
         $this->loadPlayer();
+    }
+
+    public function goToEpisode(int $season, int $episode): void
+    {
+        $this->season = $season;
+        $this->episode = $episode;
+        $this->loadSeasonData();
+        $this->loadPlayer();
+    }
+
+    public function prevEpisode(): void
+    {
+        if ($this->episode > 1) {
+            $this->goToEpisode($this->season, $this->episode - 1);
+        }
+    }
+
+    public function nextEpisode(): void
+    {
+        if ($this->episode < $this->totalEpisodes) {
+            $this->goToEpisode($this->season, $this->episode + 1);
+        }
+    }
+
+    public function switchProvider(string $provider): void
+    {
+        $this->activeProvider = $provider;
+
+        $streaming = app(StreamingProviderService::class);
+        $this->embedUrl = $streaming->getTvUrl(
+            $this->tmdbId,
+            $this->season,
+            $this->episode,
+            null,
+            $provider
+        ) ?? '';
+    }
+
+    protected function loadProviders(): void
+    {
+        $streaming = app(StreamingProviderService::class);
+        $all = $streaming->getProviders();
+
+        $this->providers = collect($all)
+            ->map(fn (array $p, string $key) => [
+                'name' => $p['name'],
+                'key' => $key,
+            ])
+            ->values()
+            ->all();
+    }
+
+    protected function loadSeasonData(): void
+    {
+        $data = TMDB::tvSeason($this->tmdbId, $this->season);
+        $episodes = $data['episodes'] ?? [];
+
+        $this->totalEpisodes = count($episodes);
+
+        $this->episodeData = collect($episodes)
+            ->firstWhere('episode_number', $this->episode) ?? [];
     }
 
     protected function loadPlayer(): void

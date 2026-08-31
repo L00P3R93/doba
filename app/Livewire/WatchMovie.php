@@ -27,6 +27,11 @@ class WatchMovie extends Component
 
     public string $activeProvider = '';
 
+    public bool $saved = false;
+
+    /** @var array{name: string, key: string}[] */
+    public array $providers = [];
+
     public function mount(int $tmdbId): void
     {
         $this->tmdbId = $tmdbId;
@@ -36,7 +41,34 @@ class WatchMovie extends Component
             abort(404);
         }
 
+        $this->loadProviders();
         $this->loadPlayer();
+    }
+
+    public function switchProvider(string $provider): void
+    {
+        $this->activeProvider = $provider;
+
+        $streaming = app(StreamingProviderService::class);
+        $this->embedUrl = $streaming->getMovieUrl(
+            $this->tmdbId,
+            $this->movie['imdb_id'] ?? null,
+            $provider
+        ) ?? '';
+    }
+
+    protected function loadProviders(): void
+    {
+        $streaming = app(StreamingProviderService::class);
+        $all = $streaming->getProviders();
+
+        $this->providers = collect($all)
+            ->map(fn (array $p, string $key) => [
+                'name' => $p['name'],
+                'key' => $key,
+            ])
+            ->values()
+            ->all();
     }
 
     protected function loadPlayer(): void

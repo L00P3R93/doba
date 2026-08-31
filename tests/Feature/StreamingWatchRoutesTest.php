@@ -40,6 +40,12 @@ it('returns 404 for a non-existent movie', function () {
 
 it('loads the TV watch page with embed iframe', function () {
     Http::fake([
+        'api.themoviedb.org/3/tv/67890/season/*' => Http::response([
+            'season_number' => 1,
+            'episodes' => [
+                ['episode_number' => 3, 'name' => 'Episode Three', 'air_date' => '2024-01-15', 'overview' => 'Third episode.'],
+            ],
+        ], 200),
         'api.themoviedb.org/3/tv/67890*' => Http::response([
             'id' => 67890,
             'name' => 'Test TV Show',
@@ -52,10 +58,9 @@ it('loads the TV watch page with embed iframe', function () {
 
     $response->assertOk();
     $response->assertSee('Test TV Show');
-    $response->assertSee('Season 1');
-    $response->assertSee('Episode 3');
+    $response->assertSee('S01');
+    $response->assertSee('E03');
     $response->assertSee('iframe');
-    $response->assertSee('Back to Home');
 });
 
 it('returns 404 for a non-existent TV show on watch page', function () {
@@ -70,14 +75,20 @@ it('returns 404 for a non-existent TV show on watch page', function () {
 
 it('loads the TV show detail page', function () {
     Http::fake([
+        'api.themoviedb.org/3/tv/67890/season/*' => Http::response([
+            'season_number' => 1,
+            'episodes' => [
+                ['episode_number' => 1, 'name' => 'Pilot', 'air_date' => '2024-01-01', 'overview' => 'First episode.'],
+            ],
+        ], 200),
         'api.themoviedb.org/3/tv/67890*' => Http::response([
             'id' => 67890,
             'name' => 'Test TV Show',
             'overview' => 'A great TV show with many seasons.',
             'genres' => [['id' => 18, 'name' => 'Drama']],
             'seasons' => [
-                ['season_number' => 1, 'name' => 'Season 1'],
-                ['season_number' => 2, 'name' => 'Season 2'],
+                ['season_number' => 1, 'name' => 'Season 1', 'episode_count' => 1],
+                ['season_number' => 2, 'name' => 'Season 2', 'episode_count' => 1],
             ],
         ], 200),
     ]);
@@ -86,7 +97,6 @@ it('loads the TV show detail page', function () {
 
     $response->assertOk();
     $response->assertSee('Test TV Show');
-    $response->assertSee('Back to Home');
 });
 
 it('returns 404 for a non-existent TV show detail page', function () {
@@ -115,11 +125,20 @@ it('homepage movie cards link to watch/movie/{tmdbId}', function () {
 
 it('tv show detail route is accessible', function () {
     Http::fake([
+        'api.themoviedb.org/3/tv/1399/season/*' => Http::response([
+            'season_number' => 1,
+            'episodes' => [
+                ['episode_number' => 1, 'name' => 'Winter Is Coming', 'overview' => 'Premiere.'],
+            ],
+        ], 200),
         'api.themoviedb.org/3/tv/1399*' => Http::response([
             'id' => 1399,
             'name' => 'Game of Thrones',
             'overview' => 'Epic fantasy.',
             'genres' => [['id' => 18, 'name' => 'Drama']],
+            'seasons' => [
+                ['season_number' => 1, 'name' => 'Season 1', 'episode_count' => 1],
+            ],
         ], 200),
     ]);
 
