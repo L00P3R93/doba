@@ -46,8 +46,8 @@ class StreamingProviderService
 
         $id = $imdbId ?? $tmdbId;
         $path = str_replace(
-            ['{id}', '{season}', '{episode}'],
-            [(string) $id, (string) $season, (string) $episode],
+            ['{id}', '{season}', '{episode}', '{s}', '{e}'],
+            [(string) $id, (string) $season, (string) $episode, (string) $season, (string) $episode],
             $config['tv_path']
         );
 

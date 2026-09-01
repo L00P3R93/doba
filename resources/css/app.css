@@ -12,6 +12,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+    scroll-behavior: smooth;
+}
+
 /* ==========================================================================
    DobaPlay Design System — "Baze Livery"
    Street-poster energy (Matatu Livery) + analog warmth (Sound System)
@@ -759,4 +763,17 @@ body:has(.main-wrapper) {
 .baze-fader-track:focus-visible {
     outline: 2px solid var(--color-frequency);
     outline-offset: 4px;
+}
+
+/* Screen reader only — visually hidden but accessible to assistive tech */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }

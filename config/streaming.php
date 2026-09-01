@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | The primary streaming provider used for movie and TV show playback.
-    | Supported: 'vixsrc', 'vidfast', 'vidking'
+    | Supported: 'vixsrc', 'vidfast', 'vidking', 'vidrock', 'vidsrc_mov', 'vidcore', 'vsembed'
     |
     */
 
@@ -21,7 +21,7 @@ return [
     |
     | Each provider defines its base URL, path templates for movies and TV
     | shows, and default query parameters appended to every embed URL.
-    | The {id}, {season}, and {episode} placeholders are replaced at runtime.
+    | The {id}, {season}, {episode}, {s}, and {e} placeholders are replaced at runtime.
     |
     */
 
@@ -58,6 +58,38 @@ return [
                 'color' => 'ff6b1a',
                 'autoPlay' => 'false',
             ],
+        ],
+
+        'vidrock' => [
+            'name' => 'VidRock',
+            'base_url' => env('VIDROCK_BASE_URL', 'https://vidrock.net'),
+            'movie_path' => '/movie/{id}',
+            'tv_path' => '/tv/{id}/{season}/{episode}',
+            'params' => [],
+        ],
+
+        'vidsrc_mov' => [
+            'name' => 'VidSrc',
+            'base_url' => env('VIDSRC_MOV_BASE_URL', 'https://vidsrc.mov'),
+            'movie_path' => '/embed/movie/{id}',
+            'tv_path' => '/embed/tv/{id}/{s}/{e}',
+            'params' => [],
+        ],
+
+        'vidcore' => [
+            'name' => 'VidCore',
+            'base_url' => env('VIDCORE_BASE_URL', 'https://vidcore.io'),
+            'movie_path' => '/movie/{id}',
+            'tv_path' => '/tv/{id}/{season}/{episode}',
+            'params' => [],
+        ],
+
+        'vsembed' => [
+            'name' => 'VidSrc',
+            'base_url' => env('VSEMBED_BASE_URL', 'https://vsembed.ru'),
+            'movie_path' => '/embed/movie/{id}',
+            'tv_path' => '/embed/tv/{id}/{season}/{episode}',
+            'params' => [],
         ],
 
     ],

@@ -10,7 +10,6 @@
     }"
     x-init="init()"
     @keydown.escape.window="mobileOpen = false"
-    @click.outside="mobileOpen = false"
 >
     <div class="baze-wrap baze-nav-inner">
         <a href="{{ route('home') }}" class="baze-display baze-nav-logo">Doba<span class="baze-accent">Play</span></a>
@@ -22,6 +21,7 @@
         </div>
 
         <div class="baze-nav-cta">
+            <livewire:search />
             @auth
                 <a href="{{ route('dashboard') }}" class="baze-btn baze-btn-primary">Dashboard</a>
             @else

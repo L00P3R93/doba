@@ -131,3 +131,76 @@ it('has a new episodes section', function () {
     $response->assertSee('New Episodes');
     $response->assertSee('new-episodes');
 });
+
+it('does not have a trailers section', function () {
+    Http::fake([
+        'api.themoviedb.org/3/*' => Http::response([
+            'results' => [],
+            'genres' => [],
+        ], 200),
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertDontSee('id="trailers"');
+    $response->assertDontSee('WATCH THE FIRST LOOK');
+});
+
+it('hides continue watching section when there is no data', function () {
+    Http::fake([
+        'api.themoviedb.org/3/*' => Http::response([
+            'results' => [],
+            'genres' => [],
+        ], 200),
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertDontSee('Continue Watching');
+    $response->assertDontSee('continue-watching');
+});
+
+it('has a marquee strip with 3 copies of items', function () {
+    Http::fake([
+        'api.themoviedb.org/3/*' => Http::response([
+            'results' => [],
+            'genres' => [],
+        ], 200),
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertSee('baze-marquee-strip');
+    $response->assertSee('baze-marquee-track');
+});
+
+it('new episode cards are clickable links to watch page', function () {
+    Http::fake([
+        'api.themoviedb.org/3/*' => Http::response([
+            'results' => [],
+            'genres' => [],
+        ], 200),
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertSee('watch/tv');
+});
+
+it('has toggle loading feedback attributes', function () {
+    Http::fake([
+        'api.themoviedb.org/3/*' => Http::response([
+            'results' => [],
+            'genres' => [],
+        ], 200),
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
+    $response->assertSee('switchRail');
+});

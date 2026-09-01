@@ -197,9 +197,10 @@
 
 /* Marquee */
 .baze-marquee-strip { background: var(--color-sunburst); color: var(--color-ink); padding: 12px 0; overflow: hidden; white-space: nowrap; }
-.baze-marquee-track { display: inline-flex; animation: baze-marquee 26s linear infinite; font-family: var(--font-display); font-size: 16px; letter-spacing: 0.12em; }
-.baze-marquee-track span { padding: 0 22px; display: inline-flex; align-items: center; gap: 10px; }
-@keyframes baze-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.baze-marquee-track { display: flex; width: max-content; animation: baze-marquee 20s linear infinite; font-family: var(--font-display); font-size: 16px; letter-spacing: 0.12em; will-change: transform; }
+.baze-marquee-track > span { padding: 0 22px; display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; white-space: nowrap; }
+.baze-marquee-set { display: flex; flex-shrink: 0; }
+@keyframes baze-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.3333%); } }
 @media (prefers-reduced-motion: reduce) { .baze-marquee-track { animation: none; } }
 
 /* Sections */

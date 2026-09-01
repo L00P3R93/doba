@@ -27,6 +27,10 @@ class WatchTv extends Component
 
     public array $show = [];
 
+    public array $seasons = [];
+
+    public array $episodes = [];
+
     public array $episodeData = [];
 
     public string $embedUrl = '';
@@ -51,6 +55,11 @@ class WatchTv extends Component
             abort(404);
         }
 
+        $this->seasons = collect($this->show['seasons'] ?? [])
+            ->where('season_number', '>', 0)
+            ->values()
+            ->all();
+
         $this->loadProviders();
         $this->loadSeasonData();
         $this->loadPlayer();
@@ -60,6 +69,14 @@ class WatchTv extends Component
     {
         $this->season = $season;
         $this->episode = $episode;
+        $this->loadSeasonData();
+        $this->loadPlayer();
+    }
+
+    public function switchSeason(int $season): void
+    {
+        $this->season = $season;
+        $this->episode = 1;
         $this->loadSeasonData();
         $this->loadPlayer();
     }
@@ -111,6 +128,7 @@ class WatchTv extends Component
         $data = TMDB::tvSeason($this->tmdbId, $this->season);
         $episodes = $data['episodes'] ?? [];
 
+        $this->episodes = $episodes;
         $this->totalEpisodes = count($episodes);
 
         $this->episodeData = collect($episodes)

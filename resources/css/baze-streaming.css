@@ -801,6 +801,12 @@ button.baze-landscape-playbtn:hover {
     margin-bottom: var(--space-4);
 }
 
+@media (max-width: 480px) {
+    .baze-rail-head {
+        flex-wrap: wrap;
+    }
+}
+
 .baze-rail-toggle {
     display: inline-flex;
     border-radius: 9999px;
@@ -827,7 +833,7 @@ button.baze-landscape-playbtn:hover {
 }
 
 .baze-rail-toggle-btn.is-active {
-    background: var(--color-mustard);
+    background: var(--color-sunburst);
     color: var(--color-ink);
 }
 
@@ -1107,8 +1113,113 @@ button.baze-landscape-playbtn:hover {
 }
 
 /* ---------------------------------------------------------------------
-   WATCH PAGE — layout shell
-   --------------------------------------------------------------------- */
+    WATCH PAGE — controls bar (below player)
+    --------------------------------------------------------------------- */
+
+.baze-watch-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    margin-top: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.baze-watch-controls-servers {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.baze-watch-controls-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-left: auto;
+    position: relative;
+}
+
+.baze-watch-controls-epnav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.baze-watch-ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+    color: var(--color-bone-dim);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.baze-watch-ctrl-btn:hover:not(:disabled) {
+    border-color: var(--color-bone-muted);
+    color: var(--color-bone);
+}
+
+.baze-watch-ctrl-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.baze-watch-ctrl-btn:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: 2px;
+}
+
+.baze-watch-ctrl-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-bone-muted);
+    padding: 0 4px;
+    min-width: 36px;
+    text-align: center;
+}
+
+.baze-watch-ctrl-browse[aria-expanded="true"] {
+    border-color: var(--color-sunburst);
+    color: var(--color-sunburst);
+}
+
+.baze-watch-ctrl-browse-text {
+    display: none;
+}
+
+@media (min-width: 480px) {
+    .baze-watch-ctrl-browse-text {
+        display: inline;
+    }
+}
+
+.baze-watch-episodes-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: min(480px, calc(100vw - 32px));
+    max-height: 60vh;
+    overflow-y: auto;
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+    padding: var(--space-4);
+}
+
+/* ---------------------------------------------------------------------
+    WATCH PAGE — layout shell
+    --------------------------------------------------------------------- */
 
 .baze-watch-page {
     max-width: 1200px;
@@ -1493,6 +1604,14 @@ button.baze-landscape-playbtn:hover {
     text-decoration: none;
     color: inherit;
     transition: all var(--transition-fast);
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.baze-tv-episode-card.is-active {
+    border-color: var(--color-sunburst);
+    background: rgba(255, 107, 26, 0.08);
 }
 
 .baze-tv-episode-card:hover {
@@ -1669,4 +1788,349 @@ button.baze-landscape-playbtn:hover {
     font-size: var(--font-size-sm);
     color: var(--color-bone-muted);
     font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------
+    WATCH PAGE — season & episode selector panel
+    --------------------------------------------------------------------- */
+
+.baze-watch-episodes-panel {
+    margin-top: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-ink-raised);
+    overflow: hidden;
+}
+
+.baze-watch-episodes-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-4) var(--space-5);
+    border: none;
+    background: transparent;
+    color: var(--color-bone);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.baze-watch-episodes-toggle:hover {
+    background: rgba(245, 240, 232, 0.04);
+}
+
+.baze-watch-episodes-toggle svg:last-child {
+    margin-left: auto;
+    color: var(--color-bone-muted);
+}
+
+.baze-watch-episodes-body {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+/* ---------------------------------------------------------------------
+    SEARCH — inline dropdown
+   --------------------------------------------------------------------- */
+
+.baze-search-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.baze-nav-search.is-active {
+    color: var(--color-sunburst);
+    background: rgba(255, 107, 26, 0.12);
+}
+
+.baze-search-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 40;
+    backdrop-filter: blur(4px);
+}
+
+.baze-search-panel {
+    position: fixed;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100vw - 32px));
+    max-height: min(520px, calc(100vh - 120px));
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 240, 232, 0.04);
+    z-index: 50;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.baze-search-panel-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.baze-search-panel-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--color-bone-muted);
+    pointer-events: none;
+}
+
+.baze-search-panel-input {
+    width: 100%;
+    padding: 16px 40px 16px 40px;
+    border: none;
+    background: transparent;
+    color: var(--color-bone);
+    font-size: var(--font-size-lg);
+    font-family: inherit;
+    outline: none;
+}
+
+.baze-search-panel-input::placeholder {
+    color: var(--color-bone-muted);
+}
+
+.baze-search-panel-clear {
+    position: absolute;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-border);
+    color: var(--color-bone-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.baze-search-panel-clear:hover {
+    background: var(--color-bone-muted);
+    color: var(--color-bone);
+}
+
+.baze-search-panel-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+}
+
+.baze-search-panel-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-sunburst);
+    border-radius: 50%;
+    animation: baze-spin 0.6s linear infinite;
+}
+
+.baze-search-panel-results {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    flex: 1;
+}
+
+.baze-search-panel-result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--transition-fast);
+}
+
+.baze-search-panel-result:hover {
+    background: rgba(245, 240, 232, 0.06);
+}
+
+.baze-search-panel-result:focus-visible {
+    outline: 2px solid var(--color-frequency);
+    outline-offset: -2px;
+}
+
+.baze-search-panel-result-poster {
+    flex-shrink: 0;
+    width: 44px;
+    height: 64px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-ink);
+    border: 1px solid var(--color-border);
+}
+
+.baze-search-panel-result-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.baze-search-panel-result-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-bone-faint);
+}
+
+.baze-search-panel-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.baze-search-panel-result-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-bone);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.baze-search-panel-result-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--color-bone-muted);
+    margin-top: 2px;
+}
+
+.baze-search-panel-result-type {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-sunburst);
+}
+
+.baze-search-panel-result-score {
+    font-weight: 700;
+}
+
+.baze-search-panel-result-score--high {
+    color: #22c55e;
+}
+
+.baze-search-panel-result-score--mid {
+    color: #eab308;
+}
+
+.baze-search-panel-result-score--low {
+    color: #ef4444;
+}
+
+.baze-search-panel-result-arrow {
+    flex-shrink: 0;
+    color: var(--color-bone-faint);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.baze-search-panel-result:hover .baze-search-panel-result-arrow {
+    opacity: 1;
+}
+
+.baze-search-panel-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--color-bone-muted);
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
+
+/* ---------------------------------------------------------------------
+    SKELETON LOADING
+    --------------------------------------------------------------------- */
+
+.baze-rail-skeleton {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 16px;
+    padding: 4px 2px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.baze-rail-skeleton--visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.baze-rail-track {
+    transition: opacity 0.3s ease;
+}
+
+.baze-rail-viewport:has(.baze-rail-skeleton--visible) > .baze-rail-track {
+    opacity: 0;
+}
+
+.baze-skeleton-card {
+    flex-shrink: 0;
+    width: 180px;
+}
+
+.baze-skeleton-poster {
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, var(--color-ink-raised) 25%, rgba(245, 240, 232, 0.06) 50%, var(--color-ink-raised) 75%);
+    background-size: 200% 100%;
+    animation: baze-shimmer 1.5s infinite;
+}
+
+.baze-skeleton-text {
+    height: 12px;
+    margin-top: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-ink-raised) 25%, rgba(245, 240, 232, 0.06) 50%, var(--color-ink-raised) 75%);
+    background-size: 200% 100%;
+    animation: baze-shimmer 1.5s infinite;
+}
+
+.baze-skeleton-text--short {
+    width: 60%;
+}
+
+@keyframes baze-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .baze-skeleton-poster,
+    .baze-skeleton-text {
+        animation: none;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   TOGGLE LOADING
+   --------------------------------------------------------------------- */
+
+.baze-toggle-loading {
+    opacity: 0.6;
+    pointer-events: none;
 }

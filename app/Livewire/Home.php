@@ -72,30 +72,10 @@ class Home extends Component
     public string $popularType = 'movies';
 
     /**
-     * "Continue Watching" — landscape cards with demo progress.
-     * Static placeholder data, shaped so it's a drop-in swap for real
-     * watch-history later. TMDB has no concept of "your" history, so
-     * this stays local regardless of TMDB availability.
+     * "Continue Watching" — landscape cards with progress.
+     * Populated from localStorage via Alpine.js on the frontend.
      */
-    public array $continueWatching = [
-        ['title' => 'John Wick', 'image' => 'wick.PNG', 'remaining' => '1h 18m remaining', 'progress' => 62],
-        ['title' => 'The Wolf of Wall Street', 'image' => 'the wolf of wall street.PNG', 'remaining' => '42m remaining', 'progress' => 78],
-        ['title' => 'Terminator: Dark Fate', 'image' => 'terimator.PNG', 'remaining' => '55m remaining', 'progress' => 30],
-        ['title' => 'Zodiac', 'image' => 'zodiac.PNG', 'remaining' => '1h 40m remaining', 'progress' => 15],
-    ];
-
-    /**
-     * "Trailers" — click-to-play preview rail. Locally hosted files;
-     * TMDB's /videos endpoint would need a separate opt-in fetch per
-     * title, so this stays static until that's worth the extra calls.
-     */
-    public array $trailers = [
-        ['title' => 'Black Clover: Sword of the Wizard King', 'video' => 'black-clover-sword-of-the-wizard-king.mp4', 'poster' => 'black clover.jpg'],
-        ['title' => 'Game of Thrones — Season 7', 'video' => 'game-of-thrones-s7.mp4', 'poster' => 'game of thrones.PNG'],
-        ['title' => 'Sakamoto Days — Season 2 Announcement', 'video' => 'sakamoto-days-season-2-announcement-netflix-720-ytshorts.savetube.me.mp4', 'poster' => 'sakamoto days.PNG'],
-        ['title' => 'Solo Leveling — Season 3', 'video' => 'solo-leveling-season-3.mp4', 'poster' => 'solo leveling.PNG'],
-        ['title' => 'Terminator: Dark Fate — Official Trailer', 'video' => 'terminator-dark-fate-official-trailer.mp4', 'poster' => 'terimator.PNG'],
-    ];
+    public array $continueWatching = [];
 
     /**
      * "Music" — stream the sounds behind the stories. Fictional demo
@@ -268,6 +248,53 @@ class Home extends Component
             'popular' => $this->popularType = $type,
             default => null,
         };
+    }
+
+    /**
+     * Populate Continue Watching from localStorage data sent by the frontend.
+     */
+    public function loadContinueWatching(array $items): void
+    {
+        $this->continueWatching = collect($items)
+            ->take(8)
+            ->map(fn ($item) => [
+                'title' => $item['title'] ?? 'Untitled',
+                'image' => $item['image'] ?? '',
+                'remaining' => $this->formatRemaining($item['progress'] ?? 0),
+                'progress' => $item['progress'] ?? 0,
+                'tmdb_id' => $item['tmdbId'] ?? 0,
+                'type' => $item['type'] ?? 'movie',
+                'season' => $item['season'] ?? null,
+                'episode' => $item['episode'] ?? null,
+                'watch_href' => $this->buildWatchHref($item),
+            ])
+            ->all();
+    }
+
+    protected function buildWatchHref(array $item): string
+    {
+        if (($item['type'] ?? 'movie') === 'tv') {
+            return route('watch.tv', [
+                $item['tmdbId'] ?? 0,
+                $item['season'] ?? 1,
+                $item['episode'] ?? 1,
+            ]);
+        }
+
+        return route('watch.movie', $item['tmdbId'] ?? 0);
+    }
+
+    protected function formatRemaining(int $progress): string
+    {
+        $remaining = (int) round((100 - $progress) * 1.2);
+        $hours = intdiv($remaining, 60);
+        $mins = $remaining % 60;
+
+        if ($hours > 0) {
+            return "{$hours}h {$mins}m remaining";
+        }
+
+        return "{$mins}m remaining";
     }
 
     public function render(): Factory|View|\Illuminate\View\View

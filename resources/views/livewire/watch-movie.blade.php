@@ -1,4 +1,24 @@
-<div class="baze-watch-page">
+<div class="baze-watch-page"
+     x-data="{
+         init() {
+             this.$el._startTime = Date.now();
+             const timer = setInterval(() => {
+                 const iframe = document.querySelector('.baze-player-container iframe');
+                 if (iframe) {
+                     const elapsed = (Date.now() - this.$el._startTime) / 1000;
+                     const progress = Math.min(95, Math.round((elapsed / 7200) * 100));
+                     saveWatchProgress({
+                         tmdbId: {{ $tmdbId }},
+                         type: 'movie',
+                         title: '{{ addslashes($movie['title'] ?? '') }}',
+                         image: '{{ addslashes($movie['image'] ?? '') }}',
+                         progress: progress,
+                     });
+                 }
+             }, 30000);
+             this.$once('destroy', () => clearInterval(timer));
+         }
+     }">
     {{-- Back Navigation --}}
     <nav class="baze-watch-nav">
         <a href="{{ route('home') }}" class="baze-watch-back">
@@ -27,11 +47,10 @@
         </div>
     @endif
 
-    {{-- Provider Selector --}}
+    {{-- Controls Bar: Servers --}}
     @if (count($providers) > 1)
-        <div class="baze-watch-providers">
-            <span class="baze-watch-providers-label">SERVERS</span>
-            <div class="baze-watch-providers-grid">
+        <div class="baze-watch-controls">
+            <div class="baze-watch-controls-servers">
                 @foreach ($providers as $provider)
                     <button
                         type="button"
@@ -39,8 +58,7 @@
                         class="baze-watch-server-btn {{ $activeProvider === $provider['key'] ? 'is-active' : '' }}"
                         aria-pressed="{{ $activeProvider === $provider['key'] ? 'true' : 'false' }}"
                     >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                        {{ $provider['name'] }}
+                        {{ 'Server ' . ($loop->index + 1) }}
                     </button>
                 @endforeach
             </div>

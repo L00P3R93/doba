@@ -53,13 +53,14 @@
     @if (count($seasons) > 0)
         <div class="baze-tv-seasons">
             <div class="baze-tv-seasons-label">SEASONS</div>
-            <div class="baze-tv-seasons-track">
+            <div class="baze-tv-seasons-track" role="tablist" aria-label="Seasons">
                 @foreach ($seasons as $season)
                     <button
                         type="button"
                         wire:click="loadSeason({{ $season['season_number'] }})"
                         class="baze-tv-season-btn {{ $selectedSeason === $season['season_number'] ? 'is-active' : '' }}"
-                        aria-pressed="{{ $selectedSeason === $season['season_number'] ? 'true' : 'false' }}"
+                        role="tab"
+                        aria-selected="{{ $selectedSeason === $season['season_number'] ? 'true' : 'false' }}"
                     >
                         S{{ $season['season_number'] }}
                     </button>
