@@ -11,7 +11,7 @@
                          tmdbId: {{ $tmdbId }},
                          type: 'movie',
                          title: '{{ addslashes($movie['title'] ?? '') }}',
-                         image: '{{ addslashes($movie['image'] ?? '') }}',
+                         image: @js(!empty($movie['backdrop_path']) ? "https://image.tmdb.org/t/p/w780{$movie['backdrop_path']}" : (!empty($movie['poster_path']) ? "https://image.tmdb.org/t/p/w500{$movie['poster_path']}" : '')),
                          progress: progress,
                      });
                  }

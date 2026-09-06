@@ -20,28 +20,31 @@
             <a href="{{ route('advertise') }}">Advertise With Us</a>
         </div>
 
-        <div class="baze-nav-cta">
+        <div class="baze-nav-right">
             <livewire:search />
-            @auth
-                <a href="{{ route('dashboard') }}" class="baze-btn baze-btn-primary">Dashboard</a>
-            @else
-                <a href="{{ route('login') }}" class="baze-btn baze-btn-ghost">Log in</a>
-                <a href="{{ route('register') }}" class="baze-btn baze-btn-primary">Create account</a>
-            @endauth
-        </div>
 
-        <button
-            type="button"
-            class="baze-nav-toggle"
-            @click="mobileOpen = !mobileOpen"
-            :aria-expanded="mobileOpen"
-            aria-controls="baze-mobile-menu"
-            aria-label="Toggle navigation menu"
-        >
-            <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
-            <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
-            <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
-        </button>
+            <div class="baze-nav-cta">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="baze-btn baze-btn-primary">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="baze-btn baze-btn-ghost">Log in</a>
+                    <a href="{{ route('register') }}" class="baze-btn baze-btn-primary">Create account</a>
+                @endauth
+            </div>
+
+            <button
+                type="button"
+                class="baze-nav-toggle"
+                @click="mobileOpen = !mobileOpen"
+                :aria-expanded="mobileOpen"
+                aria-controls="baze-mobile-menu"
+                aria-label="Toggle navigation menu"
+            >
+                <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
+                <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
+                <span class="baze-nav-toggle-bar" :class="{ 'is-open': mobileOpen }"></span>
+            </button>
+        </div>
     </div>
 
     {{-- Mobile panel --}}
